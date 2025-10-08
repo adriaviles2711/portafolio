@@ -1,0 +1,58 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+/* Estilos */
+:root {
+    /* Colores principales */
+    --color-primary: #1a2332;
+    --color-secondary: #2d3e50;
+    --color-accent: #4a9eff;
+    --color-background: #0f1419;
+    --color-border: #2d3e50;
+    --color-text: #e8eaed;
+    --color-text-secondary: #9ca3af;
+
+    /* Tipografía */
+    --font-primary: Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+/* Barra de navegación */
+#navbar-index {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    width: 100%;
+    border-bottom: solid 2px var(--color-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#navbar-logo {
+    font-weight: bold;
+    font-size: 20px;
+    transition: color 0.2s ease;
+}
+
+#navbar-logo:hover {
+    color: var(--color-accent);
+}
+
+#navbar-izq {
+
+}
