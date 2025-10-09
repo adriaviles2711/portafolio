@@ -27,6 +27,7 @@ body {
     font-family: var(--font-primary);
     background-color: var(--color-background);
     color: var(--color-text);
+    padding-top: 70px;
 }
 
 /* Barra de navegación */
@@ -41,18 +42,95 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    background-color: var(--color-background);
 }
 
 #navbar-logo {
     font-weight: bold;
     font-size: 20px;
-    transition: color 0.2s ease;
+    transition: color 0.3s ease;
 }
 
 #navbar-logo:hover {
     color: var(--color-accent);
 }
 
-#navbar-izq {
+#navbar-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    font-size: 15px;
+}
 
+/* Estilos del menú */
+.nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    font-weight: bold;
+    padding-bottom: 5px;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-text);
+}
+
+.nav-link.active {
+    color: var(--color-text);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease-out;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* Presentación */
+#presentation {
+    height: 60%;
+    font-size: 20px;
+    padding: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#presentation-buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.button {
+    border: 2px solid var(--color-accent);
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--color-accent);
+    transition: all 0.3s ease;
+}
+
+.button p {
+    padding: 20px 30px;
+}
+
+.button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    transform: translateY(-5px);
 }
