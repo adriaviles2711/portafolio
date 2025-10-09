@@ -101,7 +101,7 @@ body {
 
 /* Presentación */
 #presentation {
-    height: 60%;
+    height: 40%;
     font-size: 20px;
     padding: 100px;
     display: flex;
@@ -133,4 +133,56 @@ body {
     background-color: var(--color-accent);
     color: var(--color-background);
     transform: translateY(-5px);
+}
+
+#presentation-pbutton {
+    transition: all 0.3s ease;
+    background-color: var(--color-accent); 
+    color: var(--color-background);
+    margin-right: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+#presentation-pbutton p {
+    padding: 20px 30px;
+}
+
+#presentation-pbutton:hover {
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    transform: translateY(-5px);
+}
+
+/* Animación de scroll */
+.scroll-indicator {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  animation: bounce 2s infinite;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--color-accent), transparent);
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
 }
