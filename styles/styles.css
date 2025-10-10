@@ -47,7 +47,7 @@ body {
 
 #navbar-logo {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
     transition: color 0.3s ease;
 }
 
@@ -137,7 +137,8 @@ body {
 
 #presentation-pbutton {
     transition: all 0.3s ease;
-    background-color: var(--color-accent); 
+    background-color: var(--color-accent);
+    border: 2px solid var(--color-accent); 
     color: var(--color-background);
     margin-right: 10px;
     font-size: 15px;
@@ -152,37 +153,63 @@ body {
     background-color: transparent;
     cursor: pointer;
     color: var(--color-accent);
-    border: 2px solid var(--color-accent);
     transform: translateY(-5px);
 }
 
 /* Animación de scroll */
 .scroll-indicator {
-  position: absolute;
-  bottom: var(--spacing-md);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-xs);
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-  animation: bounce 2s infinite;
+    position: absolute;
+    bottom: var(--spacing-md);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    animation: bounce 2s infinite;
 }
 
 .scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--color-accent), transparent);
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--color-accent), transparent);
 }
 
 @keyframes bounce {
-  0%,
-  100% {
+    0%,
+    100% {
     transform: translateX(-50%) translateY(0);
-  }
-  50% {
+    }
+    50% {
     transform: translateX(-50%) translateY(10px);
-  }
+    }
 }
+
+@keyframes fadeInUp {
+    from {
+    opacity: 0;
+    transform: translateY(40px); /* Empieza 40px más abajo */
+    }
+    to {
+    opacity: 1;
+    transform: translateY(0); /* Termina en su posición original */
+    }
+}
+
+
+#presentation-text > * {
+    opacity: 0;
+    animation-name: fadeInUp;
+    animation-duration: 0.8s; 
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards; 
+}
+
+#presentation-text p:nth-of-type(1) { animation-delay: 0.2s; } /* Hola, soy */
+#presentation-text p:nth-of-type(2) { animation-delay: 0.4s; } /* Adrián Avilés */
+#presentation-text p:nth-of-type(3) { animation-delay: 0.6s; } /* Desarrollador Web... */
+#presentation-text p:nth-of-type(4) { animation-delay: 0.7s; } /* Técnico de Sistemas... */
+#presentation-text p:nth-of-type(5) { animation-delay: 0.8s; } /* Especialista en... */
+#presentation-buttons { animation-delay: 1.0s; } /* Los botones */
