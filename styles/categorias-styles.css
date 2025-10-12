@@ -1,0 +1,131 @@
+:root {
+    /* Colores principales */
+    --color-primary: #1a2332;
+    --color-secondary: #2d3e50;
+    --color-accent: #4a9eff;
+    --color-background: #0f1419;
+    --color-border: #2d3e50;
+    --color-text: #e8eaed;
+    --color-text-secondary: #9ca3af;
+    --color-led: #4a9effaa;
+
+    /* Tipografía */
+    --font-primary: Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Ruta */
+#sec-ruta {
+    padding: 20px 30px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+#sec-ruta a {
+    color: var(--color-accent);
+    padding: 5px;
+    transition: all 0.3s ease;
+}
+
+#sec-ruta a:hover {
+    background-color: var(--color-secondary);
+    border-radius: 5px;
+}
+
+#sec-ruta p {
+    margin-top: 5px;
+    color: var(--color-text-secondary);
+}
+
+#sec-ruta span {
+    padding: 5px;
+}
+
+#ruta {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Header */
+#header {
+    padding: 50px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid var(--color-border);
+}
+
+#header-text {
+    text-align: center;
+}
+
+#header-text h1 {
+    font-size: 50px;
+    color: var(--color-text);
+}
+
+#header-text p {
+    color: var(--color-text-secondary);
+    font-size: 18px;
+}
+
+/* Proyectos */
+.proyectos {
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
+    justify-content: center;
+    gap: 40px;
+    margin: 20px;
+}
+
+.proyecto-tarj {
+    border: 1px solid var(--color-border);
+    border-radius: 7px;
+    background-color: var(--color-primary);
+    transition: all 0.3s ease;
+    height: 500px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.proyecto-img {
+    width: 100%;
+    height: 200px;
+}
+
+.proyecto-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.proyecto-txt {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.proyecto-txt h3 {
+    font-size: 23px;
+    color: var(--color-accent);
+}
+
+.sec-etiquetas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.proyecto-etiquetas {
+    background-color: var(--color-secondary);
+    border-radius: 5px;
+    padding: 7px;
+    color: var(--color-accent);
+}

@@ -40,9 +40,10 @@
 /* Categorias */
 .categorias {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-columns: repeat(3, 400px);
+  justify-content: center;
   gap: 40px;
-  padding: 20px;
+  margin: 20px;
 }
 
 .categoria-tarj {
@@ -51,7 +52,8 @@
   background-color: var(--color-primary);
   cursor: pointer;
   transition: all 0.3s ease;
-  height: 470px;
+  height: 500px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -82,4 +84,3 @@
     font-size: 30px;
     color: var(--color-text);
 }
-
