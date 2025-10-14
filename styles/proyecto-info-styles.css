@@ -77,6 +77,16 @@
     top: 10%;
 }
 
+#navegador-izq a span {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+#navegador-izq a:hover span,
+#navegador-izq a#active span {
+    transform: translateX(8px);
+}
+
 #navegador-cabecera {
     font-size: 17px;
 }
