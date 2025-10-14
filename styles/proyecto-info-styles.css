@@ -93,7 +93,7 @@
 
 #navegador-izq hr {
     border: 2px solid var(--color-accent);
-    border-radius: 1.0px;
+    border-radius: 10px;
 }
 
 /* Sección de la información derecha */
