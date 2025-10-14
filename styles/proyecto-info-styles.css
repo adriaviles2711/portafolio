@@ -103,3 +103,32 @@
     border-radius: 10px;
     padding: 50px;
 }
+
+#informacion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--color-text-secondary);
+    font-size: 18px;
+}
+
+#informacion h1 {
+    font-size: 40px;
+    color: var(--color-text);
+}
+
+#info-stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    gap: 80px;
+    background-color: var(--color-background);
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+#info-stats h3 {
+    color: var(--color-text);
+    font-size: 18px;
+}
