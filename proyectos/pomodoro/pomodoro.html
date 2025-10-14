@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro & Snacks de Ejercicio</title>
+    <style>
+        /* Estilos Generales y Variables */
+        :root {
+            --bg-color: #1a1a2e;
+            --container-color: #16213e;
+            --primary-color: #0f3460;
+            --accent-color: #e94560;
+            --text-color: #dcdcdc;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--container-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        /* Pestañas de Navegación */
+        .tabs {
+            display: flex;
+            background-color: var(--primary-color);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            background-color: var(--container-color);
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Contenido de las Pestañas */
+        .tab-content {
+            display: none;
+            padding: 25px;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos del Temporizador */
+        .timer-container {
+            text-align: center;
+        }
+
+        #timer-display {
+            font-size: 6rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+        }
+
+        #timer-status {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #a0a0a0;
+        }
+        
+        #pomodoro-cycles {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #888;
+        }
+        
+        #break-options {
+            display: none; /* Oculto por defecto */
+            margin: 15px 0;
+        }
+
+        #next-exercise {
+            min-height: 50px;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        #next-exercise h4 {
+            margin: 0 0 5px 0;
+            color: var(--accent-color);
+        }
+
+        #next-exercise p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+
+        .timer-controls, .global-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .control-button {
+            background-color: var(--primary-color);
+            border: none;
+            color: var(--text-color);
+            padding: 12px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .control-button:active {
+            transform: scale(0.95);
+        }
+
+        .control-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        #start-pause-button {
+            background-color: var(--accent-color);
+            width: 70px;
+            height: 70px;
+        }
+        
+        #start-pause-button:hover {
+            background-color: #ff5c7a;
+        }
+
+        /* Estilos del Formulario y Rutinas */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-group label {
+            flex: 1;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        
+        .radio-group input[type="radio"]:checked + label {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #ff5c7a;
+        }
+        
+        .btn-secondary {
+            background-color: var(--primary-color);
+        }
+        .btn-secondary:hover {
+            background-color: #1c4579;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid var(--primary-color);
+            margin: 25px 0;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .list-item-info {
+            cursor: pointer;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        .delete-btn:hover {
+            color: var(--accent-color);
+        }
+
+        /* Modales */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--container-color);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-content h2 {
+            margin-top: 0;
+        }
+        
+        .modal-content .btn {
+            margin-top: 15px;
+        }
+
+        /* Panel de depuración */
+        #debug-panel {
+            display: none;
+            background-color: rgba(0,0,0,0.2);
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 10px;
+            border: 1px dashed var(--accent-color);
+        }
+        #debug-panel h4 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .debug-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .debug-controls .btn {
+            width: auto;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Estilos de Juegos Mejorados */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        .game-card {
+            background-color: var(--primary-color);
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 2px solid transparent;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.2);
+            border-color: var(--accent-color);
+        }
+        .game-card h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .game-icon {
+            width: 48px;
+            height: 48px;
+            fill: var(--text-color);
+        }
+
+        #game-modal .modal-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow: auto;
+        }
+        #game-container {
+            margin-top: 20px;
+            position: relative;
+        }
+        #game-container canvas {
+            background-color: #000;
+            border-radius: 5px;
+            max-width: 100%;
+        }
+        .game-status {
+            min-height: 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        /* Estilos específicos de juegos */
+        .tic-tac-toe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 240px;
+            height: 240px;
+            margin: 15px auto;
+        }
+        .ttt-cell {
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .memory-game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 300px;
+            margin: 15px auto;
+        }
+        .memory-card {
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        .memory-card.flipped, .memory-card.matched {
+            transform: rotateY(180deg);
+            background-color: var(--accent-color);
+        }
+        .memory-card .card-face {
+            backface-visibility: hidden;
+            position: absolute; /* Needed for proper layering in Safari */
+        }
+        .memory-card .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .snake-controls {
+            display: none; /* Oculto en escritorio por defecto */
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            width: 150px;
+            margin: 15px auto 0;
+            gap: 10px;
+        }
+        /* Se muestra solo en dispositivos táctiles */
+        @media (hover: none) and (pointer: coarse) {
+            .snake-controls {
+                display: grid;
+            }
+        }
+        .snake-controls .btn {
+            margin: 0;
+            padding: 15px;
+            font-size: 1.5rem;
+            line-height: 1;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
+        }
+        #snake-up { grid-area: up; }
+        #snake-down { grid-area: down; }
+        #snake-left { grid-area: left; }
+        #snake-right { grid-area: right; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="tabs">
+            <button class="tab-button active" data-tab="timer">Temporizador</button>
+            <button class="tab-button" data-tab="routines">Rutinas</button>
+            <button class="tab-button" data-tab="games">Juegos</button>
+        </header>
+
+        <main>
+            <!-- Pestaña del Temporizador -->
+            <div id="timer-tab" class="tab-content active">
+                <div class="timer-container">
+                    <div id="timer-status">Elige una rutina para empezar</div>
+                    <div id="timer-display">25:00</div>
+                    <div id="pomodoro-cycles">Ciclo 1 de 4</div>
+                    <div class="timer-controls">
+                        <button id="start-pause-button" class="control-button" aria-label="Iniciar/Pausar temporizador">
+                            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                            <svg id="pause-icon" viewBox="0 0 24 24" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+                        </button>
+                    </div>
+                    <div id="break-options">
+                        <button id="play-game-btn" class="btn">Jugar Minijuego</button>
+                    </div>
+                    <div id="next-exercise">
+                        <h4>Próximo Ejercicio</h4>
+                        <p>Ninguno programado.</p>
+                    </div>
+                    <div class="global-controls">
+                         <button id="reset-button" class="control-button" aria-label="Reiniciar rutina">
+                            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>
+                        </button>
+                        <button id="mute-button" class="control-button" aria-label="Silenciar/Activar sonido">
+                            <svg id="volume-on-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+                            <svg id="volume-off-icon" viewBox="0 0 24 24" style="display: none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path></svg>
+                        </button>
+                    </div>
+                    <button id="change-routine-btn" class="btn btn-secondary" style="margin-top: 20px;">Cambiar Rutina</button>
+                    <!-- Panel de depuración (oculto por defecto) -->
+                    <div id="debug-panel">
+                        <h4>DEV: Debug Panel</h4>
+                        <div class="debug-controls">
+                            <button id="debug-work" class="btn">Forzar Trabajo</button>
+                            <button id="debug-short" class="btn">Forzar D. Corto</button>
+                            <button id="debug-long" class="btn">Forzar D. Largo</button>
+                            <button id="debug-end" class="btn">Forzar Fin Rutina</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Rutinas -->
+            <div id="routines-tab" class="tab-content">
+                <section>
+                    <h3>Crear/Editar Rutina</h3>
+                    <div class="form-group">
+                        <label for="routine-name">Nombre de la Rutina</label>
+                        <input type="text" id="routine-name" placeholder="Ej: Foco Mañanero">
+                    </div>
+
+                    <h4>Añadir Snack de Ejercicio</h4>
+                    <div class="form-group">
+                        <label for="exercise-name">Nombre del Ejercicio</label>
+                        <input type="text" id="exercise-name" placeholder="Ej: Sentadillas">
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-sets">Series</label>
+                        <input type="number" id="exercise-sets" value="3" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-reps">Repeticiones</label>
+                        <input type="number" id="exercise-reps" value="12" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>¿Cuándo hacerlo?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="short-break" name="break-time" value="short" checked>
+                            <label for="short-break">Descanso Corto</label>
+                            <input type="radio" id="long-break" name="break-time" value="long">
+                            <label for="long-break">Descanso Largo</label>
+                        </div>
+                    </div>
+                    <button id="add-exercise-btn" class="btn btn-secondary">Añadir Ejercicio</button>
+                    <div id="current-routine-exercises"></div>
+                    <button id="save-routine-btn" class="btn">Guardar Rutina</button>
+                </section>
+                
+                <hr>
+
+                <section>
+                    <h3>Mis Rutinas</h3>
+                    <div id="routines-list">
+                        <p>Aún no has guardado ninguna rutina.</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Pestaña de Juegos -->
+            <div id="games-tab" class="tab-content">
+                <h3>Minijuegos de Descanso</h3>
+                <div class="games-grid">
+                    <div class="game-card" data-game="snake">
+                        <svg class="game-icon" viewBox="0 0 24 24"><path d="M5.33,18.67C4.13,18.67 3.14,17.68 3.14,16.48C3.14,15.28 4.13,14.29 5.33,14.29C6.53,14.29 7.52,15.28 7.52,16.48C7.52,17.68 6.53,18.67 5.33,18.67M12.74,8.57C12.74,6.26 12.1,4.12 10.87,2.33C12.66,2.33 14.45,2.97 15.96,4.2L17.75,2.41C16.1,1.13 14.17,0.14 12.1,0.14C10.03,0.14 8.1,1.13 6.45,2.41L8.24,4.2C9.47,2.97 10.55,2.33 10.55,2.33C9.32,4.12 8.68,6.26 8.68,8.57C8.68,12.23 11.69,15.24 15.35,15.24V17.03H12.74V22.06H14.53V18.97H18.97V17.03C20.48,16.14 21.47,14.49 21.47,12.6C21.47,9.94 19.33,7.8 16.67,7.8C16.13,7.8 15.6,7.97 15.1,8.24C14.54,7.02 13.56,6.04 12.38,5.48C12.6,6.47 12.74,7.55 12.74,8.57Z"></path></svg>
+                        <h4>Snake</h4>
+                    </div>
+                    <div class="game-card" data-game="pong">
+                        <svg class="game-icon" viewBox="0 0 24 24"><path d="M21,6H23V8H21V6M21,10H23V12H21V10M1,8H3V6H1V8M1,12H3V10H1V12M21,14H23V16H21V14M1,16H3V14H1V16M1,4H3V2H1V4M21,2H23V4H21V2M1,20H3V18H1V20M21,18H23V20H21V18M4,2V22H6V2H4M18,2V22H20V2H18Z"></path></svg>
+                        <h4>Pong</h4>
+                    </div>
+                    <div class="game-card" data-game="tic-tac-toe">
+                        <svg class="game-icon" viewBox="0 0 24 24"><path d="M6,6V8H8V6H6M10,6V8H12V6H10M14,6V8H16V6H14M6,10V12H8V10H6M10,10V12H12V10H10M14,10V12H16V10H14M6,14V16H8V14H6M10,14V16H12V14H10M14,14V16H16V14H14M4,4V18H18V4H4Z"></path></svg>
+                        <h4>Tres en Raya</h4>
+                    </div>
+                    <div class="game-card" data-game="memory">
+                        <svg class="game-icon" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7.07,18.28C7.5,17.38 8.5,16.5 9.5,16.5C10.5,16.5 11.5,17.38 11.93,18.28C11.22,18.73 10.39,19 9.5,19C8.61,19 7.78,18.73 7.07,18.28M12,17.5C10.5,17.5 9.25,16.42 9.07,15H14.93C14.75,16.42 13.5,17.5 12,17.5M14.5,16.5C15.5,16.5 16.5,17.38 16.93,18.28C16.22,18.73 15.39,19 14.5,19C13.61,19 12.78,18.73 12.07,18.28C12.5,17.38 13.5,16.5 14.5,16.5M16.14,12.25C15.68,11.72 15.09,11.33 14.5,11.14C15.09,10.95 15.68,10.56 16.14,10.03C16.6,9.5 16.9,8.81 17,8C16.9,7.19 16.6,6.5 16.14,5.97C15.68,5.44 15.09,5.05 14.5,4.86C14.5,5.55 14.28,6.16 13.86,6.7C13.45,7.22 12.88,7.57 12.2,7.74C12.77,8.21 13.23,8.8 13.54,9.5C13.69,9.85 13.77,10.22 13.77,10.61C13.77,11.41 13.47,12.13 12.86,12.74C12.25,13.35 11.53,13.65 10.73,13.65C9.93,13.65 9.21,13.35 8.6,12.74C8,12.13 7.7,11.41 7.7,10.61C7.7,10.22 7.78,9.85 7.93,9.5C8.24,8.8 8.7,8.21 9.27,7.74C8.59,7.57 8.02,7.22 7.61,6.7C7.19,6.16 6.97,5.55 6.97,4.86C6.38,5.05 5.79,5.44 5.33,5.97C4.87,6.5 4.57,7.19 4.46,8C4.57,8.81 4.87,9.5 5.33,10.03C5.79,10.56 6.38,10.95 6.97,11.14C6.38,11.33 5.79,11.72 5.33,12.25C4.87,12.78 4.57,13.47 4.46,14.25H19C19,13.47 18.7,12.78 18.24,12.25C17.78,11.72 17.19,11.33 16.6,11.14C17.19,10.95 17.78,10.56 18.24,10.03C18.7,9.5 19,8.81 19,8C19,7.19 18.7,6.5 18.24,5.97C17.78,5.44 17.19,5.05 16.6,4.86C17.19,5.05 17.78,5.44 18.24,5.97C18.7,6.5 19,7.19 19,8C19,8.81 18.7,9.5 18.24,10.03C17.78,10.56 17.19,10.95 16.6,11.14C17.19,11.33 17.78,11.72 18.24,12.25C18.7,12.78 19,13.47 19,14.25H16.14V12.25Z"></path></svg>
+                        <h4>Memoria</h4>
+                    </div>
+                    <div class="game-card" data-game="clicker">
+                        <svg class="game-icon" viewBox="0 0 24 24"><path d="M12.2,21.6L10.8,23L5,17.2V11.5L11,5.5L12.4,6.9L11,8.3V16.3L12.2,17.5M5.9,23L4.5,21.6L15.3,10.8L12,7.5L7.4,12.1L8.8,13.5L12,10.3L16.7,15L13.7,18L10.3,14.6L5.9,19V23M17,14L14.7,11.7L18.9,7.5L21.2,9.8L17,14M9.5,4A1.5,1.5 0 0,0 8,5.5A1.5,1.5 0 0,0 9.5,7A1.5,1.5 0 0,0 11,5.5A1.5,1.5 0 0,0 9.5,4M5.5,8A1.5,1.5 0 0,0 4,9.5A1.5,1.5 0 0,0 5.5,11A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 5.5,8M2,13.5A1.5,1.5 0 0,0 0.5,15A1.5,1.5 0 0,0 2,16.5A1.5,1.5 0 0,0 3.5,15A1.5,1.5 0 0,0 2,13.5Z"></path></svg>
+                        <h4>Clicker</h4>
+                    </div>
+                </div>
+                <button id="random-game-btn" class="btn btn-secondary">Juego Aleatorio</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Post-Rutina -->
+    <div id="end-routine-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>¡Rutina Completada!</h2>
+            <p>¿Qué te gustaría hacer ahora?</p>
+            <button id="repeat-routine-btn" class="btn">Repetir Rutina</button>
+            <button id="choose-another-btn" class="btn btn-secondary">Elegir Otra</button>
+            <button id="random-routine-btn" class="btn btn-secondary">Rutina Aleatoria</button>
+        </div>
+    </div>
+
+    <!-- Modal de selección de rutina -->
+    <div id="select-routine-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Seleccionar Rutina</h2>
+            <div id="modal-routines-list"></div>
+            <button id="cancel-select-routine-btn" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación genérico -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="confirm-modal-title">¿Estás seguro?</h2>
+            <p id="confirm-modal-text"></p>
+            <button id="confirm-modal-yes-btn" class="btn">Sí</button>
+            <button id="confirm-modal-no-btn" class="btn btn-secondary">No</button>
+        </div>
+    </div>
+
+    <!-- Modal de Juegos -->
+    <div id="game-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="game-title"></h2>
+            <div id="game-container"></div>
+            <button id="close-game-btn" class="btn btn-secondary">Cerrar Juego</button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos del DOM
+            const timerDisplay = document.getElementById('timer-display');
+            const timerStatus = document.getElementById('timer-status');
+            const pomodoroCyclesDisplay = document.getElementById('pomodoro-cycles');
+            const nextExerciseDisplay = document.getElementById('next-exercise');
+            const startPauseBtn = document.getElementById('start-pause-button');
+            const resetBtn = document.getElementById('reset-button');
+            const muteBtn = document.getElementById('mute-button');
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            const volumeOnIcon = document.getElementById('volume-on-icon');
+            const volumeOffIcon = document.getElementById('volume-off-icon');
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const breakOptions = document.getElementById('break-options');
+            
+            // Elementos de Rutinas
+            const routineNameInput = document.getElementById('routine-name');
+            const exerciseNameInput = document.getElementById('exercise-name');
+            const exerciseSetsInput = document.getElementById('exercise-sets');
+            const exerciseRepsInput = document.getElementById('exercise-reps');
+            const addExerciseBtn = document.getElementById('add-exercise-btn');
+            const saveRoutineBtn = document.getElementById('save-routine-btn');
+            const currentRoutineExercisesContainer = document.getElementById('current-routine-exercises');
+            const routinesListContainer = document.getElementById('routines-list');
+            const changeRoutineBtn = document.getElementById('change-routine-btn');
+
+            // Modales
+            const endRoutineModal = document.getElementById('end-routine-modal');
+            const repeatRoutineBtn = document.getElementById('repeat-routine-btn');
+            const chooseAnotherBtn = document.getElementById('choose-another-btn');
+            const randomRoutineBtn = document.getElementById('random-routine-btn');
+
+            const selectRoutineModal = document.getElementById('select-routine-modal');
+            const modalRoutinesList = document.getElementById('modal-routines-list');
+            const cancelSelectRoutineBtn = document.getElementById('cancel-select-routine-btn');
+
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmModalText = document.getElementById('confirm-modal-text');
+            const confirmModalYesBtn = document.getElementById('confirm-modal-yes-btn');
+            const confirmModalNoBtn = document.getElementById('confirm-modal-no-btn');
+            let confirmCallback = null;
+            
+            // Elementos de Juegos
+            const gamesGrid = document.querySelector('.games-grid');
+            const randomGameBtn = document.getElementById('random-game-btn');
+            const playGameBtn = document.getElementById('play-game-btn');
+            const gameModal = document.getElementById('game-modal');
+            const gameTitle = document.getElementById('game-title');
+            const gameContainer = document.getElementById('game-container');
+            const closeGameBtn = document.getElementById('close-game-btn');
+            let activeGame = null;
+
+            // Panel de depuración
+            const debugPanel = document.getElementById('debug-panel');
+            const debugWorkBtn = document.getElementById('debug-work');
+            const debugShortBtn = document.getElementById('debug-short');
+            const debugLongBtn = document.getElementById('debug-long');
+            const debugEndBtn = document.getElementById('debug-end');
+            
+            // Estado de la aplicación
+            let timer;
+            let totalTime = 25 * 60;
+            let timeLeft = totalTime;
+            let isRunning = false;
+            let isMuted = false;
+            let mode = 'work'; // work, shortBreak, longBreak
+            let pomodoroCount = 0; // Pomodoros completados en el ciclo actual
+            const pomodorosPerCycle = 4;
+
+            let routines = [];
+            let currentRoutine = null;
+            let currentTempRoutine = { name: '', exercises: [] };
+
+            // Audio
+            let audioCtx;
+            
+            // Inicialización
+            const init = () => {
+                loadRoutinesFromStorage();
+                renderRoutinesList();
+                updateDisplay();
+                updatePomodoroCyclesDisplay();
+                checkForDebugMode();
+            };
+
+            // --- LÓGICA DEL TEMPORIZADOR ---
+
+            const startTimer = () => {
+                if (isRunning) return;
+                if (!currentRoutine) {
+                    showError("Por favor, selecciona o crea una rutina para empezar.");
+                    return;
+                }
+                isRunning = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                
+                timer = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        playSound();
+                        switchMode();
+                    }
+                }, 1000);
+            };
+
+            const pauseTimer = () => {
+                isRunning = false;
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+                clearInterval(timer);
+            };
+
+            const switchMode = () => {
+                if (mode === 'work') {
+                    pomodoroCount++;
+                    if (pomodoroCount % pomodorosPerCycle === 0) {
+                        mode = 'longBreak';
+                        totalTime = 15 * 60;
+                        timerStatus.textContent = "Descanso Largo";
+                    } else {
+                        mode = 'shortBreak';
+                        totalTime = 5 * 60;
+                        timerStatus.textContent = "Descanso Corto";
+                    }
+                    breakOptions.style.display = 'block'; // Mostrar opciones en descanso
+                } else { // Si está en descanso
+                    breakOptions.style.display = 'none'; // Ocultar opciones al volver a trabajo
+                    if (mode === 'longBreak' && pomodoroCount >= pomodorosPerCycle) {
+                         // Fin del ciclo completo
+                         pomodoroCount = 0;
+                         showEndRoutineModal();
+                         return; // IMPORTANTE: Detener ejecución para esperar la decisión del modal
+                    }
+                    mode = 'work';
+                    totalTime = 25 * 60;
+                    timerStatus.textContent = `Trabajo - ${currentRoutine.name}`;
+                }
+                
+                timeLeft = totalTime;
+                isRunning = false;
+                updateDisplay();
+                updatePomodoroCyclesDisplay();
+                updateNextExerciseDisplay();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            };
+            
+            const resetRoutine = () => {
+                if (!currentRoutine) return;
+                pauseTimer();
+                mode = 'work';
+                pomodoroCount = 0;
+                totalTime = 25 * 60;
+                timeLeft = totalTime;
+                timerStatus.textContent = `Trabajo - ${currentRoutine.name}`;
+                updateDisplay();
+                updatePomodoroCyclesDisplay();
+                updateNextExerciseDisplay();
+                breakOptions.style.display = 'none';
+            }
+
+            const updateDisplay = () => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timerDisplay.textContent = display;
+                document.title = `${display} - ${timerStatus.textContent}`;
+            };
+            
+            const updatePomodoroCyclesDisplay = () => {
+                const currentCycle = (pomodoroCount % pomodorosPerCycle) + 1;
+                pomodoroCyclesDisplay.textContent = `Ciclo ${currentCycle} de ${pomodorosPerCycle}`;
+            };
+            
+            const updateNextExerciseDisplay = () => {
+                 if (!currentRoutine || currentRoutine.exercises.length === 0) {
+                    nextExerciseDisplay.innerHTML = `<h4>Próximo Ejercicio</h4><p>Ninguno programado.</p>`;
+                    return;
+                }
+                
+                const nextBreakType = pomodoroCount % pomodorosPerCycle === (pomodorosPerCycle -1) ? 'long' : 'short';
+                
+                let exerciseForNextBreak = null;
+                if (mode === 'work') {
+                   nextExerciseDisplay.style.display = 'block';
+                   exerciseForNextBreak = currentRoutine.exercises.find(ex => ex.when === nextBreakType);
+                } else { // si estamos en descanso, ocultamos el proximo ejercicio
+                   nextExerciseDisplay.style.display = 'none';
+                   exerciseForNextBreak = null;
+                }
+                
+                if (exerciseForNextBreak) {
+                    nextExerciseDisplay.innerHTML = `
+                        <h4>Próximo Ejercicio (${nextBreakType === 'short' ? 'Desc. Corto' : 'Desc. Largo'})</h4>
+                        <p>${exerciseForNextBreak.name} - ${exerciseForNextBreak.sets} series x ${exerciseForNextBreak.reps} reps</p>
+                    `;
+                } else {
+                     nextExerciseDisplay.innerHTML = `<h4>Próximo Ejercicio</h4><p>Ninguno para el siguiente descanso.</p>`;
+                }
+            };
+            
+            // --- LÓGICA DE SONIDO ---
+
+            const playSound = () => {
+                if (isMuted) return;
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) {
+                        console.error("Web Audio API is not supported in this browser");
+                        return;
+                    }
+                }
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            };
+
+            const toggleMute = () => {
+                isMuted = !isMuted;
+                volumeOnIcon.style.display = isMuted ? 'none' : 'block';
+                volumeOffIcon.style.display = isMuted ? 'block' : 'none';
+            };
+
+            // --- LÓGICA DE RUTINAS Y EJERCICIOS ---
+            
+            const addExerciseToTempRoutine = () => {
+                const name = exerciseNameInput.value.trim();
+                const sets = exerciseSetsInput.value;
+                const reps = exerciseRepsInput.value;
+                const when = document.querySelector('input[name="break-time"]:checked').value;
+
+                if (!name) {
+                    showError('Por favor, introduce un nombre para el ejercicio.');
+                    return;
+                }
+                
+                currentTempRoutine.exercises.push({ id: Date.now(), name, sets, reps, when });
+                renderCurrentTempRoutineExercises();
+                
+                // Limpiar campos
+                exerciseNameInput.value = '';
+            };
+            
+            const renderCurrentTempRoutineExercises = () => {
+                if (currentTempRoutine.exercises.length === 0) {
+                    currentRoutineExercisesContainer.innerHTML = '';
+                    return;
+                }
+                
+                currentRoutineExercisesContainer.innerHTML = `
+                    <h4>Ejercicios en esta rutina:</h4>
+                    ${currentTempRoutine.exercises.map(ex => `
+                        <div class="list-item">
+                            <span>${ex.name} (${ex.sets}x${ex.reps}) - ${ex.when === 'short' ? 'D. Corto' : 'D. Largo'}</span>
+                            <button class="delete-btn" data-id="${ex.id}">&times;</button>
+                        </div>
+                    `).join('')}
+                `;
+            };
+
+            const deleteExerciseFromTempRoutine = (id) => {
+                currentTempRoutine.exercises = currentTempRoutine.exercises.filter(ex => ex.id !== id);
+                renderCurrentTempRoutineExercises();
+            };
+
+            const saveRoutine = () => {
+                const name = routineNameInput.value.trim();
+                if (!name) {
+                    showError('Por favor, introduce un nombre para la rutina.');
+                    return;
+                }
+                currentTempRoutine.name = name;
+                
+                const existingIndex = routines.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
+                if(existingIndex > -1) {
+                    // Actualizar rutina existente
+                    routines[existingIndex] = { ...currentTempRoutine };
+                } else {
+                    // Añadir nueva rutina
+                    routines.push({ ...currentTempRoutine });
+                }
+                
+                saveRoutinesToStorage();
+                renderRoutinesList();
+                
+                // Limpiar
+                routineNameInput.value = '';
+                currentTempRoutine = { name: '', exercises: [] };
+                renderCurrentTempRoutineExercises();
+            };
+            
+            const loadRoutine = (routineName) => {
+                const routine = routines.find(r => r.name === routineName);
+                if (routine) {
+                    currentRoutine = { ...routine };
+                    pauseTimer();
+                    mode = 'work';
+                    pomodoroCount = 0;
+                    totalTime = 25 * 60;
+                    timeLeft = totalTime;
+                    timerStatus.textContent = `Trabajo - ${currentRoutine.name}`;
+                    updateDisplay();
+                    updatePomodoroCyclesDisplay();
+                    updateNextExerciseDisplay();
+                    switchTab('timer');
+                }
+            };
+            
+            const editRoutine = (routineName) => {
+                 const routine = routines.find(r => r.name === routineName);
+                 if (routine) {
+                    routineNameInput.value = routine.name;
+                    currentTempRoutine = JSON.parse(JSON.stringify(routine)); // Deep copy
+                    renderCurrentTempRoutineExercises();
+                    switchTab('routines');
+                 }
+            };
+            
+            const deleteRoutine = (routineName) => {
+                showConfirmationModal(`¿Estás seguro de que quieres eliminar la rutina "${routineName}"?`, () => {
+                    routines = routines.filter(r => r.name !== routineName);
+                    if (currentRoutine && currentRoutine.name === routineName) {
+                        currentRoutine = null;
+                        resetRoutine();
+                         timerStatus.textContent = "Elige una rutina para empezar";
+                    }
+                    saveRoutinesToStorage();
+                    renderRoutinesList();
+                });
+            };
+
+            const renderRoutinesList = () => {
+                if (routines.length === 0) {
+                    routinesListContainer.innerHTML = '<p>Aún no has guardado ninguna rutina.</p>';
+                    return;
+                }
+                routinesListContainer.innerHTML = routines.map(r => `
+                    <div class="list-item">
+                        <span class="list-item-info" data-name="${r.name}">${r.name}</span>
+                        <div>
+                            <button class="control-button" style="width:35px;height:35px;" onclick="editRoutineProxy('${r.name}')" title="Editar Rutina">
+                               <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+                            </button>
+                            <button class="control-button" style="width:35px;height:35px;" onclick="deleteRoutineProxy('${r.name}')" title="Eliminar Rutina">
+                               <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            };
+
+            // --- LÓGICA DE NAVEGACIÓN Y MODAL ---
+
+            const switchTab = (tabName) => {
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            };
+            
+            const showEndRoutineModal = () => {
+                endRoutineModal.classList.add('visible');
+            };
+            
+            const hideEndRoutineModal = () => {
+                endRoutineModal.classList.remove('visible');
+            };
+            
+            // --- MODALES GENÉRICOS ---
+            
+            const showConfirmationModal = (text, callback) => {
+                confirmModalText.textContent = text;
+                confirmCallback = callback;
+                confirmModal.classList.add('visible');
+            };
+
+            const hideConfirmationModal = () => {
+                confirmModal.classList.remove('visible');
+                confirmCallback = null;
+            };
+            
+            const openRoutineSelectorModal = () => {
+                if (routines.length === 0) {
+                    showError("No hay rutinas guardadas para seleccionar.");
+                    return;
+                }
+                modalRoutinesList.innerHTML = routines.map(r => 
+                    `<button class="btn" data-name="${r.name}">${r.name}</button>`
+                ).join('');
+                selectRoutineModal.classList.add('visible');
+            };
+
+            const hideRoutineSelectorModal = () => {
+                selectRoutineModal.classList.remove('visible');
+            };
+
+            // --- MANEJO DE ERRORES / NOTIFICACIONES ---
+            const showError = (message) => {
+                timerStatus.textContent = message;
+                timerStatus.style.color = 'var(--accent-color)';
+                setTimeout(() => {
+                    timerStatus.style.color = '#a0a0a0';
+                     if (currentRoutine) {
+                        timerStatus.textContent = `Trabajo - ${currentRoutine.name}`;
+                    } else {
+                        timerStatus.textContent = "Elige una rutina para empezar";
+                    }
+                }, 3000);
+            };
+
+            // --- PERSISTENCIA (LocalStorage) ---
+
+            const saveRoutinesToStorage = () => {
+                localStorage.setItem('pomodoroRoutines', JSON.stringify(routines));
+            };
+
+            const loadRoutinesFromStorage = () => {
+                const storedRoutines = localStorage.getItem('pomodoroRoutines');
+                if (storedRoutines) {
+                    routines = JSON.parse(storedRoutines);
+                }
+            };
+            
+            // --- LÓGICA DE JUEGOS ---
+
+            const games = {
+                'snake': { name: 'Snake', init: initSnake },
+                'pong': { name: 'Pong', init: initPong },
+                'tic-tac-toe': { name: 'Tres en Raya', init: initTicTacToe },
+                'memory': { name: 'Memoria', init: initMemoryGame },
+                'clicker': { name: 'Clicker', init: initClickerGame }
+            };
+
+            function launchGame(gameId) {
+                if (activeGame && activeGame.stop) {
+                    activeGame.stop();
+                }
+                const game = games[gameId];
+                if (game) {
+                    gameTitle.textContent = game.name;
+                    gameContainer.innerHTML = '';
+                    activeGame = game.init(gameContainer); // Guardar la referencia al juego activo
+                    gameModal.classList.add('visible');
+                }
+            }
+            
+            function closeGame() {
+                if (activeGame && activeGame.stop) {
+                    activeGame.stop();
+                    activeGame = null;
+                }
+                gameModal.classList.remove('visible');
+            }
+
+            // --- EVENT LISTENERS ---
+
+            startPauseBtn.addEventListener('click', () => {
+                if (isRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                showConfirmationModal('¿Quieres reiniciar la rutina actual desde el principio?', () => {
+                    resetRoutine();
+                });
+            });
+            muteBtn.addEventListener('click', toggleMute);
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+            
+            addExerciseBtn.addEventListener('click', addExerciseToTempRoutine);
+            saveRoutineBtn.addEventListener('click', saveRoutine);
+            
+            currentRoutineExercisesContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const id = parseInt(e.target.dataset.id, 10);
+                    deleteExerciseFromTempRoutine(id);
+                }
+            });
+
+            routinesListContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('list-item-info')) {
+                    const name = e.target.dataset.name;
+                    loadRoutine(name);
+                }
+            });
+            
+            // Listeners del Modal de Fin de Rutina
+            endRoutineModal.addEventListener('click', (e) => {
+                if (e.target === endRoutineModal) hideEndRoutineModal();
+            });
+            
+            repeatRoutineBtn.addEventListener('click', () => {
+                hideEndRoutineModal();
+                resetRoutine();
+                startTimer();
+            });
+            
+            chooseAnotherBtn.addEventListener('click', () => {
+                hideEndRoutineModal();
+                switchTab('routines');
+            });
+
+            randomRoutineBtn.addEventListener('click', () => {
+                if(routines.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * routines.length);
+                    loadRoutine(routines[randomIndex].name);
+                    startTimer();
+                } else {
+                    showError("No hay rutinas guardadas para elegir una al azar.");
+                }
+                hideEndRoutineModal();
+            });
+            
+            // Listeners del modal de confirmación
+            confirmModalYesBtn.addEventListener('click', () => {
+                if (confirmCallback) {
+                    confirmCallback();
+                }
+                hideConfirmationModal();
+            });
+            confirmModalNoBtn.addEventListener('click', hideConfirmationModal);
+            
+            // Listeners del modal de selección de rutina
+            changeRoutineBtn.addEventListener('click', openRoutineSelectorModal);
+            cancelSelectRoutineBtn.addEventListener('click', hideRoutineSelectorModal);
+            modalRoutinesList.addEventListener('click', (e) => {
+                if(e.target.tagName === 'BUTTON') {
+                    const routineName = e.target.dataset.name;
+                    hideRoutineSelectorModal();
+                    showConfirmationModal(`¿Cambiar a la rutina "${routineName}"? Se perderá el progreso actual.`, () => {
+                         loadRoutine(routineName);
+                    });
+                }
+            });
+
+            // Listeners de Juegos
+            gamesGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.game-card');
+                if (card) {
+                    launchGame(card.dataset.game);
+                }
+            });
+            
+            playGameBtn.addEventListener('click', () => {
+                switchTab('games');
+            });
+            
+            randomGameBtn.addEventListener('click', () => {
+                const gameIds = Object.keys(games);
+                const randomId = gameIds[Math.floor(Math.random() * gameIds.length)];
+                launchGame(randomId);
+            });
+            
+            closeGameBtn.addEventListener('click', closeGame);
+
+            // --- LÓGICA DE DEPURACIÓN ---
+            const checkForDebugMode = () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('debug') === 'true') {
+                    debugPanel.style.display = 'block';
+                }
+            };
+            
+            const forceState = (newMode, newTime, newStatus) => {
+                pauseTimer();
+                mode = newMode;
+                totalTime = newTime;
+                timeLeft = totalTime;
+                timerStatus.textContent = newStatus;
+                updateDisplay();
+                updatePomodoroCyclesDisplay();
+                updateNextExerciseDisplay();
+                breakOptions.style.display = (newMode !== 'work') ? 'block' : 'none';
+            };
+
+            debugWorkBtn.addEventListener('click', () => {
+                pomodoroCount = 0;
+                forceState('work', 25 * 60, 'Trabajo (Debug)');
+            });
+            debugShortBtn.addEventListener('click', () => forceState('shortBreak', 5 * 60, 'Descanso Corto (Debug)'));
+            debugLongBtn.addEventListener('click', () => forceState('longBreak', 15 * 60, 'Descanso Largo (Debug)'));
+            debugEndBtn.addEventListener('click', showEndRoutineModal);
+
+            // Proxies para llamadas desde HTML
+            window.editRoutineProxy = editRoutine;
+            window.deleteRoutineProxy = deleteRoutine;
+
+            // --- LÓGICA DETALLADA DE JUEGOS ---
+
+            function initClickerGame(container) {
+                let score = 0;
+                let time = 10;
+                let gameTimer;
+                container.innerHTML = `
+                    <p>Haz clic en el botón lo más rápido que puedas en 10 segundos.</p>
+                    <h3 class="game-status" id="clicker-score">Puntuación: 0</h3>
+                    <p id="clicker-time">Tiempo: 10</p>
+                    <button id="clicker-btn" class="btn">¡Clic!</button>
+                    <button id="clicker-reset" class="btn btn-secondary" style="display: none;">Jugar de Nuevo</button>
+                `;
+                const scoreDisplay = document.getElementById('clicker-score');
+                const timeDisplay = document.getElementById('clicker-time');
+                const clickBtn = document.getElementById('clicker-btn');
+                const resetBtn = document.getElementById('clicker-reset');
+
+                resetBtn.addEventListener('click', () => initClickerGame(container));
+
+                const clickHandler = () => {
+                    if (time > 0) {
+                        score++;
+                        scoreDisplay.textContent = `Puntuación: ${score}`;
+                        if (score === 1) { // Iniciar al primer clic
+                             gameTimer = setInterval(() => {
+                                time--;
+                                timeDisplay.textContent = `Tiempo: ${time}`;
+                                if (time <= 0) {
+                                    clearInterval(gameTimer);
+                                    clickBtn.disabled = true;
+                                    clickBtn.style.display = 'none';
+                                    resetBtn.style.display = 'block';
+                                    scoreDisplay.textContent = `Puntuación Final: ${score}`;
+                                }
+                            }, 1000);
+                        }
+                    }
+                };
+
+                clickBtn.addEventListener('click', clickHandler);
+                
+                return { stop: () => {
+                    clearInterval(gameTimer);
+                    clickBtn.removeEventListener('click', clickHandler);
+                }};
+            }
+
+            function initTicTacToe(container) {
+                let board = ['', '', '', '', '', '', '', '', ''];
+                let currentPlayer = 'X';
+                let isGameOver = false;
+
+                function render() {
+                    container.innerHTML = `
+                        <p class="game-status" id="ttt-status">Es tu turno (X)</p>
+                        <div class="tic-tac-toe-board">
+                            ${board.map((cell, index) => `<div class="ttt-cell" data-index="${index}">${cell}</div>`).join('')}
+                        </div>
+                        <button id="ttt-reset" class="btn btn-secondary">Reiniciar</button>
+                    `;
+                    container.querySelector('#ttt-reset').addEventListener('click', () => initTicTacToe(container));
+                }
+                
+                const winningConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ];
+
+                function checkWinner() {
+                    for (let i = 0; i < winningConditions.length; i++) {
+                        const [a, b, c] = winningConditions[i];
+                        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                            return board[a];
+                        }
+                    }
+                    return board.includes('') ? null : 'Tie';
+                }
+                
+                function handleResult(winner) {
+                    isGameOver = true;
+                    const statusEl = container.querySelector('#ttt-status');
+                    if (winner === 'Tie') statusEl.textContent = '¡Es un empate!';
+                    else statusEl.textContent = `¡Ha ganado ${winner}!`;
+                }
+
+                function aiMove() {
+                    if (isGameOver) return;
+                    let availableSpots = board.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+                    if (availableSpots.length === 0) return;
+
+                    const move = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+                    board[move] = 'O';
+                    currentPlayer = 'X';
+                    render();
+                    container.querySelector('#ttt-status').textContent = 'Es tu turno (X)';
+
+                    const winner = checkWinner();
+                    if (winner) handleResult(winner);
+                }
+                
+                const boardClickHandler = (e) => {
+                    if (!e.target.classList.contains('ttt-cell') || isGameOver) return;
+                    const index = parseInt(e.target.dataset.index);
+                    if (board[index] === '' && currentPlayer === 'X') {
+                        board[index] = 'X';
+                        currentPlayer = 'O';
+                        render();
+                        
+                        const winner = checkWinner();
+                        if (winner) {
+                            handleResult(winner);
+                        } else {
+                           container.querySelector('#ttt-status').textContent = 'Turno de la IA...';
+                           setTimeout(aiMove, 500);
+                        }
+                    }
+                };
+
+                container.addEventListener('click', boardClickHandler);
+                render();
+                
+                return { stop: () => {
+                    container.removeEventListener('click', boardClickHandler);
+                }};
+            }
+             
+            function initSnake(container){
+                container.innerHTML = `
+                    <p class="game-status" id="snake-score">Puntuación: 0</p>
+                    <div style="position: relative; width: 100%; max-width: 320px; margin: auto;">
+                         <canvas id="snake-canvas" width="320" height="320"></canvas>
+                         <div class="game-overlay" id="snake-overlay" style="display: none;">
+                            <h2>¡Fin del Juego!</h2>
+                            <p id="snake-final-score"></p>
+                            <button id="snake-restart" class="btn">Jugar de Nuevo</button>
+                        </div>
+                    </div>
+                    <div class="snake-controls">
+                        <button id="snake-up" class="btn">▲</button>
+                        <button id="snake-left" class="btn">◀</button>
+                        <button id="snake-right" class="btn">▶</button>
+                        <button id="snake-down" class="btn">▼</button>
+                    </div>
+                `;
+                const canvas = document.getElementById('snake-canvas');
+                const ctx = canvas.getContext('2d');
+                const scoreEl = document.getElementById('snake-score');
+                const overlay = document.getElementById('snake-overlay');
+                const finalScoreEl = document.getElementById('snake-final-score');
+                const restartBtn = document.getElementById('snake-restart');
+                
+                const upBtn = document.getElementById('snake-up');
+                const downBtn = document.getElementById('snake-down');
+                const leftBtn = document.getElementById('snake-left');
+                const rightBtn = document.getElementById('snake-right');
+
+                restartBtn.addEventListener('click', () => initSnake(container));
+
+                const gridSize = 20;
+                let snake = [{x: 8, y: 8}];
+                let food = {};
+                let direction = 'right';
+                let score = 0;
+                let gameOver = false;
+                let gameLoop;
+                
+                function placeFood() {
+                    food = {
+                        x: Math.floor(Math.random() * (canvas.width / gridSize)),
+                        y: Math.floor(Math.random() * (canvas.height / gridSize))
+                    };
+                }
+
+                function update() {
+                    if (gameOver) return;
+
+                    const head = {x: snake[0].x, y: snake[0].y};
+                    if (direction === 'right') head.x++;
+                    if (direction === 'left') head.x--;
+                    if (direction === 'up') head.y--;
+                    if (direction === 'down') head.y++;
+
+                    if (head.x < 0 || head.x * gridSize >= canvas.width || head.y < 0 || head.y * gridSize >= canvas.height || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                        gameOver = true;
+                        clearInterval(gameLoop);
+                        finalScoreEl.textContent = `Puntuación Final: ${score}`;
+                        overlay.style.display = 'flex';
+                        return;
+                    }
+
+                    snake.unshift(head);
+                    if (head.x === food.x && head.y === food.y) {
+                        score++;
+                        scoreEl.textContent = `Puntuación: ${score}`;
+                        placeFood();
+                    } else {
+                        snake.pop();
+                    }
+                    draw();
+                }
+
+                function draw() {
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = 'lime';
+                    snake.forEach(segment => ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2));
+
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+                }
+                
+                const keydownHandler = (e) => {
+                    const key = e.key;
+                    if (key === 'ArrowUp' && direction !== 'down') direction = 'up';
+                    else if (key === 'ArrowDown' && direction !== 'up') direction = 'down';
+                    else if (key === 'ArrowLeft' && direction !== 'right') direction = 'left';
+                    else if (key === 'ArrowRight' && direction !== 'left') direction = 'right';
+                };
+                
+                const upHandler = () => { if (direction !== 'down') direction = 'up'; };
+                const downHandler = () => { if (direction !== 'up') direction = 'down'; };
+                const leftHandler = () => { if (direction !== 'right') direction = 'left'; };
+                const rightHandler = () => { if (direction !== 'left') direction = 'right'; };
+
+                document.addEventListener('keydown', keydownHandler);
+                upBtn.addEventListener('click', upHandler);
+                downBtn.addEventListener('click', downHandler);
+                leftBtn.addEventListener('click', leftHandler);
+                rightBtn.addEventListener('click', rightHandler);
+
+                placeFood();
+                draw();
+                gameLoop = setInterval(update, 120);
+
+                return { stop: () => {
+                    clearInterval(gameLoop);
+                    document.removeEventListener('keydown', keydownHandler);
+                    upBtn.removeEventListener('click', upHandler);
+                    downBtn.removeEventListener('click', downHandler);
+                    leftBtn.removeEventListener('click', leftHandler);
+                    rightBtn.removeEventListener('click', rightHandler);
+                }};
+            }
+
+            function initPong(container){
+                container.innerHTML = `
+                    <p class="game-status" id="pong-score">0 - 0</p>
+                    <canvas id="pong-canvas" width="400" height="300"></canvas>
+                    <button id="pong-reset" class="btn btn-secondary" style="margin-top: 10px;">Reiniciar Puntuación</button>
+                `;
+                const canvas = document.getElementById('pong-canvas');
+                const ctx = canvas.getContext('2d');
+                const scoreEl = document.getElementById('pong-score');
+                const resetBtn = document.getElementById('pong-reset');
+
+                let ball = { x: canvas.width / 2, y: canvas.height / 2, dx: 3, dy: -3, radius: 7 };
+                let player = { x: 10, y: canvas.height / 2 - 40, width: 10, height: 80, score: 0 };
+                let ai = { x: canvas.width - 20, y: canvas.height / 2 - 40, width: 10, height: 80, score: 0 };
+                let gameLoop;
+                
+                function draw() {
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillRect(player.x, player.y, player.width, player.height);
+                    ctx.fillRect(ai.x, ai.y, ai.width, ai.height);
+                }
+
+                function update() {
+                    ball.x += ball.dx;
+                    ball.y += ball.dy;
+
+                    if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) ball.dy *= -1;
+
+                    if (ball.x + ball.radius > canvas.width) {
+                        player.score++;
+                        resetBall();
+                    } else if (ball.x - ball.radius < 0) {
+                        ai.score++;
+                        resetBall();
+                    }
+                    
+                    scoreEl.textContent = `${player.score} - ${ai.score}`;
+                    
+                    if (ball.dx < 0 && ball.x - ball.radius < player.x + player.width && ball.x - ball.radius > player.x && ball.y > player.y && ball.y < player.y + player.height) {
+                         ball.dx *= -1.1; 
+                    }
+                    if (ball.dx > 0 && ball.x + ball.radius > ai.x && ball.x + ball.radius < ai.x + ai.width && ball.y > ai.y && ball.y < ai.y + ai.height) {
+                         ball.dx *= -1.1;
+                    }
+                    
+                    ai.y += (ball.y - (ai.y + ai.height / 2)) * 0.1;
+                    
+                    draw();
+                }
+                
+                function resetBall() {
+                    ball.x = canvas.width / 2;
+                    ball.y = canvas.height / 2;
+                    ball.dx = (Math.random() > 0.5 ? 1 : -1) * 3;
+                    ball.dy = (Math.random() > 0.5 ? 1 : -1) * 3;
+                }
+                
+                function resetScore() {
+                    player.score = 0;
+                    ai.score = 0;
+                    resetBall();
+                }
+
+                resetBtn.addEventListener('click', resetScore);
+                
+                const moveHandler = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const y = e.touches ? e.touches[0].clientY : e.clientY;
+                    player.y = y - rect.top - player.height / 2;
+                };
+
+                const touchMoveHandler = (e) => {
+                    e.preventDefault();
+                    moveHandler(e);
+                };
+
+                canvas.addEventListener('mousemove', moveHandler);
+                canvas.addEventListener('touchmove', touchMoveHandler, { passive: false });
+                
+                gameLoop = setInterval(update, 1000 / 60);
+                
+                return { stop: () => {
+                    clearInterval(gameLoop);
+                    canvas.removeEventListener('mousemove', moveHandler);
+                    canvas.removeEventListener('touchmove', touchMoveHandler);
+                }};
+            }
+
+            function initMemoryGame(container) {
+                container.innerHTML = `<p class="game-status" id="memory-status">Encuentra las parejas</p><div class="memory-game-board"></div><button id="memory-reset" class="btn btn-secondary">Reiniciar</button>`;
+                const boardEl = container.querySelector('.memory-game-board');
+                const statusEl = container.querySelector('#memory-status');
+                container.querySelector('#memory-reset').addEventListener('click', () => initMemoryGame(container));
+
+                const emojis = ['🧠', '🔥', '🚀', '⭐', '🎯', '💡', '💪', '🏆'];
+                let cards = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
+                let flippedCards = [];
+                let matchedPairs = 0;
+                let lockBoard = false;
+
+                cards.forEach((emoji) => {
+                    const card = document.createElement('div');
+                    card.classList.add('memory-card');
+                    card.dataset.emoji = emoji;
+                    card.innerHTML = `
+                        <div class="card-face card-front"></div>
+                        <div class="card-face card-back">${emoji}</div>
+                    `;
+                    boardEl.appendChild(card);
+                });
+
+                const boardClickHandler = (e) => {
+                    const card = e.target.closest('.memory-card');
+                    if (lockBoard || !card || card.classList.contains('flipped')) return;
+
+                    card.classList.add('flipped');
+                    flippedCards.push(card);
+
+                    if (flippedCards.length === 2) {
+                        lockBoard = true;
+                        const [card1, card2] = flippedCards;
+                        
+                        if (card1.dataset.emoji === card2.dataset.emoji) {
+                            card1.classList.add('matched');
+                            card2.classList.add('matched');
+                            matchedPairs++;
+                            flippedCards = [];
+                            lockBoard = false;
+                            if (matchedPairs === emojis.length) {
+                                statusEl.textContent = "¡Has ganado!";
+                            }
+                        } else {
+                            setTimeout(() => {
+                                card1.classList.remove('flipped');
+                                card2.classList.remove('flipped');
+                                flippedCards = [];
+                                lockBoard = false;
+                            }, 1000);
+                        }
+                    }
+                };
+
+                boardEl.addEventListener('click', boardClickHandler);
+                
+                return { stop: () => {
+                    boardEl.removeEventListener('click', boardClickHandler);
+                }};
+            }
+
+
+            // Iniciar la app
+            init();
+        });
+    </script>
+</body>
+</html>
+

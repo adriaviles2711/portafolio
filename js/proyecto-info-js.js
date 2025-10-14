@@ -1,18 +1,32 @@
-// Seleccionar todos los enlaces dentro del navegador izquierdo
-const navLinks = document.querySelectorAll('#navegador-izq a');
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.secciones, #informacion');
+    const navLinks = document.querySelectorAll('#navegador-izq a');
 
-// Recorrer cada enlace para añadirle un "detector de clics" (event listener)
-navLinks.forEach(link => {
-    link.addEventListener('click', function(event) {
-        event.preventDefault(); 
+    const observerOptions = {
+        root: null,
+        rootMargin: '-40% 0px -60% 0px',
+        threshold: 0
+    };
 
-        // Buscar si ya existe un enlace con id="active" y quitárselo
-        const currentActive = document.querySelector('#navegador-izq a#active');
-        if (currentActive) {
-            currentActive.removeAttribute('id');
-        }
+    const observerCallback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.removeAttribute('id');
+                });
 
-        // Añadir el id="active" al enlace que acabamos de clicar
-        this.setAttribute('id', 'active');
+                const activeId = entry.target.id;
+                const activeLink = document.querySelector(`#navegador-izq a[href="#${activeId}"]`);
+                
+                if (activeLink) {
+                    activeLink.setAttribute('id', 'active');
+                }
+            }
+        });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    sections.forEach(section => {
+        observer.observe(section);
     });
 });
