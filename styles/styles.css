@@ -141,7 +141,7 @@ body {
     transform: translateY(-5px);
 }
 
-#presentation-pbutton {
+.reverse-button {
     transition: all 0.3s ease;
     background-color: var(--color-accent);
     border: 2px solid var(--color-accent); 
@@ -152,11 +152,11 @@ body {
     font-weight: bold;
 }
 
-#presentation-pbutton p {
+.reverse-button p {
     padding: 20px 30px;
 }
 
-#presentation-pbutton:hover {
+.reverse-button:hover {
     background-color: transparent;
     cursor: pointer;
     color: var(--color-accent);
