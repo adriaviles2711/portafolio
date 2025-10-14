@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Profesional de Aforo</title>
+    <!-- Incluimos Inter de Google Fonts y Font Awesome 6 -->
+    <link href="https://fonts.fonts.gstatic.com/s/inter/v13/UuuxPdF29uJz2N-c3t-dJ3S9.woff2" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS puro embebido (Vanilla CSS) con estilo profesional compacto y colores oscuros/claros -->
+    <style>
+        /* === Variables de Tema: Dark Mode (Hollow Knight Style, Default) === */
+        :root {
+            /* Colores Base Oscuros */
+            --hk-accent-total: #78d2cc;  /* Teal/Pale Blue Glow - Acento principal */
+            --hk-accent-men: #4c78a8;    /* Deep Blue - Hombres */
+            --hk-accent-women: #c95199;  /* Deep Purple/Pink - Mujeres */
+            
+            --bg-color: #151a1e;         /* Fondo muy oscuro */
+            --card-color: #1c2328;       /* Tarjeta ligeramente más clara */
+            --text-color: #f0f0f0;       /* Texto blanco suave */
+            --text-muted: #6e7a83;       /* Gris sutil */
+            
+            --shadow-light: rgba(0, 0, 0, 0.5);
+            --shadow-strong: rgba(0, 0, 0, 0.9);
+            --reset-color: #a84c4c;      /* Tono rojizo apagado */
+            --transition-speed: 0.3s;
+        }
+
+        /* === Variables de Tema: Light Mode (Estilo Único y Creativo) === */
+        .light-mode {
+            /* Fondo y Base */
+            --bg-color: #f3f7fa;        /* Light blue-grey background */
+            --card-color: #ffffff;      /* Pure white card */
+            --text-color: #2c3e50;      /* Dark text for contrast */
+            --text-muted: #95a5a6;      /* Muted grey */
+
+            /* Acentos */
+            --hk-accent-total: #1abc9c; /* Vivid Teal/Emerald - Main accent */
+            --hk-accent-men: #3498db;   /* Bright Blue */
+            --hk-accent-women: #e74c3c; /* Striking Red/Coral */
+            --reset-color: #f1c40f;     /* Yellow/Gold for reset (Warning) */
+
+            /* Sombras (más suaves y visibles en claro) */
+            --shadow-light: rgba(44, 62, 80, 0.05); /* Soft blue shadow */
+            --shadow-strong: rgba(44, 62, 80, 0.25); /* Enhanced Stronger shadow for 3D feel */
+        }
+
+        /* === Estilos Base === */
+        * {
+            box-sizing: border-box;
+            transition: all var(--transition-speed); 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 10px;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .main-container {
+            position: relative;
+            background-color: var(--card-color);
+            padding: 30px 20px;
+            border-radius: 12px; 
+            box-shadow: 
+                0 20px 60px var(--shadow-strong), 
+                inset 0 0 15px rgba(255, 255, 255, 0.05); 
+            max-width: 700px;
+            width: 95%;
+            margin-top: 30px; 
+            border: 2px solid var(--text-muted);
+            will-change: transform, opacity;
+            transform: rotateX(1deg) rotateY(-1deg);
+        }
+
+        .light-mode .main-container {
+            box-shadow: 
+                0 20px 60px var(--shadow-strong), 
+                inset 0 0 15px rgba(0, 0, 0, 0.03); 
+        }
+
+        /* ANIMACIÓN LOCA DE REINICIO */
+        .reset-blast {
+            animation: reset-blast 0.6s ease-out forwards;
+        }
+        @keyframes reset-blast {
+            0% { 
+                opacity: 1; 
+                transform: rotateX(1deg) rotateY(-1deg) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: rotateX(360deg) rotateY(360deg) scale(1.5); 
+                /* Se usa visibility para no afectar el layout, pero se desaparece */
+                visibility: hidden; 
+            }
+        }
+
+
+        /* --- Título y Total --- */
+        header { margin-bottom: 20px; }
+
+        h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem); 
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: var(--hk-accent-total); 
+            text-shadow: 0 0 8px rgba(120, 210, 204, 0.5); 
+            line-height: 1.1;
+        }
+        
+        .light-mode h1 { text-shadow: none; }
+
+        #totalCounter {
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--text-muted); 
+            box-shadow: inset 0 -1px 5px rgba(0, 0, 0, 0.1); 
+        }
+
+        #totalDisplay {
+            font-size: clamp(3rem, 8vw, 5rem); 
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--hk-accent-total);
+            display: block;
+            will-change: color;
+        }
+        
+        /* BARRA COMBINADA DE AFORO */
+        #combinedAuraContainer {
+            height: 15px; 
+            background-color: var(--text-muted);
+            border-radius: 8px;
+            margin: 10px auto 20px auto;
+            overflow: hidden;
+            width: 90%;
+            display: flex; /* Importante para que las barras se alineen horizontalmente */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .light-mode #combinedAuraContainer {
+             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .combined-bar-segment {
+            height: 100%;
+            transition: width 0.4s ease-out; 
+            box-shadow: 0 0 5px currentColor;
+            border-right: 1px solid var(--card-color);
+        }
+        
+        #menCombinedBar { background-color: var(--hk-accent-men); }
+        #womenCombinedBar { background-color: var(--hk-accent-women); }
+        
+        /* === GRID DE CATEGORÍAS === */
+        .category-grid {
+            display: grid;
+            gap: 15px; 
+            grid-template-columns: 1fr; 
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 600px) {
+            .category-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .category-card {
+            background-color: var(--bg-color); 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px var(--shadow-light); 
+            border: 1px solid var(--text-muted);
+            overflow: hidden;
+            will-change: transform, box-shadow; 
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 40px var(--shadow-strong); 
+        }
+        
+        .category-card h2 {
+            font-size: 1.2rem; 
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .category-icon { font-size: 1.5rem; margin-right: 5px; }
+        .men-icon { color: var(--hk-accent-men); }
+        .women-icon { color: var(--hk-accent-women); }
+
+        .category-display {
+            font-size: 3rem; 
+            font-weight: 800;
+            margin: 5px 0 10px 0;
+            display: block;
+            will-change: transform, color;
+        }
+        
+        /* --- Botones --- */
+        .button-group { display: flex; gap: 10px; margin-top: 15px; }
+
+        button {
+            flex: 1;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            color: var(--text-color);
+            outline: none;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4); 
+            transition: all 0.1s ease-out; 
+        }
+        
+        .btn-add:active, .btn-subtract:active, #globalResetButton:active {
+            transform: translateY(3px); 
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4); 
+        }
+        
+        /* Botones de Entrada (+1) */
+        .btn-add {
+            background-color: var(--hk-accent-total); 
+            box-shadow: 0 4px 0 #4d8684;
+            color: var(--bg-color);
+        }
+        .btn-add:hover { background-color: #98e2dc; }
+        
+        /* Estilos para botones de Entrada DESACTIVADOS (Aforo Completo) */
+        .btn-add:disabled {
+            background-color: #7f8c8d; /* Gris sólido */
+            color: #bdc3c7;
+            box-shadow: 0 2px 0 #6e7a83;
+            cursor: not-allowed;
+            transform: none; /* Desactivar efecto de presionado */
+        }
+        
+        /* Botones de Salida (-1) */
+        .btn-subtract {
+            background-color: var(--text-muted); 
+            color: var(--bg-color);
+            box-shadow: 0 4px 0 #57646e; 
+        }
+        .btn-subtract:hover { background-color: #8c9fae; }
+        
+        /* Estilos LIGHT MODE para botones */
+        .light-mode .btn-add { background-color: var(--hk-accent-total); color: #fff; box-shadow: 0 4px 0 #16a085; }
+        .light-mode .btn-add:hover { background-color: #48c9b0; }
+        .light-mode .btn-add:disabled { background-color: #bdc3c7; color: #95a5a6; box-shadow: 0 2px 0 #95a5a6; }
+        .light-mode .btn-subtract { background-color: #bdc3c7; color: var(--text-color); box-shadow: 0 4px 0 #7f8c8d; }
+        .light-mode .btn-subtract:hover { background-color: #aeb5b8; }
+
+
+        /* Botón de Reinicio General */
+        #globalResetButton { width: 100%; background-color: var(--reset-color); margin-top: 10px; padding: 12px; box-shadow: 0 4px 0 #803434; }
+        #globalResetButton:hover { background-color: #c96666; }
+        
+        /* Estilos LIGHT MODE para Reinicio */
+        .light-mode #globalResetButton { background-color: var(--reset-color); color: var(--text-color); box-shadow: 0 4px 0 #c7a40c; }
+        .light-mode #globalResetButton:hover { background-color: #ffd764; }
+
+        /* === ANIMACIÓN: Impacto y Flash === */
+        .impact-flash { animation: impact-flash 0.35s ease-out; }
+        @keyframes impact-flash {
+            0% { transform: scale(1); opacity: 1; text-shadow: none;}
+            30% { 
+                transform: scale(1.15); 
+                opacity: 1; 
+                color: var(--hk-accent-total); 
+                text-shadow: 0 0 15px var(--hk-accent-total); 
+            }
+            100% { transform: scale(1); opacity: 1; color: inherit; text-shadow: none; }
+        }
+
+        /* --- Secciones Adicionales --- */
+        #differenceContainer { margin-top: 15px; padding: 10px 0; border-top: 1px dashed var(--text-muted); }
+        #differenceDisplay { font-weight: 700; font-size: 1.1rem; padding: 5px; }
+        #configContainer {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid var(--hk-accent-total);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 0 10px rgba(120, 210, 204, 0.2);
+        }
+
+        #configContainer label { font-size: 0.9rem; font-weight: 600; text-align: left; }
+
+        #maxCapacityInput {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--text-muted);
+            background-color: var(--card-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .light-mode #configContainer { box-shadow: 0 0 10px rgba(26, 188, 156, 0.4); }
+
+        /* --- Toggle de Tema --- */
+        .theme-toggle-container { position: absolute; top: 10px; right: 10px; }
+
+        #themeToggle {
+            background-color: var(--card-color);
+            color: var(--text-color);
+            border: 1px solid var(--text-muted);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px var(--shadow-light);
+        }
+        #themeToggle:hover { background-color: var(--bg-color); }
+        
+    </style>
+</head>
+<body class="dark-mode"> <!-- Inicia en modo oscuro por defecto -->
+
+    <div id="appContainer" class="main-container">
+
+        <!-- TOGGLE DE TEMA -->
+        <div class="theme-toggle-container">
+            <button id="themeToggle" aria-label="Cambiar modo de tema">
+                <i class="fas fa-sun"></i> Modo Claro
+            </button>
+        </div>
+
+        <!-- CABECERA Y TOTAL -->
+        <header>
+            <h1 title="Sistema de Conteo Dinámico">
+                <i class="fas fa-users-viewfinder" style="margin-right: 10px;"></i> 
+                Contador de Aforo
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">Monitoreo de aforo y capacidad en tiempo real</p>
+        </header>
+
+        <!-- CONFIGURACIÓN DINÁMICA DE CAPACIDAD -->
+        <div id="configContainer">
+            <label for="maxCapacityInput">
+                <i class="fas fa-cogs"></i> Establecer Capacidad Máxima del Local:
+            </label>
+            <input type="number" id="maxCapacityInput" value="100" min="1" placeholder="Ej: 100">
+        </div>
+
+
+        <div id="totalCounter">
+            <small style="opacity: 0.8; font-weight: 600; color: var(--text-muted);">CONTEO TOTAL</small>
+            <span id="totalDisplay">0</span>
+        </div>
+        
+        <!-- BARRA COMBINADA DE AFORO (NUEVA) -->
+        <div id="combinedAuraContainer">
+            <div id="menCombinedBar" class="combined-bar-segment" style="width: 0%;"></div>
+            <div id="womenCombinedBar" class="combined-bar-segment" style="width: 0%;"></div>
+        </div>
+        <!-- / BARRA COMBINADA DE AFORO -->
+
+        <!-- CUERPO: CATEGORÍAS EN GRID -->
+        <div class="category-grid">
+            
+            <!-- TARJETA HOMBRES -->
+            <div id="menCard" class="category-card men-card">
+                <h2>
+                    <span class="category-icon men-icon"><i class="fas fa-male"></i></span> Hombres
+                </h2>
+                <span id="menDisplay" class="category-display" style="color: var(--hk-accent-men);">0</span>
+                
+                <div class="button-group">
+                    <button class="btn-subtract" data-category="men" data-delta="-1">
+                        <i class="fas fa-minus"></i> Salida
+                    </button>
+                    <!-- El botón de entrada se desactivará si el aforo es máximo -->
+                    <button class="btn-add" data-category="men" data-delta="1">
+                        <i class="fas fa-plus"></i> Entrada
+                    </button>
+                </div>
+            </div>
+
+            <!-- TARJETA MUJERES -->
+            <div id="womenCard" class="category-card women-card">
+                <h2>
+                    <span class="category-icon women-icon"><i class="fas fa-female"></i></span> Mujeres
+                </h2>
+                <span id="womenDisplay" class="category-display" style="color: var(--hk-accent-women);">0</span>
+
+                <div class="button-group">
+                    <button class="btn-subtract" data-category="women" data-delta="-1">
+                        <i class="fas fa-minus"></i> Salida
+                    </button>
+                    <!-- El botón de entrada se desactivará si el aforo es máximo -->
+                    <button class="btn-add" data-category="women" data-delta="1">
+                        <i class="fas fa-plus"></i> Entrada
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ÁREA DE MENSAJE TEMPORAL -->
+        <p id="messageArea" style="color: var(--hk-accent-total); font-size: 0.9rem;"></p>
+
+        <!-- SECCIÓN: DIFERENCIA DE AFORO -->
+        <div id="differenceContainer">
+            <small style="opacity: 0.8; font-weight: 600; color: var(--text-muted);">DIFERENCIA DE AFORO</small>
+            <div id="differenceDisplay" style="color: var(--hk-accent-total);">
+                El aforo está equilibrado.
+            </div>
+        </div>
+        
+        <!-- BOTÓN DE REINICIO GLOBAL -->
+        <button id="globalResetButton">
+            <i class="fas fa-redo-alt"></i> REINICIAR TODO
+        </button>
+
+    </div>
+
+    <!-- JavaScript puro embebido (Vanilla JavaScript) -->
+    <script>
+        // === Variables de Estado ===
+        let counts = {
+            men: 0,
+            women: 0,
+            total: 0
+        };
+        const MIN_COUNT = 0;
+        const THEME_STORAGE_KEY = 'theme-preference'; 
+        let MAX_CAPACITY = 100; 
+        const CAPACITY_STORAGE_KEY = 'max-capacity';
+
+        // === Referencias del DOM ===
+        const domElements = {
+            appContainer: document.getElementById('appContainer'),
+            body: document.body,
+            total: document.getElementById('totalDisplay'),
+            men: document.getElementById('menDisplay'),
+            women: document.getElementById('womenDisplay'),
+            message: document.getElementById('messageArea'),
+            countButtons: document.querySelectorAll('.button-group button'),
+            globalResetButton: document.getElementById('globalResetButton'),
+            themeToggle: document.getElementById('themeToggle'),
+            differenceDisplay: document.getElementById('differenceDisplay'), 
+            maxCapacityInput: document.getElementById('maxCapacityInput'),
+            
+            // Referencias de las nuevas barras combinadas
+            menCombinedBar: document.getElementById('menCombinedBar'), 
+            womenCombinedBar: document.getElementById('womenCombinedBar'),
+            addButtons: document.querySelectorAll('.btn-add')
+        };
+
+        // === Funciones de Tema ===
+        function updateToggleIcon(theme) {
+            const isDark = theme === 'dark';
+            domElements.themeToggle.innerHTML = isDark 
+                ? '<i class="fas fa-sun"></i> Modo Claro' 
+                : '<i class="fas fa-moon"></i> Modo Oscuro';
+        }
+
+        function toggleTheme() {
+            const isLight = domElements.body.classList.contains('light-mode');
+            if (isLight) {
+                domElements.body.classList.remove('light-mode');
+                localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+            } else {
+                domElements.body.classList.add('light-mode');
+                localStorage.setItem(THEME_STORAGE_KEY, 'light');
+            }
+            updateToggleIcon(localStorage.getItem(THEME_STORAGE_KEY) || 'dark');
+            updateVisuals(); // Forzar actualización de colores de barra si es necesario
+        }
+
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            let initialTheme = savedTheme || 'dark';
+
+            if (initialTheme === 'light') {
+                domElements.body.classList.add('light-mode');
+            } else {
+                domElements.body.classList.remove('light-mode');
+            }
+            updateToggleIcon(initialTheme);
+        }
+
+        // === Funciones de Capacidad ===
+
+        function loadMaxCapacity() {
+            const savedCapacity = localStorage.getItem(CAPACITY_STORAGE_KEY);
+            const initialCapacity = parseInt(savedCapacity) || 100;
+
+            // Cargar MAX_CAPACITY desde el input y guardar en la variable global
+            MAX_CAPACITY = (initialCapacity > 0) ? initialCapacity : 100;
+            domElements.maxCapacityInput.value = MAX_CAPACITY;
+        }
+
+        function handleMaxCapacityChange() {
+            const value = parseInt(domElements.maxCapacityInput.value);
+            
+            // Validar y actualizar
+            if (value > 0) {
+                MAX_CAPACITY = value;
+                localStorage.setItem(CAPACITY_STORAGE_KEY, MAX_CAPACITY);
+                updateDisplay(); // Forzar la actualización de barras y botones
+            } else {
+                domElements.maxCapacityInput.value = MAX_CAPACITY; // Restaurar el valor válido
+                showMessage("Capacidad mínima debe ser 1.", 1500);
+            }
+        }
+
+        // === Funciones de Visualización y Contador ===
+
+        /**
+         * Actualiza la barra combinada y el estado de los botones de entrada.
+         */
+        function updateVisuals() {
+            const total = counts.total;
+            const isFull = total >= MAX_CAPACITY;
+            const fullColor = '#d63030'; // Rojo para aforo completo
+            const normalColor = domElements.body.classList.contains('light-mode') 
+                ? '#1abc9c' : '#78d2cc'; // Color de acento normal
+            
+            // 1. Calcular porcentajes para la barra combinada
+            // El porcentaje total que se ha llenado (limitado al 100%)
+            const filledPercent = Math.min(100, (total / MAX_CAPACITY) * 100);
+
+            // Calcular las proporciones dentro de ese porcentaje lleno
+            let menWidth = 0;
+            let womenWidth = 0;
+
+            if (total > 0) {
+                const totalRatio = filledPercent / total;
+                menWidth = counts.men * totalRatio;
+                womenWidth = counts.women * totalRatio;
+            }
+
+            // Aplicar estilos a las barras combinadas
+            domElements.menCombinedBar.style.width = `${menWidth}%`;
+            domElements.womenCombinedBar.style.width = `${womenWidth}%`;
+            
+            // 2. Controlar si el aforo está completo
+            domElements.total.style.color = isFull ? fullColor : normalColor;
+            
+            if (isFull) {
+                showMessage("Aforo MÁXIMO alcanzado. ⛔", 3000);
+            }
+
+            // 3. Desactivar botones de Entrada si el aforo está completo
+            domElements.addButtons.forEach(button => {
+                button.disabled = isFull;
+                if (isFull) {
+                    button.title = "Aforo máximo alcanzado";
+                } else {
+                    button.title = "";
+                }
+            });
+        }
+
+        /**
+         * Calcula y muestra la diferencia de aforo entre hombres y mujeres.
+         */
+        function updateDifferenceDisplay() {
+            const diff = counts.men - counts.women;
+            let message = "";
+            let colorVar = "";
+            
+            if (diff > 0) {
+                const count = diff;
+                const plural = count === 1 ? 'hombre' : 'hombres';
+                message = `Hay ${count} ${plural} más.`;
+                colorVar = 'var(--hk-accent-men)';
+            } else if (diff < 0) {
+                const count = Math.abs(diff);
+                const plural = count === 1 ? 'mujer' : 'mujeres';
+                message = `Hay ${count} ${plural} más.`;
+                colorVar = 'var(--hk-accent-women)';
+            } else {
+                message = "El aforo está perfectamente equilibrado.";
+                colorVar = 'var(--hk-accent-total)';
+            }
+
+            domElements.differenceDisplay.textContent = message;
+            domElements.differenceDisplay.style.color = colorVar;
+        }
+
+
+        // Función para aplicar y resetear la nueva animación de flash
+        function animateDisplay(element) {
+            element.classList.remove('impact-flash');
+            void element.offsetWidth; 
+            element.classList.add('impact-flash');
+        }
+
+        function showMessage(msg, duration = 1200) {
+            domElements.message.textContent = msg;
+            setTimeout(() => {
+                domElements.message.textContent = '';
+            }, duration);
+        }
+
+        function updateDisplay() {
+            domElements.men.textContent = counts.men;
+            domElements.women.textContent = counts.women;
+            
+            counts.total = counts.men + counts.women;
+            domElements.total.textContent = counts.total;
+
+            updateVisuals();
+            updateDifferenceDisplay(); 
+        }
+        
+        function updateCount(category, delta) {
+            const newTotal = counts.total + delta;
+            
+            // Restricción: Si intentamos añadir (+1) y ya estamos al límite, salimos.
+            if (delta > 0 && newTotal > MAX_CAPACITY) {
+                showMessage(`🚫 Capacidad de ${MAX_CAPACITY} alcanzada.`, 1500);
+                return;
+            }
+
+            const currentCount = counts[category];
+            const newCount = currentCount + delta;
+            
+            // Restricción: No puede ser negativo
+            if (newCount < MIN_COUNT) {
+                showMessage("🚫 El conteo no puede ser negativo.", 1000);
+                return;
+            }
+
+            counts[category] = newCount;
+            updateDisplay();
+
+            // Animación al actualizar
+            animateDisplay(domElements.total);
+            animateDisplay(domElements[category]);
+            animateDisplay(domElements.differenceDisplay); 
+        }
+
+        function resetAll() {
+            // 1. Aplicar la animación "loca" de reinicio
+            domElements.appContainer.classList.add('reset-blast');
+            
+            // 2. Ejecutar el reinicio lógico después de que la animación termine
+            setTimeout(() => {
+                // Restaurar visibilidad y estado
+                domElements.appContainer.classList.remove('reset-blast');
+                
+                // Reinicio de estados
+                counts.men = 0;
+                counts.women = 0;
+                updateDisplay(); 
+                
+                // Animación normal de feedback
+                animateDisplay(domElements.total);
+                animateDisplay(domElements.men);
+                animateDisplay(domElements.women);
+                animateDisplay(domElements.differenceDisplay);
+                
+                showMessage("💥 ¡Sistema restablecido! Conteo en cero.", 1500);
+            }, 600); // 600ms es la duración de la animación CSS
+        }
+
+        // === Inicialización y Event Listeners ===
+
+        function setupEventListeners() {
+            domElements.themeToggle.addEventListener('click', toggleTheme);
+            domElements.maxCapacityInput.addEventListener('input', handleMaxCapacityChange); 
+
+            domElements.countButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const category = event.currentTarget.getAttribute('data-category');
+                    const delta = parseInt(event.currentTarget.getAttribute('data-delta'));
+                    
+                    if (category && !isNaN(delta)) {
+                        updateCount(category, delta);
+                    }
+                });
+            });
+
+            domElements.globalResetButton.addEventListener('click', resetAll);
+        }
+
+        function initializeApp() {
+            loadThemePreference();
+            loadMaxCapacity(); // Cargar la capacidad máxima inicial desde localStorage
+            setupEventListeners();
+            updateDisplay(); 
+        }
+
+        window.addEventListener('load', initializeApp);
+
+    </script>
+
+</body>
+</html>
