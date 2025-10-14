@@ -7,7 +7,7 @@
     --color-border: #2d3e50;
     --color-text: #e8eaed;
     --color-text-secondary: #9ca3af;
-    --color-led: #4a9effaa;
+    --color-led: #4a9eff88;
 
     /* Tipografía */
     --font-primary: Segoe UI, Roboto, Arial, sans-serif;
@@ -16,7 +16,6 @@
 /* Ruta */
 #sec-ruta {
     padding: 20px 30px;
-    border-bottom: 2px solid var(--color-border);
 }
 
 #sec-ruta a {
@@ -88,6 +87,12 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+}
+
+.proyecto -tarj:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px var(--color-led);
+    border-top: 4px solid var(--color-accent);
 }
 
 .proyecto-img {

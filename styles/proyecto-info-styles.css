@@ -1,0 +1,95 @@
+:root {
+    /* Colores principales */
+    --color-primary: #1a2332;
+    --color-secondary: #2d3e50;
+    --color-accent: #4a9eff;
+    --color-background: #0f1419;
+    --color-border: #2d3e50;
+    --color-text: #e8eaed;
+    --color-text-secondary: #9ca3af;
+    --color-led: #4a9eff88;
+
+    /* Tipografía */
+    --font-primary: Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Sección de la información del proyecto */
+#info-proyect {
+    display: flex;
+    gap: 40px;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Barra de navegación izquierda */
+#navegador-izq {
+    flex: 0.3;
+    background-color: var(--color-primary);
+    font-size: 17px;
+    border-radius: 10px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#navegador-izq a {
+    position: relative;
+    display: block; 
+    color: var(--color-text-secondary);
+    width: 100%; 
+    padding: 12px;
+    text-decoration: none;
+    border-radius: 10px;    
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+#navegador-izq a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 5px;
+    height: 0;
+    background-color: var(--color-accent);
+    border-radius: 5px;
+    transition: all 0.2s ease-out;
+}
+
+#navegador-izq a:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+}
+
+#navegador-izq a:hover::before {
+    height: 80%;
+    top: 10%;
+}
+
+#navegador-izq a#active {
+    color: var(--color-accent);
+    background-color: var(--color-secondary);
+}
+
+#navegador-izq a#active::before {
+    height: 80%;
+    top: 10%;
+}
+
+#navegador-cabecera {
+    font-size: 17px;
+}
+
+#navegador-izq hr {
+    border: 2px solid var(--color-accent);
+    border-radius: 10px;
+}
+
+/* Sección de la información derecha */
+#informacion-der {
+    flex: 1;
+    background-color: var(--color-primary);
+    border-radius: 10px;
+    padding: 50px;
+}

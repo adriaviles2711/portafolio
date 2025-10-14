@@ -7,7 +7,7 @@
     --color-border: #2d3e50;
     --color-text: #e8eaed;
     --color-text-secondary: #9ca3af;
-    --color-led: #4a9effaa;
+    --color-led: #4a9eff88;
 
     /* Tipografía */
     --font-primary: Segoe UI, Roboto, Arial, sans-serif;
@@ -50,7 +50,6 @@
   border: 1px solid var(--color-border);
   border-radius: 7px;
   background-color: var(--color-primary);
-  cursor: pointer;
   transition: all 0.3s ease;
   height: 500px;
   width: 400px;
