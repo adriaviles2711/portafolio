@@ -154,6 +154,11 @@
     font-size: 18px;
 }
 
+#informacion,
+.secciones {
+  scroll-margin-top: 90px;
+}
+
 /* Pestaña del resumen */
 .secciones {
     display: flex;
