@@ -429,6 +429,7 @@
         .tic-tac-toe-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr); /* <-- AÑADIDO: Fija la altura de las filas */
             gap: 10px;
             width: 240px;
             height: 240px;
@@ -554,6 +555,8 @@
                             <button id="debug-short" class="btn">Forzar D. Corto</button>
                             <button id="debug-long" class="btn">Forzar D. Largo</button>
                             <button id="debug-end" class="btn">Forzar Fin Rutina</button>
+                            <button id="debug-skip" class="btn">Saltar Temporizador</button>
+                            <button id="debug-reset-cycles" class="btn">Resetear Ciclos</button>
                         </div>
                     </div>
                 </div>
@@ -858,27 +861,36 @@
             const updateNextExerciseDisplay = () => {
                  if (!currentRoutine || currentRoutine.exercises.length === 0) {
                     nextExerciseDisplay.innerHTML = `<h4>Próximo Ejercicio</h4><p>Ninguno programado.</p>`;
+                    nextExerciseDisplay.style.display = 'block';
                     return;
                 }
-                
-                const nextBreakType = pomodoroCount % pomodorosPerCycle === (pomodorosPerCycle -1) ? 'long' : 'short';
-                
-                let exerciseForNextBreak = null;
+
                 if (mode === 'work') {
-                   nextExerciseDisplay.style.display = 'block';
-                   exerciseForNextBreak = currentRoutine.exercises.find(ex => ex.when === nextBreakType);
-                } else { // si estamos en descanso, ocultamos el proximo ejercicio
-                   nextExerciseDisplay.style.display = 'none';
-                   exerciseForNextBreak = null;
-                }
-                
-                if (exerciseForNextBreak) {
-                    nextExerciseDisplay.innerHTML = `
-                        <h4>Próximo Ejercicio (${nextBreakType === 'short' ? 'Desc. Corto' : 'Desc. Largo'})</h4>
-                        <p>${exerciseForNextBreak.name} - ${exerciseForNextBreak.sets} series x ${exerciseForNextBreak.reps} reps</p>
-                    `;
-                } else {
-                     nextExerciseDisplay.innerHTML = `<h4>Próximo Ejercicio</h4><p>Ninguno para el siguiente descanso.</p>`;
+                    const nextBreakType = pomodoroCount % pomodorosPerCycle === (pomodorosPerCycle - 1) ? 'long' : 'short';
+                    const exerciseForNextBreak = currentRoutine.exercises.find(ex => ex.when === nextBreakType);
+                    
+                    nextExerciseDisplay.style.display = 'block';
+                    if (exerciseForNextBreak) {
+                        nextExerciseDisplay.innerHTML = `
+                            <h4>Próximo Ejercicio (${nextBreakType === 'short' ? 'Desc. Corto' : 'Desc. Largo'})</h4>
+                            <p>${exerciseForNextBreak.name} - ${exerciseForNextBreak.sets} series x ${exerciseForNextBreak.reps} reps</p>
+                        `;
+                    } else {
+                         nextExerciseDisplay.innerHTML = `<h4>Próximo Ejercicio</h4><p>Ninguno para el siguiente descanso.</p>`;
+                    }
+                } else { // Estamos en un descanso
+                    const currentBreakType = mode === 'shortBreak' ? 'short' : 'long';
+                    const exerciseForThisBreak = currentRoutine.exercises.find(ex => ex.when === currentBreakType);
+                    
+                    if (exerciseForThisBreak) {
+                        nextExerciseDisplay.style.display = 'block';
+                         nextExerciseDisplay.innerHTML = `
+                            <h4>¡Hora de Moverse!</h4>
+                            <p>${exerciseForThisBreak.name} - ${exerciseForThisBreak.sets} series x ${exerciseForThisBreak.reps} reps</p>
+                        `;
+                    } else {
+                         nextExerciseDisplay.style.display = 'none';
+                    }
                 }
             };
             
@@ -1284,6 +1296,17 @@
             debugLongBtn.addEventListener('click', () => forceState('longBreak', 15 * 60, 'Descanso Largo (Debug)'));
             debugEndBtn.addEventListener('click', showEndRoutineModal);
 
+            document.getElementById('debug-skip').addEventListener('click', () => {
+                if(isRunning) {
+                    timeLeft = 1;
+                }
+            });
+
+            document.getElementById('debug-reset-cycles').addEventListener('click', () => {
+                pomodoroCount = 0;
+                updatePomodoroCyclesDisplay();
+            });
+
             // Proxies para llamadas desde HTML
             window.editRoutineProxy = editRoutine;
             window.deleteRoutineProxy = deleteRoutine;
@@ -1299,7 +1322,7 @@
                     <h3 class="game-status" id="clicker-score">Puntuación: 0</h3>
                     <p id="clicker-time">Tiempo: 10</p>
                     <button id="clicker-btn" class="btn">¡Clic!</button>
-                    <button id="clicker-reset" class="btn btn-secondary" style="display: none;">Jugar de Nuevo</button>
+                    <button id="clicker-reset" class="btn btn-secondary" style="display: none; margin-top: 10px;">Jugar de Nuevo</button>
                 `;
                 const scoreDisplay = document.getElementById('clicker-score');
                 const timeDisplay = document.getElementById('clicker-time');
@@ -1319,7 +1342,7 @@
                                 if (time <= 0) {
                                     clearInterval(gameTimer);
                                     clickBtn.disabled = true;
-                                    clickBtn.style.display = 'none';
+                                    clickBtn.textContent = '¡Tiempo!';
                                     resetBtn.style.display = 'block';
                                     scoreDisplay.textContent = `Puntuación Final: ${score}`;
                                 }
@@ -1694,6 +1717,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
