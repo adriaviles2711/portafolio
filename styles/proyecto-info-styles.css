@@ -156,7 +156,7 @@
 
 #informacion,
 .secciones {
-  scroll-margin-top: 90px;
+  scroll-margin-top: 160px;
 }
 
 /* Pestaña del resumen */
@@ -178,4 +178,117 @@
 
 .secciones span {
     color: var(--color-text);
+}
+
+
+/* Estilos para la sección de Prompts */
+.prompt-item {
+    margin-top: 25px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 25px;
+    background-color: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.prompt-text h3 {
+    font-size: 22px;
+    color: var(--color-text);
+    margin-bottom: 15px;
+}
+
+.prompt-text blockquote {
+    background-color: #0c0f13;
+    border-left: 4px solid var(--color-accent);
+    padding: 20px;
+    border-radius: 5px;
+    color: var(--color-text-secondary);
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* Estilos para Capturas Interactivas y Modal */
+.prompt-capturas {
+    display: flex;
+    gap: 15px;
+}
+
+.captura-container {
+    position: relative;
+    width: calc(50% - 7.5px);
+    cursor: pointer;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.prompt-capturas img {
+    width: 100%;
+    height: 220px; 
+    object-fit: cover; 
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.captura-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.captura-container:hover img {
+    transform: scale(1.05);
+}
+
+.captura-container:hover .captura-overlay {
+    opacity: 1;
+}
+
+/* --- Estilos del Modal --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 20, 25, 0.9);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content-wrapper {
+    position: relative;
+    display: inline-block;
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 40px); 
+    border-radius: 5px;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
