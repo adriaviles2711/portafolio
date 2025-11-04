@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Reproductor calendario</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/categorias-styles.css">
+    <link rel="stylesheet" href="../styles/proyecto-info-styles.css">
+    <script src="../js/proyecto-info-js.js" defer></script>
+</head>
+<body>
+    <nav id="navbar-index">
+        <div id="navbar-izq">
+            <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
+        </div>
+        <div id="navbar-der">
+            <ul id="navbar-menu">
+                <li><a href="../index.html" class="nav-link">INICIO</a></li>
+                <li><a href="../#sobre-mi" class="nav-link">SOBRE MÍ</a></li>
+                <li><a href="../#habilidades" class="nav-link">HABILIDADES</a></li>
+                <li><a href="../proyectos.html" class="nav-link active">PROYECTOS</a></li>
+                <li><a href="../#contacto" class="nav-link">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="sec-ruta">
+        <h3>Ruta</h3>
+        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-ia.html">Desarrollo de interfaces</a><span>/</span><span>Reproductor calendario</span></p>
+    </div>
+
+    <div id="info-proyect">
+        <div id="navegador-izq">
+            <h3 id="navegador-cabecera">En esta página</h3>
+            <hr>
+            <a href="#informacion" id="active"><span>Información</span></a>
+            <a href="#resumen"><span>Resumen</span></a>
+            <a href="#caracteristicas"><span>Características</span></a>
+            <a href="#prompts"><span>Prompts</span></a>
+        </div>
+        <div id="informacion-der">
+            
+            <div id="informacion">
+                <h1>Reproductor calendario</h1>
+                <p>Herramienta de productividad y organización personal que fusiona un calendario interactivo con un reproductor de audios locales y un sistema de gestión de tareas. Permite a los usuarios planificar su agenda, asignar bandas sonoras a días específicos y gestionar tareas pendientes.</p>
+                <div id="info-stats">
+                    <div id="info-fecha">
+                        <p>FECHA</p>
+                        <h3>Noviembre 2025</h3>
+                    </div>
+                    <div id="info-rol">
+                        <p>ROL</p>
+                        <h3>Full Stack</h3>
+                    </div>
+                    <div id="info-cliente">
+                        <p>CLIENTE</p>
+                        <h3>Proyecto Personal</h3>
+                    </div>
+                </div>
+
+                <div id="info-botones">
+                    <a href="../proyectos/reproductor-calendario/reproductor-calendario.html" target="_blank"><button class="reverse-button">
+                        <p>Ver demostración →</p>
+                    </button></a>
+                    <a href="https://github.com/adriaviles2711/portafolio/tree/main/proyectos/reproductor-calendario" target="_blank"><button class="button">
+                        <p>Ir a GitHub</p>
+                    </button></a>
+                </div>
+            </div>
+
+            <div id="resumen" class="secciones">
+                <div class="info-headers">
+                    <h1>Resumen</h1>
+                    <hr>
+                </div>
+                <p>
+                    Herramienta de productividad y organización personal que fusiona un <strong>calendario interactivo</strong> con un <strong>reproductor de audios locales</strong> y un <strong>sistema de gestión de tareas</strong>. La aplicación está diseñada para ayudar a los usuarios a planificar su agenda, permitiéndoles asignar bandas sonoras a días específicos y gestionar sus tareas pendientes en una interfaz limpia y responsiva. <br><br>
+                    Fue desarrollada íntegramente con HTML, CSS y JavaScript puro (vanilla), demostrando un enfoque en el rendimiento y la compatibilidad multiplataforma sin depender de librerías o frameworks externos.
+                </p>
+            </div>
+
+            <div id="caracteristicas" class="secciones">
+                <div class="info-headers">
+                    <h1>Características principales</h1>
+                    <hr>
+                </div>
+                <ul>
+                    <li><span>Calendario Auditivo Interactivo:</span> Permite asignar archivos de audio locales a días específicos, creando una "banda sonora del día" y reproduciéndola directamente desde el calendario.</li>
+                    <li><span>Gestor de Tareas Integrado:</span> Sistema completo para crear, editar y completar tareas con fechas y horas límite. Las tareas se visualizan tanto en una lista dedicada como en la vista del calendario.</li>
+                    <li><span>Biblioteca Multimedia y Vistas:</span> Interfaz organizada en pestañas (Calendario, Tareas, Multimedia) que permite cargar y gestionar la biblioteca de audio localmente desde los archivos del usuario.</li>
+                    <li><span>Personalización y Persistencia:</span> Panel de ajustes robusto con Modo Claro/Oscuro, multi-idioma (ES/EN) y gestión de festivos. Todos los datos (tareas, ajustes, asignaciones) se guardan en el navegador (vía Cookies/LocalStorage).</li>
+                </ul>
+                <p>Este proyecto demuestra un sólido manejo del DOM, la gestión de estado en JavaScript (Vanilla JS) y la persistencia de datos (LocalStorage), creando una aplicación de una sola página (SPA) funcional sin frameworks.</p>
+            </div>
+
+            <div id="prompts" class="secciones">
+                <div class="info-headers">
+                    <h1>Prompts Utilizados</h1>
+                    <hr>
+                </div>
+                <p>
+                    Aquí se documentan los prompts enviados a la IA y los resultados que generaron, mostrando la evolución del proyecto desde la idea inicial hasta el resultado final.
+                </p>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 1: Versión Inicial y Estructura</h3>
+                        <blockquote>Actúa como un desarrollador con experiencia de varios años en el desarrollo de aplicaciones.
+                            <br><br>
+                            Haz una app en HTML, CSS y JavaScript (vanilla puro), no uses frameworks ni para CSS ni JavaScript.
+                            <br><br>
+                            La app será un reproductor de audios locales con un calendario, los audios estarán en archivos locales.
+                            En el calendario se puede hacer click y que suene un audio en un día específico.
+                            <br><br>
+                            Además en el calendario se puedan añadir tareas que hacer, añade una opción para cambiar la vista, estará la vista calendario y la vista tareas. En el calendario solo aparecerá la tarea con el título, en la vista de tareas tendrás la opción de marcarla como completada, cambiarle el título y te pondrá el día final junto con la hora.
+                            <br><br>
+                            Si haces click a un día del calendario podrás asignarle un audio, también te dejará crear una tarea para ese día y ver información de las tareas para ese día.
+                            <br><br>
+                            Aparte de la vista de calendario y tareas, recuerda que es una aplicación de reproduccion multimedia en local, por lo que haz también la pestaña de reproducción multimedia sin necesidad de pulsar nada en el calendario para reproducir canciones.
+                            <br><br>
+                            En esta pestaña que te aparezcan todas las canciones disponibles, un botón para cambiar la ruta de las canciones y al lado de cada canción que se pueda asignar a la canción un día concreto. Arriba del todo te aparecerá una tarjetita con la canción del día, con la posibilidad de escucharla o no.
+                            <br><br>
+                            En opciones añade opciones de accesibilidad, como modo claro/oscuro y un selector de idiomas (solo añade el español e inglés, por defecto será el español). Agrega cookies para que se queden almacenadas en el navegador las opciones elegidas.
+                            <br><br>
+                            Hazlo multiplataforma, tanto para móviles, como portátiles, como PC de sobremesa. Haz que también funcione en distintos navegadores, como firefox, chrome y safari (cualquier navegador, los mencionados son solo ejemplos), así como en los sistemas operativos linux, android, mac, iOS y windows (cualquier sistema operativo principal, los mencionas son solo ejemplos).
+                            <br><br>
+                            Recuerda solo usar HTML, CSS y Javascript, evita cualquier otro lenguaje.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt1.png" alt="Captura de la primera versión del calendario">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt1-2.png" alt="Captura de la vista de tareas inicial">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt1-3.png" alt="Captura de la vista multimedia inicial">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt1-4.png" alt="Captura del modal de opciones inicial">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 2: Mejoras de UI y Carga de Archivos</h3>
+                        <blockquote>El emoji de ajustes cambialo por un icono, ten en cuenta que los emojis pueden llegar a cambiar y esto puede llegar a generar problemas.
+                            <br><br>
+                            En tareas, añade un botón para añadir las tareas, a parte de los botones que ya están en calendario. Al añadir la tarea que te de la opción de elegir fecha y hora.
+                            <br><br>
+                            Y en multimedia NO quiero que tenga que subir constantemente las canciones, quiero que te de la opción de dejar seleccionada una ruta, la aplicación acceda directamente a esa carpeta y recoja todos los .mp3 (o cualquier archivo de audio) que haya en esa carpeta.
+                            <br><br>
+                            Sobre la vista calendario, algo sucede en la última semana que hace que no se vea correctamente la cuadricula, arreglalo. Además haz que las semanas empiecen en lunes y acaben en domingo, no que empiecen en domingo y que acaben en sábado.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt2.png" alt="Captura del icono de ajustes y calendario corregido">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt2-2.png" alt="Captura del nuevo botón de añadir tarea">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 3: Lógica de Cookies y Corrección Multimedia</h3>
+                        <blockquote>El botón de añadir tarea no funciona y no me has hecho caso sobre la opción multimedia. Haz que te diga de seleccionar una ruta, pero que no se suba a la aplicación ningún archivo, si no que acceda a la ruta y detecte todos los archivos de audio que tenga. Esa ruta, además de los ajustes seleccionados y las tareas, se guardarán en unas cookies, por lo que al iniciar la app te pedirá permiso para guardar cookies en tu navegador y al aceptarlas guardará la información, si las rechaza (recordar más tarde), la próxima vez que abra la aplicación le volverá a aparecer el mensaje de cookies, si las acepta, este no volverá a aparecer.</blockquote>
+                        <b>No me hizo lo de guardar la ruta de los archivos, al investigar sobre si lo que pedía era posible para una aplicación web, me di cuenta que no era posible y por eso me ignoraba Gemini.</b>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt3.png" alt="Captura del banner de cookies">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt3-2.png" alt="Captura del modal de tarea con fecha">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt3-3.png" alt="Captura de la carga de archivos multimedia funcional">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 4: Ampliación de Tareas y Persistencia</h3>
+                        <blockquote>Vale, ahora añade a las tareas que se pueda añadir una descripción. Además, en la vista calendario aparecerá la hora limite de la tarea. También haz que se puedan editar las tareas existentes. Asegúrate de que las cookies también guarden las tareas creadas.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt4.png" alt="Captura de la tarea con hora en el calendario">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt4-2.png" alt="Captura del modal de tarea con descripción">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt4-3.png" alt="Captura de la vista de tareas con edición">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 5: Rediseño de Tareas y Petición de APIs de Festivos</h3>
+                        <blockquote>Perfecto, ahora cambia el icono de ajustes por uno más bonito. Haz que para marcar una tarea como completada sea mucho más bonito y visual en vez de un checkmark cutre y en ajustes añade para poder marcar 2 opciones:
+                            <br><br>
+                            1 de esas opciones te añadirá las fiestas escolares, podrás elegir de que pais y comunidad autónoma quieres que te marqué el calendario las fiestas, puedes usar APIs para hacerlo.
+                            <br><br>
+                            La otra hará lo mismo pero para las fiestas laborales.
+                            <br><br>
+                            Podrás hacer que te salgan ambas fiestas al mismo tiempo (por si trabajas y estudias), para diferenciarlas, cada una tendrá su propio color, si es fiesta de ambas, será de otro color especifico para hacer saber que es fiesta tanto escolar como laboral.
+                            <br><br>
+                            Añade también una leyenda al calendario.</blockquote>
+                        <b>Me comentó Gemini que las APIs que ofrecen datos fiables sobre festivos (como Google Calendar) pide una API Key para usarlas. Al no tener un servidor seguro para guardar la clave, no puedo usarlo, ya que si lo pongo sobre el código JavaScript cualquier persona podría verla y usarla, generando costes o bloqueandola.
+                            <br>Además me ha dicho que para las fiestas escolares no hay APIs públicas ya que son muy locales. Por lo que no realizó ningún cambio solicitado.</b>
+                    </div>
+                </div>
+                
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 6: Implementación Manual de Festivos</h3>
+                        <blockquote>De acuerdo, pues haz todos los cambios que te comenté anteriormente y añade una función manual para marcar días como festivos donde pueda elegir entre fiesta laboral, escolar o ambos. Añade la leyenda como te comenté y los colores que te solicité.
+                            <br><br>
+                            Además, haz que guarde los festivos en las cookies, para evitar que desaparezcan.</blockquote>
+                        <b>Llegue al límite de contexto y tuve que abrir otro chat.</b>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 7: Nuevo Contexto y Tareas (Toggle y Festivos)</h3>
+                        <blockquote>Tengo está aplicación en HTML, CSS y JavaScript (vanilla puro) sin frameworks (adjunto código). Cambia el icono de ajustes por uno más bonito. Haz que para marcar una tarea como completada sea mucho más bonito y visual en vez de un checkmark cutre y en ajustes añade para poder marcar 2 opciones:
+                            <br><br>
+                            1 de esas opciones te añadirá las fiestas escolares, las fiestas se añadirán manualmente, donde podrás marcar si un día es fiesta escolar, laboral o ambas.
+                            <br><br>
+                            La otra hará lo mismo pero para las fiestas laborales.
+                            <br><br>
+                            Podrás hacer que te salgan ambas fiestas al mismo tiempo (por si trabajas y estudias), para diferenciarlas, cada una tendrá su propio color, si es fiesta de ambas, será de otro color especifico para hacer saber que es fiesta tanto escolar como laboral.
+                            Además, haz que guarde los festivos en las cookies, para evitar que desaparezcan (localStorage).</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt7.png" alt="Captura del nuevo icono de ajustes">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt7-2.png" alt="Captura del nuevo toggle para tareas completadas">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 8: Primer Intento de Arreglar Ajustes</h3>
+                        <blockquote>Los ajustes de modo oscuro, mostrar fiestas escolares y mostrar fiestas laborales no funcionan, arreglalos.
+                            <br><br>
+                            Además, cambia el color de las fiestas escolares a otro que no sea amarillo, se confunde con el día actual.</blockquote>
+                        <b>No arregló nada.</b>
+                    </div>
+                </div>
+                
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 9: Segundo Intento de Arreglar Ajustes y Cookies</h3>
+                        <blockquote>Arregla los ajustes, ya que el modo oscuro, mostrar fiestas locales y mostrar fiestas laborales no funcionan, no hay opción de seleccionarlas.
+                            <br><br>
+                            Además, añade una leyenda en el calendario que muestre los diferentes colores que hay asignados.
+                            <br><br>
+                            Y haz que una vez se acepten las cookies, no se vuelva a mostrar el mensajes para aceptarlas o rechazarlas.</blockquote>
+                        <b>Seguían sin funcionar los ajustes.</b>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt9.png" alt="Captura de la leyenda y el color de festivos cambiado">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 10: Solución Final de Ajustes y Cookies</h3>
+        <blockquote>Los ajustes siguen sin funcionar, rehazlos por completo añadiendo las mismas funciones, aprovecha para hacer el menú más bonito.
+<br><br>
+Y sigue apareciendo la pestaña de las cookies por más que le des a aceptar.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/calendario-reproductor-img/prompt10.png" alt="Captura del modal de ajustes rediseñado y funcional">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div> </div> </div> <div id="image-modal" class="modal-overlay">
+        <img class="modal-content" id="modal-image-content">
+    </div>
+
+    <script src="../js/proyecto-info-js.js"></script>
+</body>
+</html>

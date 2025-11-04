@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-R">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Calendario</title>
+    <style>
+        /* --- Variables de Tema (Claro/Oscuro) --- */
+        :root {
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Tema Claro (Default) */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f4f9;
+            --bg-accent: #eef;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --border-color: #dddddd;
+            --accent-color: #4a69bd;
+            --accent-color-hover: #3b528f;
+            --day-today: #fff2ab;
+            --day-selected: #d0e0ff;
+            --task-complete-bg: #e8f5e9;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+
+            --day-holiday-school: #e1bee7; /* Púrpura Claro */
+            --day-holiday-work: #80cbc4; /* Verde-azulado Claro */
+            --day-holiday-both: #ffab91; /* Melocotón Claro */
+        }
+
+        body.dark-mode {
+            /* Tema Oscuro */
+            --bg-primary: #2c2c2e;
+            --bg-secondary: #1e1e1f;
+            --bg-accent: #3a3a3c;
+            --text-primary: #f2f2f7;
+            --text-secondary: #a0a0a5;
+            --border-color: #444446;
+            --accent-color: #5d8aff;
+            --accent-color-hover: #7b9fff;
+            --day-today: #5c532d;
+            --day-selected: #3a4a6d;
+            --task-complete-bg: #2e4a30;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+
+            --day-holiday-school: #4a2c5a; /* Púrpura Oscuro */
+            --day-holiday-work: #2a5a55; /* Verde-azulado Oscuro */
+            --day-holiday-both: #7d4838; /* Melocotón Oscuro */
+        }
+
+        /* --- Reseteo Básico y Estilos Globales --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Evita el scroll del body */
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        button, input[type="file"]::file-selector-button, .btn {
+            font-family: var(--font-family);
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        button:hover, input[type="file"]::file-selector-button:hover, .btn:hover {
+            background-color: var(--accent-color-hover);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        input[type="text"], input[type="datetime-local"], select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: var(--font-family);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* --- Estructura Principal de la App --- */
+        .app-header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Para móviles */
+        }
+
+        .app-header h1 {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+        
+        .app-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+        }
+
+        .nav-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--bg-accent);
+            color: var(--text-primary);
+        }
+        
+        .nav-btn.active:hover {
+            background-color: var(--accent-color-hover);
+            color: white;
+        }
+
+        .settings-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.25rem;
+            line-height: 1;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .settings-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-secondary);
+            transition: stroke 0.2s, transform 0.3s ease;
+        }
+        .settings-btn:hover svg {
+            stroke: var(--accent-color);
+            transform: rotate(60deg);
+        }
+
+        /* Contenedor principal scrollable */
+        .app-main {
+            flex: 1;
+            overflow-y: auto; /* Permite scroll solo en el contenido */
+            padding: 1rem;
+        }
+
+        .app-view {
+            display: none; /* Oculto por defecto */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .app-view.active {
+            display: block; /* Visible */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer del Reproductor */
+        .app-footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 0.75rem;
+        }
+
+        #audio-player {
+            width: 100%;
+        }
+
+        /* --- Vista Calendario --- */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            text-transform: capitalize;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .calendar-day-header, .calendar-day {
+            text-align: center;
+            padding: 0.5rem 0.25rem;
+            background-color: var(--bg-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .calendar-day {
+            background-color: var(--bg-primary);
+            min-height: 80px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            padding: 0.5rem;
+            text-align: left;
+            align-content: flex-start;
+            overflow: hidden;
+            border-top: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
+        }
+        
+        .calendar-day:nth-child(7n+1) {
+            border-left: none;
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            background-color: var(--bg-secondary);
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .calendar-day:not(.other-month):hover {
+            background-color: var(--bg-accent);
+            opacity: 0.8; /* Para que se vea el color de fondo si es festivo */
+        }
+        
+        .calendar-day.today {
+            background-color: var(--day-today);
+            font-weight: bold;
+            border: 2px solid var(--accent-color); /* Más visible */
+        }
+
+        /* Estilos de Festivos */
+        .calendar-day.holiday-school { background-color: var(--day-holiday-school); }
+        .calendar-day.holiday-work { background-color: var(--day-holiday-work); }
+        .calendar-day.holiday-both { background-color: var(--day-holiday-both); }
+
+        .calendar-day.today.holiday-school,
+        .calendar-day.today.holiday-work,
+        .calendar-day.today.holiday-both {
+            background-color: var(--day-today); /* El "hoy" tiene prioridad visual */
+        }
+
+        .day-number {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .day-task, .day-audio-icon {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background-color: var(--accent-color);
+            color: white;
+            display: block;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .day-audio-icon {
+            background-color: transparent;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            padding: 0;
+        }
+
+        /* Leyenda Calendario */
+        .calendar-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .legend-color {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+
+        /* --- Vista Tareas --- */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .task-item.completed {
+            background-color: var(--task-complete-bg);
+            opacity: 0.7;
+        }
+        
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            flex: 1;
+            padding: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .task-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            padding-left: 0.25rem;
+            white-space: pre-wrap; /* Respeta saltos de línea */
+            word-break: break-word;
+        }
+        
+        .task-datetime {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .task-actions-right {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Estilos para el nuevo Toggle de Tareas */
+        .task-complete-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Alinea texto e interruptor */
+            width: 100%; /* Ocupa todo el espacio de la izquierda */
+            font-size: 0.9rem;
+            cursor: pointer;
+            flex: 1; /* Ocupa el espacio sobrante */
+            padding-right: 1rem;
+        }
+        
+        /* Modificador para un interruptor más pequeño */
+        .switch.small-switch {
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0; /* Evita que se encoja */
+        }
+
+        .switch.small-switch .slider {
+            border-radius: 22px;
+        }
+
+        .switch.small-switch .slider:before {
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+        }
+
+        .switch.small-switch input:checked + .slider:before {
+            transform: translateX(18px);
+        }
+
+        .task-edit-btn {
+            background-color: #f9a825; /* Amarillo */
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        .task-edit-btn:hover {
+            background-color: #f57f17;
+        }
+
+        .task-delete-btn {
+            background-color: #e53935;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        .task-delete-btn:hover {
+            background-color: #c62828;
+        }
+
+        /* --- Vista Media --- */
+        .song-of-the-day-card {
+            background-color: var(--bg-accent);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .song-of-the-day-card h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .song-of-the-day-card p {
+            margin-bottom: 1rem;
+        }
+
+        .media-controls {
+            margin-bottom: 1.5rem;
+        }
+
+        #media-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .media-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .media-item-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
+        }
+
+        .media-item-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .media-item-actions .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* --- Modales --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 10vh auto;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            position: relative;
+        }
+
+        .modal-close {
+            color: var(--text-secondary);
+            position: absolute;
+            top: 0.75rem;
+            right: 1.25rem;
+            font-size: 1.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #e53935;
+            text-decoration: none;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .modal-section {
+            margin-bottom: 1rem;
+        }
+
+        .modal-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        /* ====== INICIO: Estilos para el nuevo menú "bonito" de Ajustes ====== */
+        .settings-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        /* Eliminar el margen superior del primer título */
+        .modal-content .settings-section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--bg-secondary); /* Borde sutil */
+        }
+        
+        .modal-content .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* El span que actúa como label para el texto del item */
+        .settings-item > span {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            padding-right: 1rem; /* Espacio por si el texto es largo */
+        }
+
+        /* Ajustar el select de idioma */
+        .settings-item select {
+            width: auto;
+            min-width: 120px;
+            padding: 0.5rem; /* Más pequeño que los inputs normales */
+        }
+        /* Anular margen de label si está dentro de un settings-item */
+        .settings-item label {
+            margin-bottom: 0;
+        }
+        /* ====== FIN: Estilos para el nuevo menú "bonito" de Ajustes ====== */
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        /* Switch (Sin cambios) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+            flex-shrink: 0; /* Evita que se encoja */
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Estilos para Radios de Festivos (Sin cambios) */
+        #holiday-type-select {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+        #holiday-type-select label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        #holiday-type-select input[type="radio"] {
+            width: auto; /* Anula el 100% global */
+        }
+        
+        /* --- Banner de Cookies (Sin cambios) --- */
+        .cookie-consent-banner {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            z-index: 2000;
+            box-shadow: 0 -4px 12px var(--shadow-color);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .cookie-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .cookie-text h3 {
+             margin-bottom: 0.5rem;
+        }
+        
+        .cookie-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .cookie-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap; /* Para móviles */
+        }
+        
+        .cookie-actions .btn.reject-btn {
+            background-color: var(--bg-accent);
+            color: var(--text-primary);
+        }
+        
+        .cookie-actions .btn.reject-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* --- Responsividad (Sin cambios) --- */
+        @media (max-width: 600px) {
+            .app-header {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .app-nav {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                text-align: center;
+            }
+            
+            .app-header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .settings-btn {
+                position: absolute;
+                top: 0.75rem;
+                right: 1rem;
+            }
+
+            .calendar-day-header {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.1rem;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+                padding: 0.25rem;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+            
+            .day-task {
+                font-size: 0.6rem;
+                padding: 1px 3px;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            /* Ajuste responsivo para el toggle de tarea */
+            .task-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .task-actions-right {
+                width: 100%;
+                justify-content: flex-end; /* Botones a la derecha */
+            }
+            .task-complete-label {
+                padding-right: 0;
+            }
+
+            .media-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .media-item-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .cookie-content {
+                flex-direction: column;
+            }
+            
+            .cookie-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .cookie-actions .btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <h1 data-lang-key="app_title">Audio Calendario</h1>
+        <nav class="app-nav">
+            <button class="nav-btn active" data-view="calendar-view" data-lang-key="nav_calendar">Calendario</button>
+            <button class="nav-btn" data-view="tasks-view" data-lang-key="nav_tasks">Tareas</button>
+            <button class="nav-btn" data-view="media-view" data-lang-key="nav_media">Multimedia</button>
+        </nav>
+        <button class="settings-btn" id="open-settings-btn" title="Opciones" aria-label="Abrir opciones">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1m" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+        </button>
+    </header>
+
+    <main class="app-main">
+
+        <section id="calendar-view" class="app-view active">
+            <div class="calendar-header">
+                <button id="prev-month-btn" class="btn">&lt;</button>
+                <h2 id="month-year-header"></h2>
+                <button id="next-month-btn" class="btn">&gt;</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid-container">
+                </div>
+            
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: var(--day-today);"></span> 
+                    <span data-lang-key="legend_today">Día Actual</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: var(--day-holiday-school);"></span> 
+                    <span data-lang-key="legend_school">Fiesta Escolar</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: var(--day-holiday-work);"></span> 
+                    <span data-lang-key="legend_work">Fiesta Laboral</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: var(--day-holiday-both);"></span> 
+                    <span data-lang-key="legend_both">Ambas Fiestas</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="tasks-view" class="app-view">
+            <h2 data-lang-key="tasks_title">Lista de Tareas</h2>
+            <div class="task-view-controls" style="margin-bottom: 1rem;">
+                <button id="add-new-task-btn" class="btn" data-lang-key="day_modal_add_task">Añadir Tarea</button>
+            </div>
+            <div class="task-list" id="task-list-container">
+            </div>
+        </section>
+        <section id="media-view" class="app-view">
+            <div class="song-of-the-day-card" id="song-of-the-day-card">
+                <h3 data-lang-key="song_of_day_title">Canción del Día (Hoy)</h3>
+                <p id="song-of-the-day-name" data-lang-key="song_of_day_none">No hay canción asignada para hoy.</p>
+                <button id="play-song-of-the-day-btn" class="btn" style="display: none;" data-lang-key="play">Reproducir</button>
+            </div>
+            <div class="media-controls">
+                <h2 data-lang-key="media_library">Biblioteca Multimedia</h2>
+                <p data-lang-key="media_info" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                    Selecciona tus archivos de audio locales. Los archivos solo están disponibles durante esta sesión.
+                </p>
+                <input type="file" id="audio-file-input" multiple accept="audio/*" webkitdirectory directory>
+            </div>
+            <div id="media-list">
+            </div>
+        </section>
+        
+    </main>
+
+    <footer class="app-footer">
+        <audio id="audio-player" controls>
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+    </footer>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-settings-modal">&times;</span>
+            <h2 data-lang-key="options_title">Opciones</h2>
+            
+            <h3 class="settings-section-title" data-lang-key="options_section_appearance">Apariencia</h3>
+            
+            <div class="settings-item">
+                <label for="lang-select" data-lang-key="options_lang">Idioma</label>
+                <select id="lang-select">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            
+            <div class="settings-item">
+                <span data-lang-key="options_theme">Modo Oscuro</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <h3 class="settings-section-title" data-lang-key="options_section_calendar">Calendario</h3>
+            
+            <div class="settings-item">
+                <span data-lang-key="options_school_holidays">Mostrar Fiestas Escolares</span>
+                <label class="switch">
+                    <input type="checkbox" id="school-holiday-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-item">
+                <span data-lang-key="options_work_holidays">Mostrar Fiestas Laborales</span>
+                <label class="switch">
+                    <input type="checkbox" id="work-holiday-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="day-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-day-modal">&times;</span>
+            <h2 id="day-modal-title"></h2>
+            
+            <div class="modal-section">
+                <h3 data-lang-key="day_modal_audio">Audio Asignado</h3>
+                <p id="day-modal-audio-name" data-lang-key="day_modal_audio_none">Ninguno</p>
+                <button id="day-modal-play-audio-btn" class="btn" style="display: none;" data-lang-key="play">Reproducir</button>
+                <button id="day-modal-assign-audio-btn" class="btn" data-lang-key="day_modal_assign_audio">Asignar Audio</button>
+            </div>
+            
+            <div class="modal-section">
+                <h3 data-lang-key="day_modal_tasks">Tareas del Día</h3>
+                <ul id="day-modal-task-list" style="list-style: none; padding: 0; margin-bottom: 1rem;">
+                </ul>
+                <button id="day-modal-add-task-btn" class="btn" data-lang-key="day_modal_add_task">Añadir Tarea</button>
+            </div>
+
+            <div class="modal-section">
+                <h3 data-lang-key="day_modal_holiday_type">Tipo de Día Festivo</h3>
+                <div id="holiday-type-select">
+                    <label><input type="radio" name="holiday-type" value="none"> <span data-lang-key="holiday_none">Ninguno</span></label>
+                    <label><input type="radio" name="holiday-type" value="school"> <span data-lang-key="holiday_school">Fiesta Escolar</span></label>
+                    <label><input type="radio" name="holiday-type" value="work"> <span data-lang-key="holiday_work">Fiesta Laboral</span></label>
+                    <label><input type="radio" name="holiday-type" value="both"> <span data-lang-key="holiday_both">Ambas</span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-task-modal">&times;</span>
+            <h2 id="task-modal-title" data-lang-key="task_modal_title">Añadir Tarea</h2>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <div class="form-group">
+                    <label for="task-title-input" data-lang-key="task_modal_name">Título de la Tarea</label>
+                    <input type="text" id="task-title-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-description-input" data-lang-key="task_modal_desc">Descripción</label>
+                    <textarea id="task-description-input"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-datetime-input" data-lang-key="task_modal_datetime">Fecha y Hora Límite</label>
+                    <input type="datetime-local" id="task-datetime-input" required>
+                </div>
+                <button type="submit" class="btn" data-lang-key="save">Guardar</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="cookie-consent-banner" class="cookie-consent-banner">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h3 data-lang-key="cookie_title">Tu Privacidad</h3>
+                <p data-lang-key="cookie_text">
+                    Usamos cookies para guardar tus ajustes (tema, idioma) y tus tareas en tu navegador.
+                    Si no aceptas, estas preferencias no se guardarán al cerrar la app.
+                </p>
+            </div>
+            <div class="cookie-actions">
+                <button id="cookie-accept-btn" class="btn" data-lang-key="cookie_accept">Aceptar</button>
+                <button id="cookie-reject-btn" class="btn reject-btn" data-lang-key="cookie_reject">Rechazar (Recordar más tarde)</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Traducciones (i18n) ---
+            const translations = {
+                es: {
+                    app_title: "Audio Calendario",
+                    nav_calendar: "Calendario",
+                    nav_tasks: "Tareas",
+                    nav_media: "Multimedia",
+                    options_title: "Opciones",
+                    // --- AÑADIDO: Claves para nuevo menú ---
+                    options_section_appearance: "Apariencia",
+                    options_section_calendar: "Calendario",
+                    // ---
+                    options_theme: "Modo Oscuro",
+                    options_lang: "Idioma",
+                    tasks_title: "Lista de Tareas",
+                    media_library: "Biblioteca Multimedia",
+                    media_info: "Selecciona tus archivos de audio locales. Los archivos solo están disponibles durante esta sesión.",
+                    song_of_day_title: "Canción del Día (Hoy)",
+                    song_of_day_none: "No hay canción asignada para hoy.",
+                    play: "Reproducir",
+                    save: "Guardar",
+                    edit: "Editar",
+                    day_modal_audio: "Audio Asignado",
+                    day_modal_audio_none: "Ninguno",
+                    day_modal_assign_audio: "Asignar Audio",
+                    day_modal_tasks: "Tareas del Día",
+                    day_modal_add_task: "Añadir Tarea",
+                    task_modal_title: "Añadir Tarea",
+                    edit_task_title: "Editar Tarea",
+                    task_modal_name: "Título de la Tarea",
+                    task_modal_desc: "Descripción",
+                    task_modal_datetime: "Fecha y Hora Límite",
+                    task_item_complete: "Completada",
+                    task_item_delete: "Eliminar",
+                    media_item_assign: "Asignar",
+                    weekdays: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+                    months: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+                    cookie_title: "Tu Privacidad",
+                    cookie_text: "Usamos cookies para guardar tus ajustes (tema, idioma) y tus tareas en tu navegador. Si no aceptas, estas preferencias no se guardarán al cerrar la app.",
+                    cookie_accept: "Aceptar",
+                    cookie_reject: "Rechazar (Recordar más tarde)",
+                    options_school_holidays: "Mostrar Fiestas Escolares",
+                    options_work_holidays: "Mostrar Fiestas Laborales",
+                    day_modal_holiday_type: "Tipo de Día Festivo",
+                    holiday_none: "Ninguno",
+                    holiday_school: "Fiesta Escolar",
+                    holiday_work: "Fiesta Laboral",
+                    holiday_both: "Ambas",
+                    legend_today: "Día Actual",
+                    legend_school: "Fiesta Escolar",
+                    legend_work: "Fiesta Laboral",
+                    legend_both: "Ambas Fiestas"
+                },
+                en: {
+                    app_title: "Audio Calendar",
+                    nav_calendar: "Calendar",
+                    nav_tasks: "Tasks",
+                    nav_media: "Media",
+                    options_title: "Options",
+                    // --- AÑADIDO: Claves para nuevo menú ---
+                    options_section_appearance: "Appearance",
+                    options_section_calendar: "Calendar",
+                    // ---
+                    options_theme: "Dark Mode",
+                    options_lang: "Language",
+                    tasks_title: "Task List",
+                    media_library: "Media Library",
+                    media_info: "Select your local audio files. Files are only available for this session.",
+                    song_of_day_title: "Song of the Day (Today)",
+                    song_of_day_none: "No song assigned for today.",
+                    play: "Play",
+                    save: "Save",
+                    edit: "Edit",
+                    day_modal_audio: "Assigned Audio",
+                    day_modal_audio_none: "None",
+                    day_modal_assign_audio: "Assign Audio",
+                    day_modal_tasks: "Tasks for the Day",
+                    day_modal_add_task: "Add Task",
+                    task_modal_title: "Add Task",
+                    edit_task_title: "Edit Task",
+                    task_modal_name: "Task Title",
+                    task_modal_desc: "Description",
+                    task_modal_datetime: "Deadline Date & Time",
+                    task_item_complete: "Completed",
+                    task_item_delete: "Delete",
+                    media_item_assign: "Assign",
+                    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    cookie_title: "Your Privacy",
+                    cookie_text: "We use cookies to save your settings (theme, language) and your tasks in your browser. If you do not accept, these preferences will not be saved when you close the app.",
+                    cookie_accept: "Accept",
+                    cookie_reject: "Reject (Remind me later)",
+                    options_school_holidays: "Show School Holidays",
+                    options_work_holidays: "Show Work Holidays",
+                    day_modal_holiday_type: "Holiday Type",
+                    holiday_none: "None",
+                    holiday_school: "School Holiday",
+                    holiday_work: "Work Holiday",
+                    legend_both: "Both Holidays",
+                    legend_today: "Today",
+                    legend_school: "School Holiday",
+                    legend_work: "Work Holiday",
+                    legend_both: "Both Holidays"
+                }
+            };
+
+            // --- Estado de la Aplicación ---
+            let currentView = 'calendar-view';
+            let currentDate = new Date();
+            let tasks = []; // Array de { id, title, description, dateTime, isComplete, dayKey }
+            let mediaFiles = []; // Array de objetos File
+            let audioAssignments = new Map(); // Map<dayKey, File>
+            let audioAssignmentNames = {}; // Objeto { dayKey: fileName } para localStorage
+            let holidays = {}; // Objeto { 'YYYY-MM-DD': 'school' | 'work' | 'both' }
+            
+            // --- VALORES POR DEFECTO ---
+            let currentSettings = {
+                theme: 'light',
+                lang: 'es',
+                schoolHolidays: true,
+                workHolidays: true
+            };
+            let isAssigningAudio = false;
+            let dayToAssignAudio = null;
+            let hasCookieConsent = false; // Controlado por el banner
+
+            // --- Selectores del DOM ---
+            const body = document.body;
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const views = document.querySelectorAll('.app-view');
+            const audioPlayer = document.getElementById('audio-player');
+            const fileInput = document.getElementById('audio-file-input');
+
+            // Calendario
+            const calendarGrid = document.getElementById('calendar-grid-container');
+            const monthYearHeader = document.getElementById('month-year-header');
+            const prevMonthBtn = document.getElementById('prev-month-btn');
+            const nextMonthBtn = document.getElementById('next-month-btn');
+
+            // Tareas
+            const taskListContainer = document.getElementById('task-list-container');
+            const addNewTaskBtn = document.getElementById('add-new-task-btn');
+            const taskModal = document.getElementById('task-modal');
+            const closeTaskModalBtn = document.getElementById('close-task-modal');
+            const taskForm = document.getElementById('task-form');
+            const taskModalTitle = document.getElementById('task-modal-title');
+            const taskIdInput = document.getElementById('task-id');
+            const taskTitleInput = document.getElementById('task-title-input');
+            const taskDescriptionInput = document.getElementById('task-description-input');
+            const taskDateTimeInput = document.getElementById('task-datetime-input');
+
+            // Media
+            const mediaList = document.getElementById('media-list');
+            const songOfTheDayCard = document.getElementById('song-of-the-day-card');
+            const songOfTheDayName = document.getElementById('song-of-the-day-name');
+            const playSongOfTheDayBtn = document.getElementById('play-song-of-the-day-btn');
+
+            // Modal Opciones
+            const settingsModal = document.getElementById('settings-modal');
+            const openSettingsBtn = document.getElementById('open-settings-btn');
+            const closeSettingsModalBtn = document.getElementById('close-settings-modal');
+            const themeToggle = document.getElementById('theme-toggle');
+            const langSelect = document.getElementById('lang-select');
+            const schoolHolidayToggle = document.getElementById('school-holiday-toggle');
+            const workHolidayToggle = document.getElementById('work-holiday-toggle');
+
+            // Modal Día
+            const dayModal = document.getElementById('day-modal');
+            const closeDayModalBtn = document.getElementById('close-day-modal');
+            const dayModalTitle = document.getElementById('day-modal-title');
+            const dayModalAudioName = document.getElementById('day-modal-audio-name');
+            const dayModalPlayAudioBtn = document.getElementById('day-modal-play-audio-btn');
+            const dayModalAssignAudioBtn = document.getElementById('day-modal-assign-audio-btn');
+            const dayModalTaskList = document.getElementById('day-modal-task-list');
+            const dayModalAddTaskBtn = document.getElementById('day-modal-add-task-btn');
+            const holidayTypeRadios = document.querySelectorAll('input[name="holiday-type"]');
+            
+            // Banner Cookies
+            const cookieBanner = document.getElementById('cookie-consent-banner');
+            const cookieAcceptBtn = document.getElementById('cookie-accept-btn');
+            const cookieRejectBtn = document.getElementById('cookie-reject-btn');
+            
+            let selectedDayKey = null; // 'YYYY-MM-DD'
+
+            // --- Funciones de Utilidad ---
+            
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/; samesite=strict";
+            }
+
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            /**
+             * Formatea un objeto Date a 'YYYY-MM-DD'
+             */
+            function getDayKey(date) {
+                return date.toISOString().split('T')[0];
+            }
+
+            /**
+             * Formatea un string 'YYYY-MM-DD' a un formato legible
+             */
+            function formatDayKey(dayKey) {
+                const [year, month, day] = dayKey.split('-');
+                const date = new Date(year, month - 1, day);
+                return date.toLocaleDateString(currentSettings.lang, {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            /**
+             * Formatea un string 'YYYY-MM-DDTHH:mm' a un formato legible
+             */
+            function formatDateTime(dateTimeString) {
+                const date = new Date(dateTimeString);
+                return date.toLocaleString(currentSettings.lang, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                });
+            }
+
+            // --- Gestión de Vistas ---
+            function showView(viewId) {
+                views.forEach(view => {
+                    view.classList.remove('active');
+                });
+                document.getElementById(viewId)?.classList.add('active');
+
+                navButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.view === viewId);
+                });
+                currentView = viewId;
+                
+                // Actualiza vistas que dependen de datos
+                if (viewId === 'tasks-view') renderTaskList();
+                if (viewId === 'media-view') renderMediaList();
+                if (viewId === 'calendar-view') renderCalendar();
+            }
+
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => showView(btn.dataset.view));
+            });
+
+            // --- ====== INICIO: Lógica de Cookies y Opciones (REFACTORIZADA) ====== ---
+
+            /**
+             * Aplica los ajustes actuales (cargados o por defecto) al DOM.
+             */
+            function applySettings() {
+                // Aplicar tema
+                if (currentSettings.theme === 'dark') {
+                    body.classList.add('dark-mode');
+                    themeToggle.checked = true;
+                } else {
+                    body.classList.remove('dark-mode');
+                    themeToggle.checked = false;
+                }
+                // Aplicar idioma
+                langSelect.value = currentSettings.lang;
+                
+                // Aplicar toggles de festivos
+                schoolHolidayToggle.checked = currentSettings.schoolHolidays;
+                workHolidayToggle.checked = currentSettings.workHolidays;
+
+                applyLanguage(currentSettings.lang);
+            }
+
+            /**
+             * Aplica el idioma seleccionado a todos los elementos del DOM.
+             */
+            function applyLanguage(lang) {
+                const langData = translations[lang];
+                if (!langData) return; // Seguridad
+                
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    if (langData[key]) {
+                        if (el.placeholder) el.placeholder = langData[key];
+                        else el.textContent = langData[key];
+                    }
+                });
+                // Actualizar elementos dinámicos que dependen del idioma
+                renderCalendar();
+                renderTaskList();
+                renderMediaList();
+            }
+
+            /**
+             * Guarda los ajustes actuales en una cookie (si hay consentimiento).
+             */
+            function saveSettings() {
+                if (!hasCookieConsent) return; 
+                
+                const settingsJSON = JSON.stringify(currentSettings);
+                setCookie('appSettings', encodeURIComponent(settingsJSON), 365);
+            }
+
+            /**
+             * Carga los ajustes desde la cookie.
+             * Si no hay cookie o no hay consentimiento, usa los valores por defecto.
+             */
+            function loadSettings() {
+                // Solo intentar cargar si hay consentimiento
+                if (hasCookieConsent) {
+                    const settingsCookie = getCookie('appSettings');
+                    if (settingsCookie) {
+                        try {
+                            const settingsJSON = decodeURIComponent(settingsCookie);
+                            const loadedSettings = JSON.parse(settingsJSON);
+                            currentSettings = { ...currentSettings, ...loadedSettings };
+                        } catch (e) {
+                            console.error("Error al parsear cookie de opciones:", e);
+                            // Se usarán los defaults
+                        }
+                    }
+                }
+                // Aplicar siempre (ya sean los defaults o los cargados)
+                applySettings();
+            }
+
+            // --- Listeners del Modal de Opciones (¡AHORA FUNCIONAN!) ---
+            openSettingsBtn.addEventListener('click', () => settingsModal.style.display = 'block');
+            closeSettingsModalBtn.addEventListener('click', () => settingsModal.style.display = 'none');
+            
+            themeToggle.addEventListener('change', () => {
+                currentSettings.theme = themeToggle.checked ? 'dark' : 'light';
+                applySettings();
+                saveSettings();
+            });
+            langSelect.addEventListener('change', () => {
+                currentSettings.lang = langSelect.value;
+                applySettings();
+                saveSettings();
+            });
+            schoolHolidayToggle.addEventListener('change', () => {
+                currentSettings.schoolHolidays = schoolHolidayToggle.checked;
+                saveSettings();
+                renderCalendar(); 
+            });
+            workHolidayToggle.addEventListener('change', () => {
+                currentSettings.workHolidays = workHolidayToggle.checked;
+                saveSettings();
+                renderCalendar();
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === settingsModal) settingsModal.style.display = 'none';
+                if (e.target === dayModal) dayModal.style.display = 'none';
+                if (e.target === taskModal) taskModal.style.display = 'none';
+            });
+            
+            // --- ====== FIN: Lógica de Cookies y Opciones (REFACTORIZADA) ====== ---
+
+
+            // --- Gestión de Datos (LocalStorage) ---
+
+            function saveData() {
+                if (!hasCookieConsent) return; 
+                
+                try {
+                    localStorage.setItem('appTasks', JSON.stringify(tasks));
+                    localStorage.setItem('appHolidays', JSON.stringify(holidays));
+
+                    audioAssignmentNames = {};
+                    audioAssignments.forEach((file, dayKey) => {
+                        audioAssignmentNames[dayKey] = file.name;
+                    });
+                    localStorage.setItem('appAudioMap', JSON.stringify(audioAssignmentNames));
+                } catch (e) {
+                    console.error("Error al guardar en localStorage:", e);
+                }
+            }
+
+            function loadData() {
+                if (!hasCookieConsent) return; // No cargar si no hay consentimiento
+                
+                try {
+                    tasks = JSON.parse(localStorage.getItem('appTasks')) || [];
+                    holidays = JSON.parse(localStorage.getItem('appHolidays')) || {};
+                    audioAssignmentNames = JSON.parse(localStorage.getItem('appAudioMap')) || {};
+                } catch (e) {
+                    console.error("Error al cargar de localStorage:", e);
+                    tasks = [];
+                    holidays = {};
+                    audioAssignmentNames = {};
+                }
+            }
+            
+            function relinkAudioAssignments() {
+                if (mediaFiles.length === 0 || Object.keys(audioAssignmentNames).length === 0) {
+                    return;
+                }
+                
+                const fileMap = new Map(mediaFiles.map(file => [file.name, file]));
+                audioAssignments.clear();
+                
+                for (const dayKey in audioAssignmentNames) {
+                    const fileName = audioAssignmentNames[dayKey];
+                    if (fileMap.has(fileName)) {
+                        audioAssignments.set(dayKey, fileMap.get(fileName));
+                    }
+                }
+                
+                renderCalendar();
+                updateSongOfTheDay();
+            }
+
+            // --- Lógica del Calendario ---
+            function renderCalendar() {
+                calendarGrid.innerHTML = ''; // Limpiar grid
+                const lang = currentSettings.lang;
+                const month = currentDate.getMonth();
+                const year = currentDate.getFullYear();
+                
+                if (!translations[lang]) return; // Evitar error si las traducciones no han cargado
+
+                monthYearHeader.textContent = `${translations[lang].months[month]} ${year}`;
+
+                translations[lang].weekdays.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'calendar-day-header';
+                    dayHeader.textContent = day;
+                    calendarGrid.appendChild(dayHeader);
+                });
+
+                const dayOfWeek = new Date(year, month, 1).getDay(); // 0=Sun, 1=Mon, ...
+                const firstDayOfMonth = (dayOfWeek === 0) ? 6 : dayOfWeek - 1; // 0=Mon, 1=Tue, ..., 6=Sun
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const todayKey = getDayKey(new Date());
+
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const padDay = document.createElement('div');
+                    padDay.className = 'calendar-day other-month';
+                    calendarGrid.appendChild(padDay);
+                }
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const day = document.createElement('div');
+                    const dayDate = new Date(year, month, i);
+                    const dayKey = getDayKey(dayDate);
+                    
+                    day.className = 'calendar-day';
+                    day.dataset.dayKey = dayKey;
+                    
+                    const holidayType = holidays[dayKey];
+                    if (holidayType) {
+                        if (holidayType === 'school' && currentSettings.schoolHolidays) {
+                            day.classList.add('holiday-school');
+                        } else if (holidayType === 'work' && currentSettings.workHolidays) {
+                            day.classList.add('holiday-work');
+                        } else if (holidayType === 'both') {
+                            if (currentSettings.schoolHolidays && currentSettings.workHolidays) {
+                                day.classList.add('holiday-both');
+                            } else if (currentSettings.schoolHolidays) {
+                                day.classList.add('holiday-school'); 
+                            } else if (currentSettings.workHolidays) {
+                                day.classList.add('holiday-work');
+                            }
+                        }
+                    }
+                    
+                    if (dayKey === todayKey) {
+                        day.classList.add('today');
+                    }
+                    
+                    const dayNumber = document.createElement('span');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = i;
+                    day.appendChild(dayNumber);
+                    
+                    if (audioAssignments.has(dayKey)) {
+                        const audioIcon = document.createElement('span');
+                        audioIcon.className = 'day-audio-icon';
+                        audioIcon.textContent = '🎵';
+                        day.appendChild(audioIcon);
+                    }
+                    
+                    const tasksForDay = tasks.filter(task => task.dayKey === dayKey && !task.isComplete);
+                    if (tasksForDay.length > 0) {
+                        const taskIndicator = document.createElement('div');
+                        taskIndicator.className = 'day-task';
+                        const firstTask = tasksForDay[0];
+                        const time = firstTask.dateTime.split('T')[1] || '';
+                        taskIndicator.textContent = `${time} ${firstTask.title}`;
+                        day.appendChild(taskIndicator);
+                    }
+
+                    day.addEventListener('click', () => openDayModal(dayKey));
+                    calendarGrid.appendChild(day);
+                }
+                
+                const totalGridCells = 42; 
+                const remainingSlots = totalGridCells - (firstDayOfMonth + daysInMonth);
+                
+                for (let i = 0; i < remainingSlots; i++) {
+                    const padDay = document.createElement('div');
+                    padDay.className = 'calendar-day other-month';
+                    calendarGrid.appendChild(padDay);
+                }
+            }
+
+            prevMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            nextMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+            
+            // --- Lógica del Modal de Día ---
+            function openDayModal(dayKey) {
+                selectedDayKey = dayKey;
+                dayModalTitle.textContent = formatDayKey(dayKey);
+                
+                const assignedFile = audioAssignments.get(dayKey);
+                if (assignedFile) {
+                    dayModalAudioName.textContent = assignedFile.name;
+                    dayModalPlayAudioBtn.style.display = 'inline-block';
+                } else {
+                    dayModalAudioName.textContent = translations[currentSettings.lang].day_modal_audio_none;
+                    dayModalPlayAudioBtn.style.display = 'none';
+                }
+                
+                dayModalTaskList.innerHTML = '';
+                const tasksForDay = tasks.filter(task => task.dayKey === dayKey);
+                if (tasksForDay.length > 0) {
+                    tasksForDay.forEach(task => {
+                        const li = document.createElement('li');
+                        li.textContent = `${task.title} (${task.isComplete ? 'Completada' : 'Pendiente'})`;
+                        dayModalTaskList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'No hay tareas para este día.';
+                    dayModalTaskList.appendChild(li);
+                }
+
+                const holidayType = holidays[dayKey] || 'none';
+                document.querySelector(`input[name="holiday-type"][value="${holidayType}"]`).checked = true;
+                
+                dayModal.style.display = 'block';
+            }
+            
+            closeDayModalBtn.addEventListener('click', () => dayModal.style.display = 'none');
+            
+            dayModalPlayAudioBtn.addEventListener('click', () => {
+                const file = audioAssignments.get(selectedDayKey);
+                if (file) {
+                    playAudioFile(file);
+                }
+            });
+            
+            dayModalAssignAudioBtn.addEventListener('click', () => {
+                isAssigningAudio = true;
+                dayToAssignAudio = selectedDayKey;
+                dayModal.style.display = 'none';
+                showView('media-view');
+                renderMediaList();
+            });
+            
+            dayModalAddTaskBtn.addEventListener('click', () => {
+                dayModal.style.display = 'none';
+                openTaskModal(null, selectedDayKey);
+            });
+
+            holidayTypeRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (!selectedDayKey) return; 
+                    const type = e.target.value;
+                    if (type === 'none') {
+                        delete holidays[selectedDayKey];
+                    } else {
+                        holidays[selectedDayKey] = type;
+                    }
+                    saveData(); 
+                    renderCalendar(); 
+                });
+            });
+
+            // --- Lógica de Tareas ---
+            function renderTaskList() {
+                taskListContainer.innerHTML = '';
+                const lang = currentSettings.lang;
+                const langData = translations[lang];
+                
+                if (!langData) return; // Seguridad
+
+                if (tasks.length === 0) {
+                    taskListContainer.innerHTML = `<p>No hay tareas pendientes.</p>`;
+                    return;
+                }
+                
+                const sortedTasks = [...tasks].sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+
+                sortedTasks.forEach(task => {
+                    const taskEl = document.createElement('div');
+                    taskEl.className = 'task-item';
+                    taskEl.classList.toggle('completed', task.isComplete);
+                    taskEl.dataset.taskId = task.id;
+                    
+                    taskEl.innerHTML = `
+                        <div class="task-header">
+                            <span class="task-title">${task.title}</span>
+                            <span class="task-datetime">${formatDateTime(task.dateTime)}</span>
+                        </div>
+                        <p class="task-description">${task.description || ''}</p>
+                        <div class="task-actions">
+                            <label class="task-complete-label">
+                                <span data-lang-key="task_item_complete">${langData.task_item_complete}</span>
+                                <label class="switch small-switch">
+                                    <input type="checkbox" class="task-complete-check" data-task-id="${task.id}" ${task.isComplete ? 'checked' : ''}>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                            <div class="task-actions-right">
+                                <button class="btn task-edit-btn" data-task-id="${task.id}" data-lang-key="edit">${langData.edit}</button>
+                                <button class="btn task-delete-btn" data-task-id="${task.id}" data-lang-key="task_item_delete">${langData.task_item_delete}</button>
+                            </div>
+                        </div>
+                    `;
+                    taskListContainer.appendChild(taskEl);
+                });
+                
+                addTaskListListeners();
+            }
+            
+            function addTaskListListeners() {
+                document.querySelectorAll('.task-complete-check').forEach(check => {
+                    check.addEventListener('change', (e) => {
+                        const taskId = e.target.dataset.taskId;
+                        const task = tasks.find(t => t.id === taskId);
+                        if (task) {
+                            task.isComplete = e.target.checked;
+                            saveData();
+                            renderTaskList(); 
+                            renderCalendar(); 
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.task-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const taskId = e.target.dataset.taskId;
+                        openTaskModal(taskId);
+                    });
+                });
+                
+                document.querySelectorAll('.task-delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const taskId = e.target.dataset.taskId;
+                        tasks = tasks.filter(t => t.id !== taskId);
+                        saveData();
+                        renderTaskList();
+                        renderCalendar();
+                    });
+                });
+            }
+
+            function openTaskModal(taskId = null, dayKey = null) {
+                const langData = translations[currentSettings.lang];
+                taskForm.reset();
+                if (taskId) {
+                    const task = tasks.find(t => t.id === taskId);
+                    if (task) {
+                        taskModalTitle.textContent = langData.edit_task_title;
+                        taskIdInput.value = task.id;
+                        taskTitleInput.value = task.title;
+                        taskDescriptionInput.value = task.description || '';
+                        taskDateTimeInput.value = task.dateTime; 
+                    }
+                } else {
+                    taskModalTitle.textContent = langData.task_modal_title;
+                    taskIdInput.value = '';
+                    taskDescriptionInput.value = '';
+                    if (dayKey) {
+                        taskDateTimeInput.value = `${dayKey}T12:00`;
+                    } else {
+                        taskDateTimeInput.value = '';
+                    }
+                }
+                taskModal.style.display = 'block';
+            }
+            
+            closeTaskModalBtn.addEventListener('click', () => taskModal.style.display = 'none');
+            
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = taskIdInput.value || `task_${Date.now()}`;
+                const title = taskTitleInput.value;
+                const description = taskDescriptionInput.value;
+                const dateTime = taskDateTimeInput.value;
+                const dayKey = dateTime.split('T')[0];
+                
+                const taskData = { id, title, description, dateTime, dayKey, isComplete: false };
+                
+                if (taskIdInput.value) {
+                    const taskIndex = tasks.findIndex(t => t.id === id);
+                    if (taskIndex > -1) {
+                        taskData.isComplete = tasks[taskIndex].isComplete; 
+                        tasks[taskIndex] = taskData;
+                    }
+                } else {
+                    tasks.push(taskData);
+                }
+                
+                saveData();
+                renderTaskList();
+                renderCalendar();
+                taskModal.style.display = 'none';
+            });
+
+            addNewTaskBtn.addEventListener('click', () => {
+                openTaskModal(null, null); 
+            });
+
+            // --- Lógica Multimedia ---
+            
+            function playAudioFile(file) {
+                try {
+                    const objectURL = URL.createObjectURL(file);
+                    audioPlayer.src = objectURL;
+                    audioPlayer.play();
+                    audioPlayer.onended = () => {
+                        URL.revokeObjectURL(objectURL);
+                    };
+                } catch (e) {
+                    console.error("Error al reproducir el archivo:", e);
+                }
+            }
+
+            fileInput.addEventListener('change', (e) => {
+                mediaFiles = Array.from(e.target.files);
+                relinkAudioAssignments(); 
+                renderMediaList();
+                updateSongOfTheDay();
+            });
+
+            function renderMediaList() {
+                mediaList.innerHTML = '';
+                const lang = currentSettings.lang;
+                const langData = translations[lang];
+                
+                if (!langData) return; // Seguridad
+
+                if (mediaFiles.length === 0) {
+                    mediaList.innerHTML = '<p>Carga una carpeta o archivos de audio.</p>';
+                    return;
+                }
+                
+                mediaFiles.forEach((file, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'media-item';
+                    
+                    const btnKey = isAssigningAudio ? 'media_item_assign' : 'play';
+                    const btnClass = isAssigningAudio ? 'btn-assign' : 'btn-play';
+                    const btnText = langData[btnKey];
+                    
+                    itemEl.innerHTML = `
+                        <span class="media-item-name" title="${file.name}">${file.name}</span>
+                        <div class="media-item-actions">
+                            <button class="btn ${btnClass}" data-index="${index}">${btnText}</button>
+                            ${!isAssigningAudio ? `
+                            <button class="btn btn-assign-from-list" data-index="${index}" data-lang-key="media_item_assign">${langData.media_item_assign}</button>
+                            ` : ''}
+                        </div>
+                    `;
+                    mediaList.appendChild(itemEl);
+                });
+                
+                addMediaListListeners();
+            }
+            
+            function addMediaListListeners() {
+                document.querySelectorAll('.btn-play').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const file = mediaFiles[e.target.dataset.index];
+                        playAudioFile(file);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-assign').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const file = mediaFiles[e.target.dataset.index];
+                        audioAssignments.set(dayToAssignAudio, file);
+                        saveData();
+                        
+                        isAssigningAudio = false;
+                        dayToAssignAudio = null;
+                        
+                        renderCalendar();
+                        showView('calendar-view');
+                    });
+                });
+                
+                document.querySelectorAll('.btn-assign-from-list').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const file = mediaFiles[e.target.dataset.index];
+                        const dayKey = prompt("Introduce la fecha a asignar (YYYY-MM-DD):");
+                        if (dayKey && dayKey.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                            audioAssignments.set(dayKey, file);
+                            saveData();
+                            renderCalendar();
+                            alert(`"${file.name}" asignado a ${dayKey}`);
+                        } else if(dayKey) {
+                            alert("Formato de fecha inválido.");
+                        }
+                    });
+                });
+            }
+            
+            function updateSongOfTheDay() {
+                const todayKey = getDayKey(new Date());
+                const file = audioAssignments.get(todayKey);
+                
+                if (file) {
+                    songOfTheDayName.textContent = file.name;
+                    playSongOfTheDayBtn.style.display = 'inline-block';
+                    playSongOfTheDayBtn.onclick = () => playAudioFile(file);
+                } else {
+                    if (translations[currentSettings.lang]) { // Asegurarse que las traducciones existen
+                        songOfTheDayName.textContent = translations[currentSettings.lang].song_of_day_none;
+                    }
+                    playSongOfTheDayBtn.style.display = 'none';
+                }
+            }
+
+            // --- ====== INICIO: Lógica de Inicialización (REFACTORIZADA) ====== ---
+
+            /**
+             * Función principal que arranca la app.
+             * Carga ajustes, datos (si hay permiso) y renderiza la UI.
+             */
+            function init() {
+                // 1. Cargar Ajustes (siempre, usa defaults o cookie)
+                loadSettings();
+                
+                // 2. Cargar Datos (solo si hay consentimiento)
+                if (hasCookieConsent) {
+                    loadData();
+                }
+                
+                // 3. Renderizar Vistas
+                renderCalendar();
+                updateSongOfTheDay();
+                
+                // 4. Establecer vista activa
+                showView(currentView);
+            }
+
+            /**
+             * Comprueba la cookie de consentimiento al cargar la página.
+             * Es el punto de entrada de la app.
+             */
+            function checkCookieConsent() {
+                const consent = getCookie('cookieConsent');
+                
+                if (consent === 'accepted') {
+                    hasCookieConsent = true;
+                    cookieBanner.style.display = 'none';
+                    init(); // Iniciar app completa
+                } else if (consent === 'rejected') {
+                    hasCookieConsent = false;
+                    cookieBanner.style.display = 'none'; // CORRECCIÓN: Ocultar si ya rechazó
+                    init(); // Iniciar app sin datos
+                } else { 
+                    // No hay cookie (null) -> Mostrar banner
+                    hasCookieConsent = false;
+                    cookieBanner.style.display = 'block';
+                    init(); // Iniciar app sin datos (para que la UI funcione)
+                }
+            }
+            
+            // Listeners del Banner (se quedan fuera de init)
+
+            cookieAcceptBtn.addEventListener('click', () => {
+                setCookie('cookieConsent', 'accepted', 365); // Acepta por 1 año
+                hasCookieConsent = true;
+                cookieBanner.style.display = 'none';
+                
+                // El usuario acaba de aceptar, debemos cargar sus datos
+                loadSettings(); // Recargar ajustes (por si había)
+                loadData();     // Cargar datos de tareas/audio
+                
+                // Re-renderizar todo con los nuevos datos
+                renderCalendar();
+                renderTaskList();
+                updateSongOfTheDay();
+            });
+            
+            cookieRejectBtn.addEventListener('click', () => {
+                setCookie('cookieConsent', 'rejected', 365); // Rechaza por 1 año
+                hasCookieConsent = false;
+                cookieBanner.style.display = 'none';
+            });
+
+            // --- Punto de entrada de la aplicación ---
+            checkCookieConsent();
+            
+            // --- ====== FIN: Lógica de Inicialización (REFACTORIZADA) ====== ---
+
+        });
+    </script>
+
+</body>
+</html>
