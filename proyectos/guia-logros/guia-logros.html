@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platínalo - Guías de Trofeos</title>
+    <style>
+        /* --- VARIABLES & THEME --- */
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+            --base-font-size: 16px;
+            
+            /* Trophy Colors */
+            --bronze: #cd7f32;
+            --silver: #9ca3af; 
+            --gold: #fbbf24;
+            --platinum: #8b5cf6; /* Un tono más místico para platino */
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+        }
+
+        /* Reducción de movimiento */
+        [data-motion="reduced"] *, [data-motion="reduced"] *::before, [data-motion="reduced"] *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        html { font-size: var(--base-font-size); }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: 80px; }
+        a { text-decoration: none; color: var(--primary); }
+        img { max-width: 100%; display: block; object-fit: cover; }
+        button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+
+        /* --- LAYOUT --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        h1 { font-size: 1.8rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* --- UI COMPONENTS --- */
+        .btn { padding: 10px 20px; border-radius: var(--radius); font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { border: 1px solid var(--border); background: transparent; color: var(--text-main); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-sm { padding: 5px 10px; font-size: 0.85rem; }
+        .btn-float { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; font-size: 24px; box-shadow: var(--shadow); z-index: 100; display: flex; justify-content: center; align-items: center; }
+
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); }
+        
+        /* --- FORMS --- */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 1rem; }
+        input:focus, textarea:focus { border-color: var(--primary); outline: 2px solid var(--primary-hover); outline-offset: -2px; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .checkbox-group input { width: auto; cursor: pointer; }
+        .range-group { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { flex: 1; cursor: pointer; }
+
+        /* --- GRID VIEW (HOME) --- */
+        .guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .guide-card { cursor: pointer; transition: transform 0.2s; overflow: hidden; }
+        .guide-card:hover { transform: translateY(-4px); }
+        .guide-thumb { height: 160px; width: 100%; background: #ddd; }
+        .guide-content { padding: 15px; }
+        .guide-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .guide-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+
+        /* --- GUIDE DETAILS VIEW --- */
+        .trophy-summary-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .summary-item { flex: 1; background: var(--bg-card); border: 1px solid var(--border); padding: 10px; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; min-width: 80px; }
+        .summary-count { font-size: 1.4rem; font-weight: 800; }
+        .summary-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+        .t-bronze { color: var(--bronze); }
+        .t-silver { color: var(--silver); }
+        .t-gold { color: var(--gold); }
+        .t-platinum { color: var(--platinum); }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--bg-body); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
+        .stat-value { font-size: 1.2rem; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .roadmap-section { margin-bottom: 30px; }
+        .missable-alert { background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger); padding: 15px; border-radius: 4px; margin: 15px 0; }
+
+        /* --- TROPHY LIST --- */
+        .trophy-item { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border); align-items: flex-start; }
+        .trophy-item:last-child { border-bottom: none; }
+        .trophy-img { width: 64px; height: 64px; border-radius: 8px; background: #ccc; flex-shrink: 0; }
+        .trophy-info { flex: 1; }
+        .trophy-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; flex-wrap: wrap; gap: 5px;}
+        .trophy-name { font-weight: bold; font-size: 1.1rem; }
+        .trophy-desc { font-size: 0.95rem; color: var(--text-muted); white-space: pre-wrap; }
+        
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .badge-bronze { background: var(--bronze); }
+        .badge-silver { background: var(--silver); color: #333; text-shadow: none; }
+        .badge-gold { background: var(--gold); color: #333; text-shadow: none; }
+        .badge-platinum { background: var(--platinum); }
+        .badge-missable { background: var(--danger); color: white; margin-left: 5px; text-shadow: none;}
+
+        /* --- EDITOR --- */
+        .trophy-editor-item { background: var(--bg-body); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); position: relative; }
+        .remove-trophy { position: absolute; top: 10px; right: 10px; color: var(--danger); background: none; font-size: 1.2rem; }
+
+        /* --- MODAL --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(2px); }
+        .modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--bg-card); padding: 0; border-radius: var(--radius); width: 90%; max-width: 450px; overflow: hidden; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-body); }
+        .modal-header h3 { margin: 0; font-size: 1.25rem; }
+        .modal-body { padding: 25px; }
+        .modal-footer { padding: 15px 25px; border-top: 1px solid var(--border); background: var(--bg-body); display: flex; justify-content: flex-end; }
+        
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-label h4 { margin: 0; font-size: 1rem; }
+        .setting-label p { margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-4 { margin-bottom: 1.5rem; }
+
+        @media (max-width: 600px) {
+            .trophy-item { flex-direction: column; }
+            .trophy-img { width: 50px; height: 50px; }
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .header-actions { width: 100%; display: flex; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="container">
+        <header>
+            <h1 onclick="App.router('home')" style="cursor:pointer;">🏆 Platínalo</h1>
+            <div class="header-actions">
+                <button class="btn btn-outline btn-sm" onclick="App.toggleSettings()">⚙️ Ajustes</button>
+            </div>
+        </header>
+
+        <!-- VIEW: HOME -->
+        <div id="view-home" class="view">
+            <div class="guides-grid" id="guides-list">
+                <!-- Guides injected here -->
+            </div>
+            <div id="empty-state" class="text-center hidden" style="padding: 50px;">
+                <h3>No hay guías todavía</h3>
+                <p style="color: var(--text-muted);">Pulsa el botón + para crear tu primera guía de platino.</p>
+            </div>
+            <button class="btn btn-primary btn-float" onclick="App.router('editor')" aria-label="Crear nueva guía">+</button>
+        </div>
+
+        <!-- VIEW: EDITOR -->
+        <div id="view-editor" class="view hidden">
+            <div class="card">
+                <h2 class="mb-4" id="editor-title">Nueva Guía</h2>
+                <form id="guide-form">
+                    <!-- Basic Info -->
+                    <div class="form-group">
+                        <label>Título del Juego</label>
+                        <input type="text" name="title" required placeholder="Ej: God of War: Ragnarok">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen de Portada</label>
+                        <input type="file" id="cover-input" accept="image/*">
+                        <img id="cover-preview" style="max-height: 150px; margin-top: 10px; border-radius: 8px; display:none;">
+                    </div>
+
+                    <!-- Stats -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Horas estimadas</label>
+                            <input type="number" name="hours" placeholder="Ej: 50">
+                        </div>
+                        <div class="form-group">
+                            <label>Dificultad (1-10)</label>
+                            <input type="number" name="difficulty" min="1" max="10" placeholder="Ej: 4">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Mínimo de partidas</label>
+                            <input type="number" name="playthroughs" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Trofeos Online</label>
+                            <input type="number" name="online" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="diff-related" name="difficultyRelated">
+                        <label for="diff-related" style="margin:0; font-weight:normal;">¿La dificultad afecta a los trofeos?</label>
+                    </div>
+
+                    <!-- Roadmap -->
+                    <div class="form-group">
+                        <label>Roadmap / Mini Resumen</label>
+                        <textarea name="roadmap" rows="5" placeholder="Explica los pasos: 1. Jugar historia. 2. Limpieza de coleccionables..."></textarea>
+                    </div>
+
+                    <hr class="mb-4" style="border: 0; border-top: 1px solid var(--border);">
+
+                    <!-- Trophies List -->
+                    <h3 class="mb-4">Lista de Trofeos</h3>
+                    <div id="trophies-container"></div>
+                    
+                    <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 20px;" onclick="App.addTrophyField()">+ Añadir Trofeo</button>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar Guía</button>
+                        <button type="button" class="btn btn-outline" onclick="App.router('home')">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW: DETAILS -->
+        <div id="view-details" class="view hidden">
+            <div id="details-content">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ajustes y Accesibilidad</h3>
+                <button onclick="App.toggleSettings()" style="background:none; font-size:1.5rem;">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <h4>Modo Oscuro</h4>
+                        <p>Interfaz con colores oscuros para descansar la vista.</p>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="theme-toggle" onchange="App.toggleTheme()">
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <h4>Tamaño del Texto</h4>
+                        <p>Ajusta el tamaño de la fuente global.</p>
+                    </div>
+                    <div style="width: 40%;">
+                        <input type="range" id="font-slider" min="14" max="22" step="1" value="16" oninput="App.changeFontSize(this.value)">
+                        <div class="text-center" style="font-size:0.8rem; color: var(--text-muted);"><span id="font-val">16</span>px</div>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <h4>Reducir Movimiento</h4>
+                        <p>Elimina animaciones y transiciones suaves.</p>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="motion-toggle" onchange="App.toggleMotion()">
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <h4>Zona de Peligro</h4>
+                        <p>Borrar todos los datos de la aplicación.</p>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="App.wipeData()">Borrar Todo</button>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="App.toggleSettings()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * GESTOR DE INDEXEDDB
+         * Maneja toda la persistencia de datos localmente.
+         */
+        const DB = {
+            dbName: 'PlatinaloDB',
+            version: 1,
+            db: null,
+
+            async connect() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.version);
+
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains('guides')) {
+                            db.createObjectStore('guides', { keyPath: 'id' });
+                        }
+                    };
+
+                    request.onsuccess = (e) => {
+                        this.db = e.target.result;
+                        resolve(this.db);
+                    };
+
+                    request.onerror = (e) => reject('Error abriendo DB');
+                });
+            },
+
+            async saveGuide(guide) {
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction('guides', 'readwrite');
+                    const store = tx.objectStore('guides');
+                    store.put(guide);
+                    tx.oncomplete = () => resolve(guide.id);
+                    tx.onerror = () => reject('Error guardando');
+                });
+            },
+
+            async getAllGuides() {
+                return new Promise((resolve) => {
+                    const tx = this.db.transaction('guides', 'readonly');
+                    const store = tx.objectStore('guides');
+                    const request = store.getAll();
+                    request.onsuccess = () => resolve(request.result);
+                });
+            },
+
+            async getGuide(id) {
+                return new Promise((resolve) => {
+                    const tx = this.db.transaction('guides', 'readonly');
+                    const store = tx.objectStore('guides');
+                    const request = store.get(id);
+                    request.onsuccess = () => resolve(request.result);
+                });
+            },
+
+            async deleteGuide(id) {
+                return new Promise((resolve) => {
+                    const tx = this.db.transaction('guides', 'readwrite');
+                    store = tx.objectStore('guides');
+                    store.delete(id);
+                    tx.oncomplete = () => resolve();
+                });
+            }
+        };
+
+        /**
+         * APLICACIÓN PRINCIPAL
+         */
+        const App = {
+            currentGuideId: null,
+            trophiesBuffer: [],
+
+            // Mapa de traducción para mostrar en pantalla
+            trophyLabels: {
+                bronze: 'Bronce',
+                silver: 'Plata',
+                gold: 'Oro',
+                platinum: 'Platino'
+            },
+
+            async init() {
+                try {
+                    await DB.connect();
+                    this.loadSettings(); // Cargar preferencias de usuario
+                    this.router('home');
+                } catch (error) {
+                    console.error("Fallo al iniciar la App", error);
+                    alert("Error cargando la base de datos.");
+                }
+            },
+
+            async router(viewName, param = null) {
+                document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`view-${viewName}`).classList.remove('hidden');
+                window.scrollTo(0, 0);
+
+                if (viewName === 'home') this.renderHome();
+                if (viewName === 'editor') this.renderEditor(param);
+                if (viewName === 'details') this.renderDetails(param);
+            },
+
+            /* --- VISTA: HOME --- */
+            async renderHome() {
+                const guides = await DB.getAllGuides();
+                const container = document.getElementById('guides-list');
+                const emptyState = document.getElementById('empty-state');
+                
+                container.innerHTML = '';
+
+                if (guides.length === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                    guides.forEach(guide => {
+                        const card = document.createElement('div');
+                        card.className = 'card guide-card';
+                        card.onclick = () => App.router('details', guide.id);
+                        
+                        const bgImage = guide.cover ? `url(${guide.cover})` : '#eee';
+                        const bgStyle = guide.cover ? 
+                            `background-image: ${bgImage}; background-size: cover; background-position: center;` : 
+                            `background-color: #eee; display: flex; align-items: center; justify-content: center; color: #aaa;`;
+                        
+                        const noImgText = !guide.cover ? '<span>Sin Imagen</span>' : '';
+
+                        card.innerHTML = `
+                            <div class="guide-thumb" style="${bgStyle}">${noImgText}</div>
+                            <div class="guide-content">
+                                <div class="guide-title">${guide.title}</div>
+                                <div class="guide-meta">
+                                    <span>${guide.difficulty}/10 Dificultad</span>
+                                    <span>${guide.hours}h</span>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                }
+            },
+
+            /* --- VISTA: EDITOR --- */
+            async renderEditor(guideId = null) {
+                const form = document.getElementById('guide-form');
+                const container = document.getElementById('trophies-container');
+                const title = document.getElementById('editor-title');
+                const coverPreview = document.getElementById('cover-preview');
+                
+                form.reset();
+                container.innerHTML = '';
+                this.trophiesBuffer = [];
+                coverPreview.style.display = 'none';
+                coverPreview.src = '';
+
+                if (guideId) {
+                    title.textContent = "Editar Guía";
+                    const guide = await DB.getGuide(guideId);
+                    this.currentGuideId = guideId;
+                    
+                    form.title.value = guide.title;
+                    form.hours.value = guide.hours;
+                    form.difficulty.value = guide.difficulty;
+                    form.playthroughs.value = guide.playthroughs;
+                    form.online.value = guide.online;
+                    form.difficultyRelated.checked = guide.difficultyRelated;
+                    form.roadmap.value = guide.roadmap;
+
+                    if(guide.cover) {
+                        coverPreview.src = guide.cover;
+                        coverPreview.style.display = 'block';
+                    }
+
+                    guide.trophies.forEach(t => this.addTrophyField(t));
+                } else {
+                    title.textContent = "Nueva Guía";
+                    this.currentGuideId = Date.now().toString();
+                    this.addTrophyField();
+                }
+            },
+
+            addTrophyField(data = null) {
+                const container = document.getElementById('trophies-container');
+                const id = data ? data.id : Date.now() + Math.random().toString();
+                
+                const div = document.createElement('div');
+                div.className = 'trophy-editor-item';
+                div.dataset.id = id;
+
+                const imgPreviewSrc = data && data.image ? data.image : '';
+                const imgDisplay = imgPreviewSrc ? 'block' : 'none';
+
+                div.innerHTML = `
+                    <button type="button" class="remove-trophy" onclick="this.parentElement.remove()">🗑️</button>
+                    <div class="form-group">
+                        <label>Nombre del Trofeo</label>
+                        <input type="text" class="t-name" value="${data ? data.name : ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea class="t-desc" rows="2" required>${data ? data.desc : ''}</textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <div style="flex: 1;">
+                            <label>Tipo</label>
+                            <select class="t-type">
+                                <option value="bronze" ${data && data.type === 'bronze' ? 'selected' : ''}>Bronce</option>
+                                <option value="silver" ${data && data.type === 'silver' ? 'selected' : ''}>Plata</option>
+                                <option value="gold" ${data && data.type === 'gold' ? 'selected' : ''}>Oro</option>
+                                <option value="platinum" ${data && data.type === 'platinum' ? 'selected' : ''}>Platino</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: center; padding-top: 25px;">
+                            <input type="checkbox" class="t-missable" id="m-${id}" ${data && data.missable ? 'checked' : ''}>
+                            <label for="m-${id}" style="margin:0 0 0 5px; font-weight: normal;">¿Perdible?</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Icono del trofeo</label>
+                        <input type="file" class="t-img-input" accept="image/*" onchange="App.previewImage(this)">
+                        <input type="hidden" class="t-img-base64" value="${imgPreviewSrc}">
+                        <img src="${imgPreviewSrc}" class="t-preview" style="max-width: 64px; max-height: 64px; margin-top: 5px; display: ${imgDisplay}; border-radius: 4px;">
+                    </div>
+                `;
+                container.appendChild(div);
+            },
+
+            previewImage(input) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const container = input.parentElement;
+                        container.querySelector('.t-img-base64').value = e.target.result;
+                        const img = container.querySelector('.t-preview');
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+
+            async handleSave(e) {
+                e.preventDefault();
+                const form = document.getElementById('guide-form');
+                const coverInput = document.getElementById('cover-input');
+                let coverBase64 = document.getElementById('cover-preview').src;
+                
+                if (coverInput.files[0]) {
+                    coverBase64 = await this.fileToBase64(coverInput.files[0]);
+                } else if (coverBase64.includes(window.location.href)) {
+                    coverBase64 = null;
+                }
+
+                const trophyDivs = document.querySelectorAll('.trophy-editor-item');
+                const trophies = Array.from(trophyDivs).map(div => ({
+                    id: div.dataset.id,
+                    name: div.querySelector('.t-name').value,
+                    desc: div.querySelector('.t-desc').value,
+                    type: div.querySelector('.t-type').value,
+                    missable: div.querySelector('.t-missable').checked,
+                    image: div.querySelector('.t-img-base64').value
+                }));
+
+                const missableCount = trophies.filter(t => t.missable).length;
+
+                const guide = {
+                    id: this.currentGuideId,
+                    title: form.title.value,
+                    hours: form.hours.value,
+                    difficulty: form.difficulty.value,
+                    playthroughs: form.playthroughs.value,
+                    online: form.online.value,
+                    difficultyRelated: form.difficultyRelated.checked,
+                    roadmap: form.roadmap.value,
+                    missableCount: missableCount,
+                    cover: coverBase64,
+                    trophies: trophies,
+                    updatedAt: Date.now()
+                };
+
+                await DB.saveGuide(guide);
+                this.router('details', guide.id);
+            },
+
+            /* --- VISTA: DETALLES --- */
+            async renderDetails(id) {
+                const guide = await DB.getGuide(id);
+                if (!guide) return this.router('home');
+
+                const container = document.getElementById('details-content');
+
+                // 1. Contar trofeos
+                const counts = { bronze: 0, silver: 0, gold: 0, platinum: 0 };
+                guide.trophies.forEach(t => {
+                    if (counts[t.type] !== undefined) counts[t.type]++;
+                });
+                const totalTrophies = guide.trophies.length;
+
+                // 2. Generar barra de resumen de trofeos
+                const summaryHTML = `
+                    <div class="trophy-summary-bar">
+                         <div class="summary-item">
+                            <span class="summary-count t-platinum">${counts.platinum}</span>
+                            <span class="summary-label">Platino</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-count t-gold">${counts.gold}</span>
+                            <span class="summary-label">Oro</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-count t-silver">${counts.silver}</span>
+                            <span class="summary-label">Plata</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-count t-bronze">${counts.bronze}</span>
+                            <span class="summary-label">Bronce</span>
+                        </div>
+                        <div class="summary-item" style="background: var(--bg-body); border:none;">
+                            <span class="summary-count" style="color: var(--text-main)">${totalTrophies}</span>
+                            <span class="summary-label">Total</span>
+                        </div>
+                    </div>
+                `;
+
+                // 3. Generar alertas de perdibles
+                const missableTrophies = guide.trophies.filter(t => t.missable);
+                let missableLinksHTML = '';
+                if (missableTrophies.length > 0) {
+                    const links = missableTrophies.map(t => `<a href="#trophy-${t.id}">${t.name}</a>`).join(', ');
+                    missableLinksHTML = `
+                        <div class="missable-alert">
+                            <strong>⚠️ ¡Atención!</strong> Hay ${missableTrophies.length} trofeos perdibles: ${links}.
+                        </div>
+                    `;
+                }
+
+                // 4. Generar lista de trofeos con traducción
+                const trophiesHTML = guide.trophies.map(t => {
+                    const badgeClass = `badge-${t.type}`;
+                    // Usamos el mapa para traducir 'bronze' -> 'Bronce'
+                    const typeName = this.trophyLabels[t.type] || t.type;
+                    const missableBadge = t.missable ? '<span class="badge badge-missable">Perdible</span>' : '';
+                    const imgDisplay = t.image ? `<img src="${t.image}" class="trophy-img" alt="Icono">` : `<div class="trophy-img"></div>`;
+                    
+                    return `
+                        <div class="trophy-item" id="trophy-${t.id}">
+                            ${imgDisplay}
+                            <div class="trophy-info">
+                                <div class="trophy-header">
+                                    <span class="trophy-name">${t.name}</span>
+                                    <div>
+                                        <span class="badge ${badgeClass}">${typeName}</span>
+                                        ${missableBadge}
+                                    </div>
+                                </div>
+                                <div class="trophy-desc">${this.escapeHtml(t.desc)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const headerImg = guide.cover ? 
+                    `<div style="height: 200px; width:100%; background: url(${guide.cover}) center/cover; border-radius: var(--radius); margin-bottom: 20px;"></div>` : '';
+
+                container.innerHTML = `
+                    ${headerImg}
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom: 20px;">
+                        <h1 style="margin:0;">${guide.title}</h1>
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="App.router('editor', '${guide.id}')">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="App.deleteGuide('${guide.id}')">Borrar</button>
+                        </div>
+                    </div>
+                    
+                    ${summaryHTML}
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-value">${guide.difficulty}/10</span>
+                            <span class="stat-label">Dificultad</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${guide.hours}h</span>
+                            <span class="stat-label">Estimadas</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${guide.playthroughs}</span>
+                            <span class="stat-label">Partidas Min.</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${guide.online}</span>
+                            <span class="stat-label">Online</span>
+                        </div>
+                    </div>
+
+                    <div class="card roadmap-section">
+                        <h3>📝 Roadmap y Consejos</h3>
+                        <p style="margin-top: 10px; white-space: pre-wrap;">${this.escapeHtml(guide.roadmap)}</p>
+                        <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
+                            <strong>¿Afecta la dificultad?:</strong> ${guide.difficultyRelated ? 'SÍ' : 'NO'}
+                        </div>
+                        ${missableLinksHTML}
+                    </div>
+
+                    <div class="card">
+                        <h3 class="mb-4">Lista de Trofeos</h3>
+                        ${trophiesHTML}
+                    </div>
+                `;
+            },
+
+            async deleteGuide(id) {
+                if(confirm("¿Estás seguro de querer borrar esta guía? No se puede deshacer.")) {
+                    await DB.deleteGuide(id);
+                    this.router('home');
+                }
+            },
+
+            /* --- UTILS & ACCESSIBILITY --- */
+            fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+            },
+
+            escapeHtml(text) {
+                if (!text) return '';
+                return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            },
+
+            toggleSettings() {
+                document.getElementById('settings-modal').classList.toggle('active');
+            },
+
+            // --- AJUSTES DE TEMA Y ACCESIBILIDAD ---
+
+            loadSettings() {
+                // Tema
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    document.getElementById('theme-toggle').checked = true;
+                }
+                
+                // Fuente
+                const savedSize = localStorage.getItem('fontSize') || '16';
+                this.changeFontSize(savedSize);
+                document.getElementById('font-slider').value = savedSize;
+
+                // Movimiento
+                const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+                if (reducedMotion) {
+                    document.body.setAttribute('data-motion', 'reduced');
+                    document.getElementById('motion-toggle').checked = true;
+                }
+            },
+
+            toggleTheme() {
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.body.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            },
+
+            changeFontSize(size) {
+                document.documentElement.style.setProperty('--base-font-size', size + 'px');
+                document.getElementById('font-val').innerText = size;
+                localStorage.setItem('fontSize', size);
+            },
+
+            toggleMotion() {
+                const isReduced = document.body.getAttribute('data-motion') === 'reduced';
+                if(isReduced) {
+                    document.body.removeAttribute('data-motion');
+                    localStorage.setItem('reducedMotion', 'false');
+                } else {
+                    document.body.setAttribute('data-motion', 'reduced');
+                    localStorage.setItem('reducedMotion', 'true');
+                }
+            },
+            
+            async wipeData() {
+                if(confirm("¡CUIDADO! Esto borrará TODAS las guías y ajustes. ¿Continuar?")) {
+                    const guides = await DB.getAllGuides();
+                    for(let g of guides) {
+                        await DB.deleteGuide(g.id);
+                    }
+                    localStorage.clear();
+                    alert("Datos y ajustes borrados.");
+                    window.location.reload();
+                }
+            }
+        };
+
+        document.getElementById('guide-form').addEventListener('submit', (e) => App.handleSave(e));
+        window.onload = () => App.init();
+
+    </script>
+</body>
+</html>
