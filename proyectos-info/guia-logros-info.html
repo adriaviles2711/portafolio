@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio - Reproductor calendario</title>
+    <title>Portafolio - Guía de logros</title>
     <link rel="stylesheet" href="../styles/styles.css">
     <link rel="stylesheet" href="../styles/categorias-styles.css">
     <link rel="stylesheet" href="../styles/proyecto-info-styles.css">
     <script src="../js/proyecto-info-js.js" defer></script>
 </head>
 <body>
+    <!-- Navegación -->
     <nav id="navbar-index">
         <div id="navbar-izq">
             <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
@@ -27,7 +28,7 @@
 
     <div id="sec-ruta">
         <h3>Ruta</h3>
-        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-ia.html">Desarrollo de interfaces</a><span>/</span><span>Reproductor calendario</span></p>
+        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-ia.html">Desarrollo de interfaces</a><span>/</span><span>Aplicación pomodoro</span></p>
     </div>
 
     <div id="info-proyect">
@@ -40,13 +41,13 @@
             <a href="#prompts"><span>Prompts</span></a>
         </div>
         <div id="informacion-der">
-            
             <div id="informacion">
-                <h1>Guía de Logros</h1>
+                <h1>Guía de logros</h1>
                 <p>Plataforma de gestión de guías de trofeos diseñada para ayudar a los jugadores a organizar su camino hacia el platino. La aplicación permite crear, editar y visualizar estrategias detalladas, calculando automáticamente estadísticas de dificultad y alertando sobre trofeos perdibles en una interfaz accesible y adaptada a móviles.</p>
+                <div id="info-stats">
                     <div id="info-fecha">
                         <p>FECHA</p>
-                        <h3>Noviembre 2025</h3>
+                        <h3>Octubre 2025</h3>
                     </div>
                     <div id="info-rol">
                         <p>ROL</p>
@@ -69,15 +70,15 @@
             </div>
 
             <div id="resumen" class="secciones">
-            <div class="info-headers">
-                <h1>Resumen</h1>
-                <hr>
+                <div class="info-headers">
+                    <h1>Resumen</h1>
+                    <hr>
+                </div>
+                <p>
+                    Plataforma de gestión de guías de trofeos diseñada para ayudar a los jugadores a organizar su camino hacia el platino. La aplicación permite crear, editar y visualizar estrategias detalladas, calculando automáticamente estadísticas de dificultad y alertando sobre trofeos perdibles en una interfaz accesible y adaptada a móviles.<br><br>
+                    Fue desarrollada íntegramente con HTML, CSS y JavaScript puro (vanilla), funcionando como una Single Page Application (SPA). Destaca por su implementación de <strong>IndexedDB</strong> para el almacenamiento local persistente de datos e imágenes, eliminando la necesidad de bases de datos externas o conexión a internet.
+                </p>
             </div>
-            <p>
-                Plataforma de gestión de guías de trofeos diseñada para ayudar a los jugadores a organizar su camino hacia el platino. La aplicación permite crear, editar y visualizar estrategias detalladas, calculando automáticamente estadísticas de dificultad y alertando sobre trofeos perdibles en una interfaz accesible y adaptada a móviles.<br><br>
-                Fue desarrollada íntegramente con HTML, CSS y JavaScript puro (vanilla), funcionando como una Single Page Application (SPA). Destaca por su implementación de <strong>IndexedDB</strong> para el almacenamiento local persistente de datos e imágenes, eliminando la necesidad de bases de datos externas o conexión a internet.
-            </p>
-        </div>
 
             <div id="caracteristicas" class="secciones">
                 <div class="info-headers">
@@ -94,7 +95,7 @@
             </div>
 
             <div id="prompts" class="secciones">
-    <div class="info-headers">
+                <div class="info-headers">
         <h1>Prompts Utilizados</h1>
         <hr>
     </div>
@@ -102,29 +103,39 @@
         Aquí se documentan los prompts enviados a la IA y los resultados que generaron, mostrando la evolución del proyecto desde la idea inicial hasta el resultado final.
     </p>
 
+
     <div class="prompt-item">
         <div class="prompt-text">
             <h3>Prompt 1: Versión Inicial y Estructura con IndexedDB</h3>
             <blockquote>Actúa como un desarrollador con experiencia de varios años en el desarrollo de aplicaciones.
 
+
 Haz una app de guias de platinos de videojuegos en HTML, CSS y JavaScript puro (vanilla JavaScript) embebido, no uses frameworks para JavaScript ni para CSS.
+
 
 Las guías, junto con las imágenes subidas, se guardarán en local usando IndexedDB.
 La idea es que haya una sección donde apareceran todos las guias añadidas de los diferentes juegos, y al seleccionar uno, aparezca la guía.
 Quiero que al abrirlo aparezca la siguiente información del platino:
 
+
 Horas para conseguir el platino, dificultad (del 1 al 10), minimo de partidas para el platino, Nº trofeos online, Nº trofeos perdibles y que ponga si influye o no la dificultad en los trofeos.
+
 
 Está información la tendrá que poner el usuario a la hora de crear la guia.
 Luego aparecerá un miniresumen de cosas importantes, como por ejemplo, que dificultad debe jugar la persona para conseguir el platino, cuantos trofeos perdibles hay (y un hipervinculo a ellos, que estaran en la misma pagina, osea que solo será como un indice para que baje hasta el trofeo) y más información importante.
 
+
 Luego aparecerán los logros en el orden en el que el usuario los haya añadido, junto con una foto del logro, si es de bronce, plata u oro y s es perdible o no.
+
 
 Junto con la foto aparecerá el nombre y una descripción que explicará como conseguirlo, que también tendrá que poner el usuario (como todo).
 
+
 Para que el usuario añada cosas, añade un botón para crear una guía y otro dentro de las guías para editarlas. Para crearlas, será un formulario donde irá pidiendo foto, descripción, decir si es perdible o no, y poner si es bronce, plata, oro o platino.
 
+
 Hazlo como veas conveniente y si crees que me ha faltado algo, añadelo. Todo se guardará en un indexedDB en local, recuerda.
+
 
 Hazlo también compatible para móviles, y pon cosas de accesibilidad, como modo oscuro y más opciones de ajustes.</blockquote>
         </div>
@@ -156,12 +167,15 @@ Hazlo también compatible para móviles, y pon cosas de accesibilidad, como modo
         </div>
     </div>
 
+
     <div class="prompt-item">
         <div class="prompt-text">
             <h3>Prompt 2: Corrección de idioma y mejoras visuales</h3>
             <blockquote>Una vez añadido un trofeo, aparece bronze en vez de bronce, lo mismo con platino, que aparece platinum. Ponlo en español.
 
+
 Además, añade al principio cuantos trofeos de bronce, plata, oro y platinos hay.
+
 
 También, haz los ajustes más bonitos y añade más funciones de accesibilidad. Es muy soso ahora mismo.</blockquote>
         </div>
@@ -181,9 +195,11 @@ También, haz los ajustes más bonitos y añade más funciones de accesibilidad.
         </div>
     </div>
 
-</div>
-            
-            <div id="image-modal" class="modal-overlay">
+
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal-overlay">
         <img class="modal-content" id="modal-image-content">
     </div>
 
