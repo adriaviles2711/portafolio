@@ -13,12 +13,23 @@
     --font-primary: Segoe UI, Roboto, Arial, sans-serif;
 }
 
+/* --- CORRECCIÓN: SOLUCIÓN AL PROBLEMA DE SUPERPOSICIÓN --- */
+#navbar-index {
+    position: sticky; /* Hace que la barra se pegue al subir */
+    top: 0;           /* Se pega al borde superior */
+    z-index: 500;     /* Asegura que esté por encima del contenido (imágenes) */
+    background-color: var(--color-background); /* Fondo opaco para que no se vea el contenido detrás */
+    /* Asegúrate de que esto coincida con tu diseño actual, si tienes padding/border agrégalos aquí si faltan */
+}
+
 /* Sección de la información del proyecto */
 #info-proyect {
     display: flex;
     gap: 40px;
     margin: 0 auto;
     max-width: 1200px;
+    position: relative; /* Contexto de posición */
+    z-index: 1; /* Nivel base */
 }
 
 /* Barra de navegación izquierda */
@@ -36,6 +47,7 @@
     align-self: flex-start;
     height: 40%;
     overflow-y: auto;
+    z-index: 10; /* Ligeramente elevado */
 }
 
 #navegador-izq a {
@@ -222,6 +234,7 @@
     cursor: pointer;
     border-radius: 5px;
     overflow: hidden;
+    z-index: 1; /* Aseguramos que no sea mayor que el navbar */
 }
 
 .prompt-capturas img {
@@ -262,7 +275,7 @@
 .modal-overlay {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1000; /* Modal siempre encima de todo (Navbar es 500) */
     left: 0;
     top: 0;
     width: 100%;

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Configuración RPi y Mac Mini</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/categorias-styles.css">
+    <link rel="stylesheet" href="../styles/proyecto-info-styles.css">
+    <script src="../js/proyecto-info-js.js" defer></script>
+</head>
+<body>
+    <nav id="navbar-index">
+        <div id="navbar-izq">
+            <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
+        </div>
+        <div id="navbar-der">
+            <ul id="navbar-menu">
+                <li><a href="../index.html" class="nav-link">INICIO</a></li>
+                <li><a href="../#sobre-mi" class="nav-link">SOBRE MÍ</a></li>
+                <li><a href="../#habilidades" class="nav-link">HABILIDADES</a></li>
+                <li><a href="../proyectos.html" class="nav-link active">PROYECTOS</a></li>
+                <li><a href="../#contacto" class="nav-link">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="sec-ruta">
+        <h3>Ruta</h3>
+        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-asi.html">Administración de Sistemas</a><span>/</span><span>Configuración RPi y Mac Mini</span></p>
+    </div>
+
+    <div id="info-proyect">
+        <div id="navegador-izq">
+            <h3 id="navegador-cabecera">En esta página</h3>
+            <hr>
+            <a href="#informacion" id="active"><span>Información</span></a>
+            <a href="#resumen"><span>Resumen</span></a>
+            <a href="#raspberry"><span>Raspberry Pi</span></a>
+            <a href="#macmini"><span>Mac Mini</span></a>
+        </div>
+        <div id="informacion-der">
+            <div id="informacion">
+                <h1>Configuración inicial Raspberry Pi y Mac Mini</h1>
+                <p>En esta práctica voy a detallar cómo fue la configuración inicial de los siguientes dos equipos: una Raspberry Pi y un Mac Mini. Describiré, paso a paso, todo lo que hicimos para dejar ambos sistemas operativos listos.</p>
+                <div id="info-stats">
+                    <div id="info-fecha">
+                        <p>FECHA</p>
+                        <h3>Noviembre 2025</h3>
+                    </div>
+                    <div id="info-rol">
+                        <p>ROL</p>
+                        <h3>SysAdmin</h3>
+                    </div>
+                    <div id="info-cliente">
+                        <p>CLIENTE</p>
+                        <h3>Aulateca / Práctica</h3>
+                    </div>
+                </div>
+
+                <div id="info-botones">
+                    <a href="#" target="_blank"><button class="reverse-button">
+                        <p>Ver documentación PDF →</p>
+                    </button></a>
+                    <a href="https://github.com/adriaviles2711/portafolio" target="_blank"><button class="button">
+                        <p>Ir a GitHub</p>
+                    </button></a>
+                </div>
+            </div>
+
+            <div id="resumen" class="secciones">
+                <div class="info-headers">
+                    <h1>Resumen</h1>
+                    <hr>
+                </div>
+                <p>
+                    En esta práctica voy a detallar cómo fue la configuración inicial de los siguientes dos equipos: una Raspberry Pi y un Mac Mini. Describiré, paso a paso, todo lo que hicimos para dejar ambos sistemas operativos listos. Esto incluye desde la selección del idioma y la conexión a la red, hasta la creación de usuarios y la realización de las actualizaciones necesarias.
+                </p>
+                <div class="prompt-capturas" style="margin-top: 20px;">
+                    <div class="captura-container">
+                        <img src="../asi-img/configMacRap/imagen1.jpg" alt="Portada práctica configuración">
+                        <div class="captura-overlay"><p>Portada</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="raspberry" class="secciones">
+                <div class="info-headers">
+                    <h1>Configuración Raspberry Pi</h1>
+                    <hr>
+                </div>
+                
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>1. Inicio y Región</h3>
+                        <blockquote>
+                            Lo primero fue conectar la Raspberry y encenderla. Al encenderla por primera vez, aparece el asistente de inicio que nos ayudará a configurar el sistema. Al darle a siguiente, nos pedirá que seleccionemos nuestro país, idioma y zona horaria.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen2.jpg" alt="Selección de país">
+                            <div class="captura-overlay"><p>Set Country</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>2. Creación de Usuario</h3>
+                        <blockquote>
+                            Después de darle a continuar, deberemos crear nuestro usuario con su contraseña, siguiendo las instrucciones del profesor, le asignamos "aulaateca26" tanto de usuario como de contraseña.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen3.jpg" alt="Creación de usuario">
+                            <div class="captura-overlay"><p>Create User</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>3. Conexión WiFi</h3>
+                        <blockquote>
+                            Al crear el usuario, lo siguiente que nos aparece es para conectarnos a la red WiFi.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen4.jpg" alt="Selección de red WiFi">
+                            <div class="captura-overlay"><p>Select WiFi</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>4. Configuración del Navegador</h3>
+                        <blockquote>
+                            Una vez nos hemos conectado a la red WiFi nos pregunta qué navegador queremos usar por defecto junto con una opción para desinstalar el que no usemos. Seleccionamos Chromium y NO marcamos la opción para desinstalar Firefox.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen5.jpg" alt="Selección de navegador">
+                            <div class="captura-overlay"><p>Choose Browser</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>5. Actualización del Sistema</h3>
+                        <blockquote>
+                            A continuación, nos pide actualizar, marcamos que si queremos actualizar ahora y esperamos.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen6.jpg" alt="Actualizando software">
+                            <div class="captura-overlay"><p>Update Software</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>6. Depósito de Claves</h3>
+                        <blockquote>
+                            Una vez se han completado las actualizaciones, reiniciamos el equipo e introducir una contraseña para el depósito de claves. Siguiendo las instrucciones del profesor, esta contraseña también será "aulaateca26".
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen7.jpg" alt="Contraseña depósito de claves">
+                            <div class="captura-overlay"><p>Depósito de claves</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="macmini" class="secciones">
+                <div class="info-headers">
+                    <h1>Configuración Mac Mini</h1>
+                    <hr>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>1. Idioma y Región</h3>
+                        <blockquote>
+                            Lo primero que debemos hacer es conectarlo y encenderlo. Una vez encendido, aparecerá el asistente que nos guiará en la configuración inicial. La primera opción que nos aparece es para seleccionar el idioma, por lo que seleccionamos español. Después nos consulta por nuestra región, donde seleccionamos España.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen8.jpg" alt="Selección de idioma">
+                            <div class="captura-overlay"><p>Idioma</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>2. Tratamiento Personal</h3>
+                        <blockquote>
+                            A continuación, nos pide que seleccionemos como quiere que se nos trate, si como masculino, femenino o neutro. Esto no tiene mucha importancia, pero seleccionamos neutro y le dimos a siguiente.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen9.jpg" alt="Selección de tratamiento">
+                            <div class="captura-overlay"><p>Tratamiento</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>3. Accesibilidad</h3>
+                        <blockquote>
+                            Después nos aparecen ajustes de accesibilidad, investigamos sobre que iba cada uno, pero finalmente no seleccionamos nada y le dimos a continuar.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen10.jpg" alt="Ajustes de accesibilidad">
+                            <div class="captura-overlay"><p>Accesibilidad</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>4. Conexión WiFi</h3>
+                        <blockquote>
+                            Una vez omitido el paso de accesibilidad, nos pedía conectarnos a una red WiFi, por lo que nos conectamos a la misma red que con la Raspberry Pi.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen11.jpg" alt="Selección de red WiFi">
+                            <div class="captura-overlay"><p>Red WiFi</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>5. Asistente de Migración</h3>
+                        <blockquote>
+                            Cuando nos conectamos, nos apareció un asistente de migración, como no queríamos migrar ningún tipo de dato pulsamos en "Ahora no".
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen12.jpg" alt="Asistente de migración">
+                            <div class="captura-overlay"><p>Migración</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>6. Cuenta de Apple</h3>
+                        <blockquote>
+                            Posteriormente nos pedía que iniciaramos sesión con nuestra cuenta de Apple, seleccionamos la opción "Configurar más tarde".
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen13.jpg" alt="Inicio de sesión Apple">
+                            <div class="captura-overlay"><p>Apple ID</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>7. Términos y Condiciones</h3>
+                        <blockquote>
+                            Después nos pidió que aceptáramos los términos y condiciones, los cuales aceptamos para poder utilizar el equipo.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen14.jpg" alt="Términos y condiciones">
+                            <div class="captura-overlay"><p>Términos</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>8. Creación de Cuenta</h3>
+                        <blockquote>
+                            Luego tuvimos que crear nuestro usuario, por lo que, siguiendo las instrucciones del profesor, volvió a ser "aulaateca26" tanto para el usuario como la contraseña.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen15.jpg" alt="Crear cuenta en el ordenador">
+                            <div class="captura-overlay"><p>Crear Usuario</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>9. Configuración de Servicios y Cierre</h3>
+                        <blockquote>
+                            Después nos pidió activar varias opciones, como la localización, zona horaria, enviar datos de análisis, y una opción para confirmar si queremos recibir informes sobre el tiempo de uso. Esta última opción marcamos en "Configurar más tarde" aunque el cursor aparezca en continuar. Una vez marcadas las opciones de los pasos anteriores, reiniciamos el equipo y ya estaba listo para usar.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configMacRap/imagen16.jpg" alt="Activa la localización">
+                            <div class="captura-overlay"><p>Localización</p></div>
+                        </div>
+                        <div class="captura-container" style="margin-top: 10px;">
+                            <img src="../asi-img/configMacRap/imagen17.jpg" alt="Análisis de datos">
+                            <div class="captura-overlay"><p>Análisis</p></div>
+                        </div>
+                        <div class="captura-container" style="margin-top: 10px;">
+                            <img src="../asi-img/configMacRap/imagen18.jpg" alt="Tiempo de uso">
+                            <div class="captura-overlay"><p>Tiempo de uso</p></div>
+                        </div>
+                        <div class="captura-container" style="margin-top: 10px;">
+                            <img src="../asi-img/configMacRap/imagen19.jpg" alt="Bienvenida al Mac">
+                            <div class="captura-overlay"><p>Listo para usar</p></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal-overlay">
+        <img class="modal-content" id="modal-image-content">
+    </div>
+
+    <script src="../js/proyecto-info-js.js"></script>
+</body>
+</html>
