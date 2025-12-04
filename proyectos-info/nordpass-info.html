@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Clonación NordPass</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/categorias-styles.css">
+    <link rel="stylesheet" href="../styles/proyecto-info-styles.css">
+    <style>
+        /* --- AJUSTES ESPECÍFICOS PARA ESTA PÁGINA (Sobre escribe o complementa tu CSS) --- */
+        
+        /* Ajuste de Navbar según tu CSS */
+        #navbar-index {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            background-color: var(--color-background);
+        }
+
+        /* Estilo Decorativo para las cajas de texto (Más bonito) */
+        .text-card {
+            background-color: var(--color-primary); /* Fondo más integrado */
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-accent); /* Decoración lateral */
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 16px;
+            text-align: justify;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .text-card:hover {
+            box-shadow: 0 0 15px var(--color-led); /* Efecto Glow al pasar ratón */
+            border-color: var(--color-accent);
+        }
+
+        /* Listas dentro de las tarjetas */
+        .text-card ul {
+            margin-left: 20px;
+            margin-top: 10px;
+            list-style: none; /* Quitamos bullets por defecto para poner los nuestros */
+        }
+        
+        .text-card li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .text-card li::before {
+            content: '>';
+            color: var(--color-accent);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* RECORTAR ESPACIOS (Lo que pediste) */
+        .secciones {
+            margin-bottom: 10px; /* Menos espacio entre secciones */
+        }
+
+        .info-headers {
+            margin-bottom: 10px; /* Pegar título al contenido */
+        }
+
+        .info-headers h1 {
+            font-size: 28px; /* Un poco más contenido */
+            margin-bottom: 2px; /* Pegado a la línea */
+            color: var(--color-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-headers hr {
+            margin-top: 0;
+            margin-bottom: 15px; /* Espacio justo antes del texto */
+            opacity: 0.7;
+        }
+
+        /* Decoración de texto */
+        .highlight {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .sub-title {
+            color: var(--color-text);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+    </style>
+    <script src="../js/proyecto-info-js.js" defer></script>
+</head>
+<body>
+    <nav id="navbar-index">
+        <div id="navbar-izq">
+            <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
+        </div>
+        <div id="navbar-der">
+            <ul id="navbar-menu">
+                <li><a href="../index.html" class="nav-link">INICIO</a></li>
+                <li><a href="../#sobre-mi" class="nav-link">SOBRE MÍ</a></li>
+                <li><a href="../#habilidades" class="nav-link">HABILIDADES</a></li>
+                <li><a href="../proyectos.html" class="nav-link active">PROYECTOS</a></li>
+                <li><a href="../#contacto" class="nav-link">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="sec-ruta">
+        <h3>Ruta</h3>
+        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-dev.html">Desarrollo Móvil</a><span>/</span><span>Clonación NordPass</span></p>
+    </div>
+
+    <div id="info-proyect">
+        <div id="navegador-izq">
+            <h3 id="navegador-cabecera">Navegación</h3>
+            <hr>
+            <a href="#intro" id="active"><span>Contexto</span></a>
+            <a href="#registro"><span>Registro y Lógica</span></a>
+            <a href="#inicio"><span>Inicio</span></a>
+            <a href="#anadir"><span>Gestión Elementos</span></a>
+            <a href="#formularios"><span>Formularios</span></a>
+            <a href="#generador"><span>Generador</span></a>
+            <a href="#perfil"><span>Perfil</span></a>
+            <a href="#conclusion"><span>Conclusión</span></a>
+        </div>
+
+        <div id="informacion-der">
+            <div id="informacion">
+                <h1>Clonación NordPass (FlutterFlow)</h1>
+                <p>Documentación técnica detallada sobre el desarrollo, limitaciones técnicas y lógica de seguridad implementada en la réplica de la aplicación NordPass.</p>
+                
+                <div id="info-stats">
+                    <div id="info-fecha">
+                        <p>FECHA</p>
+                        <h3>Diciembre 2025</h3>
+                    </div>
+                    <div id="info-rol">
+                        <p>ROL</p>
+                        <h3>FlutterFlow Dev</h3>
+                    </div>
+                    <div id="info-cliente">
+                        <p>CLIENTE</p>
+                        <h3>Práctica Académica</h3>
+                    </div>
+                </div>
+
+                <div id="info-botones">
+                    <a href="#" target="_blank"><button class="reverse-button">
+                        <p>Ver PDF original →</p>
+                    </button></a>
+                    <a href="https://github.com/adriaviles2711/portafolio" target="_blank"><button class="button">
+                        <p>Repositorio GitHub</p>
+                    </button></a>
+                </div>
+            </div>
+
+            <div id="intro" class="secciones">
+                <div class="info-headers">
+                    <h1>Contexto del desarrollo</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        Esta última semana (01/12/2025 - 04/12/2025), incluyendo el jueves y viernes de la semana pasada (27/11/2025 y 28/11/2025), he estado trabajando en esta práctica todas las mañanas, sin falta, desde las 09:00 aproximadamente hasta las 14:00. Además, he aprovechado momentos de clase para avanzar en ella.
+                    </p>
+                    <p>
+                        Esto no lo explico al principio como intento de dar pena y que mi nota suba, sino para que se entienda mi conclusión final y elimine por completo toda posibilidad de pensar que, si la aplicación no está terminada, no es porque haya estado vagueando, sino porque hacerla en <span class="highlight">FlutterFlow manualmente</span> fue una idea que subestimé, y no fui capaz de ver que tardaría mucho más en realizar esta práctica de lo que pensaba.
+                    </p>
+                    <p>
+                        Aun así, agradezco que se valore el esfuerzo de no utilizar una IA para realizar la práctica y hacerlo por mis propios medios. En la conclusión me explayaré más detenidamente sobre esto. Dividiré la documentación por páginas de la aplicación, explicando lo que hay hecho y lo que falta por hacer.
+                    </p>
+                    <p>
+                        Todas las pantallas son copias exactas de la aplicación original, con diferencias mínimas. Esta documentación no tendrá imágenes debido a la falta de tiempo, entiendo que esto afectará a mi nota, pero puedes utilizar la documentación para guiarte a la hora de probar la aplicación y saber lo que funciona y lo que no. Esta página web fue hecha para verse bien en <span class="highlight">FORMATO MÓVIL</span>. En el modo ordenador también debería verse bien, pero no he realizado pruebas por si hay fallos. Lo mismo ocurre con el modo claro: está hecha para verse en modo oscuro, aunque el modo claro también debería estar configurado ya que creé ambas paletas cogiendo los colores oficiales.
+                    </p>
+                </div>
+            </div>
+
+            <div id="registro" class="secciones">
+                <div class="info-headers">
+                    <h1>Registro y Lógica Interna</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        Al iniciar por primera vez la aplicación, si nunca iniciaste sesión, te mandará a la página de inicio de sesión. Allí podrás iniciar sesión con correo y contraseña o utilizar una cuenta de Google. Si no tienes cuenta, abajo te aparecerá la opción para crear una.
+                    </p>
+                    <p>Al crear una cuenta se realizarán varias acciones automáticas:</p>
+                    <ul>
+                        <li><span class="sub-title">1. Carpeta por defecto</span> Se crea una carpeta en la base de datos asignada a ese usuario llamada "Ninguna carpeta". Esta carpeta servirá para almacenar elementos cuando el usuario no guarde una contraseña en ninguna categoría específica.</li>
+                        <li><span class="sub-title">2. Clave de Cifrado Única</span> Se generará, utilizando una <span class="highlight">Custom Function</span>, una clave única para ese usuario. Esta clave será utilizada posteriormente como llave para cifrar y descifrar las contraseñas y la información sensible.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="inicio" class="secciones">
+                <div class="info-headers">
+                    <h1>Inicio e Interfaz</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        Al crear la cuenta te redirigirá directamente a la página de inicio. En esta página, empezando de arriba a la izquierda hasta abajo a la derecha, encontramos varios elementos:
+                    </p>
+                    <ul>
+                        <li><span class="highlight">Logo y Notificaciones:</span> Aparece el logo (que no realiza acción) y un icono de campana para notificaciones. Este último no está en funcionamiento ya que la aplicación no manda ninguna notificación (la original la usa para ofertas y avisos).</li>
+                        <li><span class="highlight">Ordenación:</span> Un icono circular con tres puntos que sirve para ordenar las contraseñas por orden alfabético o fecha de creación. No funciona debido a la falta de tiempo y errores generados por Firebase, el cual solicitaba actualizar a un plan de pago para indexar estos campos.</li>
+                        <li><span class="highlight">Añadir elemento:</span> Un icono de cuadrado con signo de sumar, que sirve para añadir un elemento.</li>
+                        <li><span class="highlight">Búsqueda e Importación:</span> Debajo hay una barra de búsqueda, la cual no funciona por el mismo motivo que el botón de ordenar, y un botón de importar que tampoco funciona por falta de tiempo y desconocimiento técnico.</li>
+                        <li><span class="highlight">Barra de navegación:</span> Situada abajo del todo, sirve para navegar correctamente entre las distintas pestañas.</li>
+                    </ul>
+                    <p>
+                        <strong>Página de inicio (con contraseña):</strong> Una vez añades una contraseña, aparecerá en la pestaña de inicio con su icono, título y correo. El icono de 3 puntos de cada elemento no hace nada, y tampoco puedes copiar usuario ni contraseña directamente desde la lista debido a falta de tiempo.
+                    </p>
+                </div>
+            </div>
+
+            <div id="anadir" class="secciones">
+                <div class="info-headers">
+                    <h1>Menú de Adición</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        Al darle a añadir elemento, se pone borroso el fondo de pantalla y aparece un menú para elegir entre distintos elementos: Contraseña, Nota segura, Tarjeta de crédito, Información de contacto, Documento y Carpeta. Al darle a cada uno, te redirige a otra pestaña.
+                    </p>
+                    <p>
+                        <span class="sub-title">Limitación en Documentos</span>
+                        Al darle a añadir documento, aparece otro menú para elegir entre DNI, Carné de conducir, Pasaporte u Otro documento. Estas opciones no funcionan ya que guardar archivos, imágenes y vídeos en Firebase a fecha de 04/12/2025 es una funcionalidad de pago.
+                    </p>
+                    <p>
+                        <span class="sub-title">Carpetas</span>
+                        Al pulsar sobre Carpeta aparece un menú para crearla. Colocas el nombre, le das a crear, y se genera asignada a ese usuario en la base de datos.
+                    </p>
+                </div>
+            </div>
+
+            <div id="formularios" class="secciones">
+                <div class="info-headers">
+                    <h1>Formularios y Seguridad</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        Si seleccionas contraseña, nota segura, tarjeta o contacto, te redirige a un formulario. Hay un botón arriba a la izquierda para volver y un "check" para guardar.
+                    </p>
+                    <ul>
+                        <li><span class="sub-title">Cifrado Real</span> En el caso de contraseña, al darle al check se cifra el usuario y contraseña insertados con una <span class="highlight">Custom Function</span>. Esta función toma la contraseña y la cifra con la clave del usuario que se generó al crear la cuenta. Como cada usuario tiene una clave distinta, el cifrado es único. Dependiendo del elemento se cifra una u otra información.</li>
+                        <li><span class="sub-title">Escaneo (Nota segura)</span> Hay un botón para escanear una nota. Esto no es posible hacerlo funcionalmente, ya que para crear una acción personalizada de escaneo necesitas importar dependencias externas, cosa que en FlutterFlow actualmente es de pago. El botón aparece para mantener la fidelidad con la interfaz original.</li>
+                        <li><span class="sub-title">Asignación</span> Abajo puedes seleccionar a qué carpeta quieres que se le asigne el elemento. Aunque se le asigna en la base de datos, no sirve de nada visualmente al no tener creado el funcionamiento para filtrar por carpetas.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="generador" class="secciones">
+                <div class="info-headers">
+                    <h1>Generador de Contraseñas</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>En el formulario de contraseñas hay un acceso al generador. Yendo de arriba a abajo:</p>
+                    <ul>
+                        <li><span class="highlight">Historial:</span> Un icono de reloj que debería mostrar el historial de contraseñas generadas. No funciona debido a falta de tiempo.</li>
+                        <li><span class="highlight">Visualización:</span> Una sección donde aparecerá la contraseña generada después de darle al botón "Generar".</li>
+                        <li><span class="highlight">Opciones de generación:</span> Puedes elegir entre generar por caracteres o por palabras. Cada una tiene una <em>Custom Function</em> distinta: una genera caracteres aleatorios con las opciones seleccionadas abajo, y la otra usa una lista de palabras separadas por guiones.</li>
+                        <li><span class="highlight">Botones de acción:</span> El botón "Copiar" copia la contraseña al portapapeles. El botón "Generar" crea una nueva (o reemplaza la existente). El botón "Utilizar" te redirige a la pestaña de creación de contraseñas y rellena automáticamente el campo con la contraseña generada.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="perfil" class="secciones">
+                <div class="info-headers">
+                    <h1>Perfil, Herramientas y Extras</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        <span class="sub-title">Pestaña Examinar</span>
+                        Contiene accesos directos a los formularios. Aparece una opción de "Elementos compartidos" (no realizada por falta de tiempo) y una de "Carpetas" (tampoco realizada, aunque solo mostraría las carpetas creadas). La "Papelera" tiene el funcionamiento en la base de datos (campo booleano 'bin'), y la idea era borrar automáticamente elementos tras 30 días, pero no he tenido tiempo para implementarlo ni para hacer el sistema de envío a la papelera.
+                    </p>
+                    <p>
+                        <span class="sub-title">Pestaña Herramientas</span>
+                        Esta pestaña no funciona por falta de tiempo. Aun así, todas las funciones que contiene eran "Premium" en la aplicación original, excepto la generación de contraseñas.
+                    </p>
+                    <p>
+                        <span class="sub-title">Pestaña Perfil</span>
+                    </p>
+                    <ul>
+                        <li><strong>Foto de perfil:</strong> Al darle, aparece un menú para insertar una URL de imagen y cambiarla. En la original se selecciona del dispositivo, pero como guardar imágenes en Firebase es de pago, utilizo enlaces para saltarme esa barrera.</li>
+                        <li><strong>Datos y Plan:</strong> Muestra el correo y el plan (solo gratuito).</li>
+                        <li><strong>Botones:</strong> "Cambiar de cuenta" no funciona porque no he sabido cómo hacerlo. "Configuración", "Importar" y "Ayuda" no realizados por falta de tiempo.</li>
+                        <li><strong>Interacción externa:</strong> "Recomendar a una empresa" redirige a la página oficial. "Valorar NordPass" lleva a la Play Store. "Bloquear la aplicación" cierra la sesión actual.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="conclusion" class="secciones">
+                <div class="info-headers">
+                    <h1>Conclusión</h1>
+                    <hr>
+                </div>
+                <div class="text-card">
+                    <p>
+                        He empleado, sin contar el tiempo empleado en otras asignaturas, en los recreos y en clase, un total de <span class="highlight">35 horas</span>. Aun así, la aplicación sigue muy incompleta. Con una semana más posiblemente podría haberla terminado, ya que el sistema estaba ya montado y la idea de cómo hacerlo ya estaba en mi cabeza.
+                    </p>
+                    <p>
+                        Aun así, he concluido que no vale la pena realizar las prácticas con FlutterFlow de forma manual si el tiempo es limitado. El tiempo otorgado no es suficiente ya que está pensado para hacerse con asistencia de IA. Aunque es muchísimo más entretenido y divertido hacerlo con FlutterFlow uno mismo, solo ha servido para que, aunque se valore el esfuerzo técnico, no tenga una nota alta.
+                    </p>
+                    <p>
+                        Visualmente es muy similar, pero faltan muchas opciones. Aunque parece que esté exigiendo una nota alta por el esfuerzo no es así; solo quiero dejar claro que la aplicación no está completa ya que se tarda mucho en hacerlo con FlutterFlow y no porque me haya esforzado poco. Aun así, acepto la nota que se me imponga, mientras la mentalidad al corregir no sea que no hay trabajo detrás.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/proyecto-info-js.js"></script>
+</body>
+</html>
