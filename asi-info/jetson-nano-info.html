@@ -45,16 +45,17 @@
             <hr>
             <a href="#informacion" id="active"><span>Información</span></a>
             <a href="#resumen"><span>Resumen</span></a>
-            <a href="#hardware"><span>Hardware e Inicio</span></a>
-            <a href="#red"><span>Red y Usuario</span></a>
-            <a href="#sistema"><span>Sistema y Particiones</span></a>
-            <a href="#ssd"><span>Montaje SSD</span></a>
-            <a href="#lmstudio"><span>LM Studio</span></a>
+            <a href="#fase1"><span>1. Hardware e Inicio</span></a>
+            <a href="#fase2"><span>2. Red y Región</span></a>
+            <a href="#fase3"><span>3. Usuario y Particiones</span></a>
+            <a href="#fase4"><span>4. Ajustes Finales</span></a>
+            <a href="#fase5"><span>5. Montaje SSD</span></a>
+            <a href="#fase6"><span>6. LM Studio e IA</span></a>
         </div>
         <div id="informacion-der">
             <div id="informacion">
                 <h1>Configuración inicial Jetson Nano y LM Studio</h1>
-                <p>Documentación técnica sobre el despliegue inicial de una NVIDIA Jetson Nano. El proyecto abarca desde la conexión de hardware y configuración del sistema operativo (Ubuntu) hasta la implementación de almacenamiento externo y la instalación de software de Inteligencia Artificial Generativa (LM Studio).</p>
+                <p>Guía paso a paso sobre cómo preparar una NVIDIA Jetson Nano. Aquí explico desde cómo conectar los cables y configurar Ubuntu, hasta cómo montar un disco SSD y dejar listo LM Studio para usar Inteligencia Artificial.</p>
                 <div id="info-stats">
                     <div id="info-fecha">
                         <p>FECHA</p>
@@ -86,280 +87,272 @@
                     <hr>
                 </div>
                 <p>
-                    El objetivo de esta práctica fue poner en marcha un dispositivo de computación en el borde (Edge Computing) para tareas de IA. [cite_start]El proceso comenzó con la preparación del hardware Jetson Nano y su cableado[cite: 119, 120]. [cite_start]Posteriormente, se realizó la configuración "out-of-the-box" del sistema operativo, incluyendo localización, red y creación de usuarios administrativos[cite: 121, 126].
+                    En esta práctica lo primero que hacemos es preparar todo el material de la Jetson Nano y asegurarnos de que enciende correctamente. Después pasamos a configurar el sistema operativo paso a paso, eligiendo el idioma, conectándonos a la red del aula y creando nuestro usuario.
                 </p>
                 <p>
-                    [cite_start]Una fase crítica consistió en el montaje técnico de una unidad SSD externa mediante comandos de terminal para expandir el almacenamiento[cite: 146, 154]. [cite_start]Finalmente, se procedió a la instalación de las librerías necesarias (libfuse) para ejecutar LM Studio y descargar un modelo de lenguaje (LLM) de 4 billones de parámetros para realizar pruebas de inferencia[cite: 160, 163, 166].
+                    Una parte importante es cuando trabajamos con la terminal para montar un disco SSD externo, usando varios comandos para dejarlo listo. Por último, instalamos las librerías necesarias y descargamos LM Studio para probar un modelo de Inteligencia Artificial de 4 billones de parámetros.
                 </p>
             </div>
 
-            <div id="hardware" class="secciones">
+            <div id="fase1" class="secciones">
                 <div class="info-headers">
-                    <h1>1. Preparación de Hardware e Inicio</h1>
+                    <h1>1. Preparación de Hardware y Primer Arranque</h1>
                     <hr>
                 </div>
                 
                 <div class="prompt-item">
                     <div class="prompt-text">
-                        <h3>Verificación y Primer Arranque</h3>
+                        <h3>Verificación Física y Encendido</h3>
                         <blockquote>
-                            [cite_start]Se procedió a la verificación del material, asegurando la disponibilidad de la placa Jetson Nano y su cableado de alimentación correspondiente[cite: 119]. [cite_start]Tras conectar el dispositivo a la corriente y al monitor para verificar su funcionamiento, se inició el asistente de configuración[cite: 120]. [cite_start]Se aceptaron los términos de licencia y se configuró el idioma y la disposición del teclado[cite: 121].
+                            Lo primero que debemos hacer es preparar el material. Nos aseguramos de tener la Jetson Nano y sus cables a mano. A continuación, conectamos la Jetson a la corriente y al monitor para comprobar que funciona. Una vez encendida, nos pide aceptar las licencias y después seleccionamos el idioma.
                         </blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image1.jpg" alt="Jetson Nano Hardware">
-                            <div class="captura-overlay"><p>Placa Jetson</p></div>
+                            <img src="../asi-img/configJetson/image1.jpg" alt="Placa Jetson Nano">
+                            <div class="captura-overlay"><p>Hardware</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image2.jpg" alt="Cable de alimentación">
-                            <div class="captura-overlay"><p>Cableado</p></div>
+                            <img src="../asi-img/configJetson/image2.jpg" alt="Cableado">
+                            <div class="captura-overlay"><p>Cables</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image3.jpg" alt="Conexión de periféricos">
-                            <div class="captura-overlay"><p>Conexiones</p></div>
+                            <img src="../asi-img/configJetson/image3.jpg" alt="Conexión periféricos">
+                            <div class="captura-overlay"><p>Conexión</p></div>
                         </div>
                     </div>
                     <div class="prompt-capturas" style="margin-top: 15px;">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image4.jpg" alt="Pantalla de bienvenida y licencias">
+                            <img src="../asi-img/configJetson/image4.jpg" alt="Pantalla de bienvenida">
+                            <div class="captura-overlay"><p>Bienvenida</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image5.jpg" alt="Aceptar licencias">
                             <div class="captura-overlay"><p>Licencias</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image5.jpg" alt="Selección de idioma">
+                            <img src="../asi-img/configJetson/image6.jpg" alt="Selección de idioma">
                             <div class="captura-overlay"><p>Idioma</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image6.jpg" alt="Disposición de teclado">
-                            <div class="captura-overlay"><p>Teclado</p></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="red" class="secciones">
+            <div id="fase2" class="secciones">
                 <div class="info-headers">
-                    <h1>2. Conectividad y Credenciales</h1>
+                    <h1>2. Configuración Regional y Conectividad</h1>
                     <hr>
                 </div>
 
                 <div class="prompt-item">
                     <div class="prompt-text">
-                        <h3>Configuración de Red y Usuario</h3>
+                        <h3>Teclado y Red Inalámbrica</h3>
                         <blockquote>
-                            [cite_start]El sistema solicitó la conexión a una red inalámbrica, seleccionando la red correspondiente al aula[cite: 123]. [cite_start]Tras establecer la conexión, se definió la zona horaria (Madrid)[cite: 124]. [cite_start]Finalmente, se procedió a la creación del usuario administrativo utilizando las credenciales proporcionadas y activando el inicio de sesión automático[cite: 126].
+                            Después de elegir el idioma, nos pregunta por la disposición del teclado. Luego nos pide conectarnos a una red, así que elegimos la conexión inalámbrica del aula ateca. Una vez conectados, seleccionamos nuestra zona horaria (Madrid) y le damos a continuar.
                         </blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image7.jpg" alt="Selección de red inalámbrica">
+                            <img src="../asi-img/configJetson/image7.jpg" alt="Disposición de teclado">
+                            <div class="captura-overlay"><p>Teclado</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image8.jpg" alt="Selección de Red">
                             <div class="captura-overlay"><p>Red WiFi</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image8.jpg" alt="Autenticación WiFi">
+                            <img src="../asi-img/configJetson/image9.jpg" alt="Autenticación WiFi">
                             <div class="captura-overlay"><p>Conexión</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image9.jpg" alt="Selección de zona horaria">
-                            <div class="captura-overlay"><p>Zona Horaria</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image10.jpg" alt="Creación de usuario">
-                            <div class="captura-overlay"><p>Crear Usuario</p></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="sistema" class="secciones">
-                <div class="info-headers">
-                    <h1>3. Particionamiento y Software Base</h1>
-                    <hr>
-                </div>
-
-                <div class="prompt-item">
-                    <div class="prompt-text">
-                        <h3>Configuración de Almacenamiento y Navegador</h3>
-                        <blockquote>
-                            [cite_start]Se configuró el tamaño de la partición de la aplicación, asignando el máximo espacio disponible permitido por el sistema[cite: 129]. [cite_start]Acto seguido, se aceptó la instalación del navegador Chromium[cite: 131]. [cite_start]El sistema procedió a aplicar la configuración y realizar las instalaciones iniciales[cite: 135].
-                        </blockquote>
-                    </div>
-                    <div class="prompt-capturas">
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image11.jpg" alt="Tamaño de partición APP">
-                            <div class="captura-overlay"><p>Partición</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image12.jpg" alt="Instalar Chromium">
-                            <div class="captura-overlay"><p>Chromium</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image13.jpg" alt="Progreso instalación Chromium">
-                            <div class="captura-overlay"><p>Instalando</p></div>
                         </div>
                     </div>
                     <div class="prompt-capturas" style="margin-top: 15px;">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image14.jpg" alt="Configuración del sistema">
+                            <img src="../asi-img/configJetson/image10.jpg" alt="Conectado a la red">
+                            <div class="captura-overlay"><p>Conectado</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image11.jpg" alt="Mapa zona horaria">
+                            <div class="captura-overlay"><p>Zona Horaria</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image12.jpg" alt="Confirmación región">
+                            <div class="captura-overlay"><p>Madrid</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fase3" class="secciones">
+                <div class="info-headers">
+                    <h1>3. Gestión de Usuario y Particiones</h1>
+                    <hr>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Credenciales y Almacenamiento</h3>
+                        <blockquote>
+                            A continuación creamos el usuario de la Jetson poniendo los datos que nos dio el profesor y marcamos "iniciar sesión automáticamente". Luego seleccionamos el tamaño de la partición: ponemos el máximo que se nos permita (como se ve en pantalla) y le damos a continuar. También nos pregunta si queremos instalar Chromium, le decimos que sí.
+                        </blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image13.jpg" alt="Creación de usuario">
+                            <div class="captura-overlay"><p>Usuario</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image14.jpg" alt="Configuración contraseña">
+                            <div class="captura-overlay"><p>Credenciales</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image15.jpg" alt="Tamaño partición APP">
+                            <div class="captura-overlay"><p>Partición</p></div>
+                        </div>
+                    </div>
+                    <div class="prompt-capturas" style="margin-top: 15px;">
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image16.jpg" alt="Instalar Chromium">
+                            <div class="captura-overlay"><p>Navegador</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image17.jpg" alt="Progreso de instalación">
+                            <div class="captura-overlay"><p>Instalando</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image18.jpg" alt="Configurando sistema">
                             <div class="captura-overlay"><p>Configurando</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image15.jpg" alt="Aplicando cambios">
+                            <img src="../asi-img/configJetson/image19.jpg" alt="Aplicando cambios">
                             <div class="captura-overlay"><p>Finalizando</p></div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="fase4" class="secciones">
+                <div class="info-headers">
+                    <h1>4. Ajustes Finales y Actualización</h1>
+                    <hr>
+                </div>
 
                 <div class="prompt-item">
                     <div class="prompt-text">
-                        <h3>Ajustes Finales de Ubuntu</h3>
+                        <h3>Privacidad y Actualizaciones</h3>
                         <blockquote>
-                            [cite_start]Al finalizar la instalación base, el asistente ofreció conectar cuentas en línea y configurar Ubuntu Pro, opciones que fueron omitidas ("Skip")[cite: 136]. [cite_start]Se deshabilitaron los servicios de localización por privacidad [cite: 138] [cite_start]y se ejecutó el gestor de actualizaciones para asegurar que el sistema estuviera al día[cite: 139].
+                            Al terminar, nos hará preguntas sobre habilitar complementos o cuentas en línea; seleccionamos siempre la opción "Skip". Una vez hayamos "skipeado" lo anterior, desmarcamos la opción de servicios de localización. Después de eso, comprobamos si hay actualizaciones y, si las hay, actualizamos el equipo. Finalmente conectamos ratón y teclado para trabajar cómodos.
                         </blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image16.jpg" alt="Cuentas en línea">
+                            <img src="../asi-img/configJetson/image20.jpg" alt="Cuentas en línea">
                             <div class="captura-overlay"><p>Cuentas</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image17.jpg" alt="Ubuntu Pro">
+                            <img src="../asi-img/configJetson/image21.jpg" alt="Ubuntu Pro">
                             <div class="captura-overlay"><p>Ubuntu Pro</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image18.jpg" alt="Privacidad">
+                            <img src="../asi-img/configJetson/image22.jpg" alt="Privacidad y datos">
                             <div class="captura-overlay"><p>Privacidad</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image19.jpg" alt="Localización">
-                            <div class="captura-overlay"><p>Localización</p></div>
                         </div>
                     </div>
                     <div class="prompt-capturas" style="margin-top: 15px;">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image20.jpg" alt="Actualizador de software">
-                            <div class="captura-overlay"><p>Actualizaciones</p></div>
+                            <img src="../asi-img/configJetson/image23.jpg" alt="Servicios de ubicación">
+                            <div class="captura-overlay"><p>Ubicación</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image24.jpg" alt="Software Updater">
+                            <div class="captura-overlay"><p>Actualizador</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image25.jpg" alt="Escritorio listo">
+                            <div class="captura-overlay"><p>Listo</p></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="ssd" class="secciones">
+            <div id="fase5" class="secciones">
                 <div class="info-headers">
-                    <h1>4. Preparación del Entorno y SSD</h1>
+                    <h1>5. Preparación del Entorno y Montaje SSD</h1>
                     <hr>
                 </div>
 
                 <div class="prompt-item">
                     <div class="prompt-text">
-                        <h3>Recursos y Montaje de Disco</h3>
+                        <h3>Configuración de Almacenamiento Externo</h3>
                         <blockquote>
-                            [cite_start]Para preparar el entorno de IA, consultamos la guía "Jetson Setup Guide" en la web de NVIDIA[cite: 142, 144]. [cite_start]Verificamos el hardware conectado mediante los comandos <code>lspci</code> y <code>lsblk</code> en la terminal[cite: 145]. [cite_start]Paralelamente, descargamos el software LM Studio desde su página oficial[cite: 147].
+                            Para instalar LM Studio, seguimos la guía de NVIDIA. Abrimos la terminal y usamos `lspci` y `lsblk` para revisar si tenemos montado el disco. Luego usamos comandos para formatearlo (`sudo mkfs.ext4`) y montarlo en la carpeta `/ssd`. También editamos el fichero `/etc/fstab` para que se quede guardado. Mientras hacemos esto, dejamos descargando LM Studio de la página oficial.
                         </blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image21.jpg" alt="Web NVIDIA AI">
-                            <div class="captura-overlay"><p>NVIDIA Web</p></div>
+                            <img src="../asi-img/configJetson/image26.jpg" alt="Web NVIDIA AI">
+                            <div class="captura-overlay"><p>NVIDIA Lab</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image22.jpg" alt="Guía de configuración">
-                            <div class="captura-overlay"><p>Guía Setup</p></div>
+                            <img src="../asi-img/configJetson/image27.jpg" alt="Guía Setup">
+                            <div class="captura-overlay"><p>Documentación</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image23.jpg" alt="Terminal lspci">
-                            <div class="captura-overlay"><p>Terminal</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image24.jpg" alt="Descarga LM Studio">
-                            <div class="captura-overlay"><p>LM Studio</p></div>
+                            <img src="../asi-img/configJetson/image28.jpg" alt="Terminal lspci">
+                            <div class="captura-overlay"><p>Identificación</p></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="prompt-item">
-                    <div class="prompt-text">
-                        <h3>Comandos de Montaje y Permisos</h3>
-                        <blockquote>
-                            [cite_start]Para utilizar el disco SSD, ejecutamos una secuencia de comandos técnicos: formateo con <code>sudo mkfs.ext4</code>, creación del directorio con <code>sudo mkdir /ssd</code> y montaje del dispositivo [cite: 154-156]. [cite_start]Verificamos el montaje con <code>lsblk -f</code> y editamos el fichero <code>/etc/fstab</code> para hacer el montaje persistente[cite: 157, 158]. [cite_start]Finalmente, ajustamos los permisos de propiedad del directorio[cite: 159].
-                        </blockquote>
-                    </div>
-                    <div class="prompt-capturas">
+                    <div class="prompt-capturas" style="margin-top: 15px;">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image25.jpg" alt="Comandos de montaje">
-                            <div class="captura-overlay"><p>Formateo</p></div>
+                            <img src="../asi-img/configJetson/image29.jpg" alt="Descarga LM Studio">
+                            <div class="captura-overlay"><p>Software</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image26.jpg" alt="Edición fstab">
+                            <img src="../asi-img/configJetson/image30.jpg" alt="Formateo y Montaje">
+                            <div class="captura-overlay"><p>Terminal SSD</p></div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image31.jpg" alt="Edición fstab">
                             <div class="captura-overlay"><p>Persistencia</p></div>
                         </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image27.jpg" alt="Permisos de usuario">
-                            <div class="captura-overlay"><p>Permisos</p></div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="lmstudio" class="secciones">
+            <div id="fase6" class="secciones">
                 <div class="info-headers">
-                    <h1>5. Instalación de LM Studio</h1>
+                    <h1>6. Instalación y Prueba de LM Studio</h1>
                     <hr>
                 </div>
 
                 <div class="prompt-item">
                     <div class="prompt-text">
-                        <h3>Dependencias y Ejecución</h3>
+                        <h3>Despliegue de IA Generativa</h3>
                         <blockquote>
-                            [cite_start]Fue necesario instalar las librerías <code>libfuse2</code> para permitir la ejecución de archivos AppImage[cite: 160]. [cite_start]Tras corregir un error inicial en la instalación de las dependencias, otorgamos permisos de ejecución al archivo de LM Studio y procedimos a su instalación/apertura[cite: 161].
+                            Instalamos libfuse2 y damos permisos de ejecución a la AppImage de LM Studio para poder instalarlo. Una vez instalado, lo abrimos y vamos a la lupa para buscar modelos de IA. Instalamos el modelo "qwen2-vl-4b", donde "4b" significa 4 mil millones de parámetros. Para terminar, creamos un chat nuevo, escribimos "hola" y nos fijamos en los tokens por segundo para ver qué tal funciona.
                         </blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image28.jpg" alt="Instalación libfuse">
-                            <div class="captura-overlay"><p>Librerías</p></div>
-                        </div>
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image29.jpg" alt="Terminal corrección">
+                            <img src="../asi-img/configJetson/image32.jpg" alt="Instalación libfuse">
                             <div class="captura-overlay"><p>Dependencias</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image30.jpg" alt="Permisos AppImage">
-                            <div class="captura-overlay"><p>Ejecución</p></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="prompt-item">
-                    <div class="prompt-text">
-                        <h3>Despliegue de Modelos de IA</h3>
-                        <blockquote>
-                            [cite_start]Una vez operativo LM Studio, utilizamos la función de búsqueda para localizar e instalar el modelo <code>qwen2-vl-4b</code>[cite: 163]. [cite_start]Este modelo cuenta con 4 mil millones de parámetros (4 Billions), lo cual verificamos en su ficha técnica antes de la descarga[cite: 164, 165].
-                        </blockquote>
-                    </div>
-                    <div class="prompt-capturas">
-                        <div class="captura-container">
-                            <img src="../asi-img/configJetson/image31.jpg" alt="Interfaz LM Studio">
-                            <div class="captura-overlay"><p>Interfaz</p></div>
+                            <img src="../asi-img/configJetson/image33.jpg" alt="Permisos AppImage">
+                            <div class="captura-overlay"><p>Permisos</p></div>
                         </div>
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image32.jpg" alt="Descarga de modelo">
+                            <img src="../asi-img/configJetson/image34.jpg" alt="Interfaz LM Studio">
+                            <div class="captura-overlay"><p>LM Studio</p></div>
+                        </div>
+                    </div>
+                    <div class="prompt-capturas" style="margin-top: 15px;">
+                        <div class="captura-container">
+                            <img src="../asi-img/configJetson/image35.jpg" alt="Descarga Modelo">
                             <div class="captura-overlay"><p>Modelo 4B</p></div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="prompt-item">
-                    <div class="prompt-text">
-                        <h3>Prueba de Inferencia</h3>
-                        <blockquote>
-                            Para finalizar, iniciamos un nuevo chat con el modelo cargado para validar su funcionamiento. [cite_start]Realizamos una prueba de interacción básica ("hola") y monitorizamos la velocidad de respuesta, medida en tokens por segundo, para evaluar el rendimiento del dispositivo[cite: 166].
-                        </blockquote>
-                    </div>
-                    <div class="prompt-capturas">
                         <div class="captura-container">
-                            <img src="../asi-img/configJetson/image33.jpg" alt="Chat con la IA">
-                            <div class="captura-overlay"><p>Test Chat</p></div>
+                            <img src="../asi-img/configJetson/image36.jpg" alt="Prueba de Chat">
+                            <div class="captura-overlay"><p>Inferencia</p></div>
                         </div>
                     </div>
                 </div>
