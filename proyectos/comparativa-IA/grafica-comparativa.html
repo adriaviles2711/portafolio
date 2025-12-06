@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Comparativo IA - Adrián Avilés</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* =========================================
+           1. ESTILOS BASE (Importados de styles.css)
+           ========================================= */
+        :root {
+            /* Colores principales */
+            --color-primary: #1a2332;
+            --color-secondary: #2d3e50;
+            --color-accent: #4a9eff;
+            --color-background: #0f1419;
+            --color-border: #2d3e50;
+            --color-text: #e8eaed;
+            --color-text-secondary: #9ca3af;
+            --color-led: #4a9eff88;
+            
+            /* Colores específicos para gráficas */
+            --chart-qwen4b: #4a9eff;
+            --chart-granite: #ff6b6b;
+            --chart-gemma: #a29bfe;
+            --chart-qwen8b: #00b894;
+
+            /* Tipografía */
+            --font-primary: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            padding-top: 70px; /* Espacio para el navbar fixed */
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* =========================================
+           2. NAVBAR (Idéntico a tu web)
+           ========================================= */
+        #navbar-index {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            width: 100%;
+            border-bottom: solid 2px var(--color-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: var(--color-background);
+            z-index: 1000;
+        }
+
+        #navbar-logo {
+            font-weight: bold;
+            font-size: 23px;
+            transition: color 0.3s ease;
+            color: var(--color-text);
+        }
+
+        #navbar-logo:hover { color: var(--color-accent); }
+
+        #navbar-menu {
+            list-style-type: none;
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--color-text-secondary);
+            font-weight: bold;
+            padding-bottom: 5px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active { color: var(--color-text); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease-out;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
+
+        /* =========================================
+           3. LAYOUT PRINCIPAL (Estilo proyecto-info)
+           ========================================= */
+        #sec-ruta {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        #sec-ruta h3 { display: inline-block; margin-right: 10px; color: var(--color-text); }
+        #sec-ruta a:hover { color: var(--color-accent); text-decoration: underline; }
+        #sec-ruta span { margin: 0 5px; }
+
+        #info-proyect {
+            display: flex;
+            gap: 40px;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Sidebar Izquierda */
+        #navegador-izq {
+            flex: 0.25;
+            background-color: var(--color-primary);
+            font-size: 16px;
+            border-radius: 10px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: sticky;
+            top: 100px; /* Debajo del navbar */
+            align-self: flex-start;
+            border: 1px solid var(--color-border);
+        }
+
+        #navegador-izq a {
+            position: relative;
+            color: var(--color-text-secondary);
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #navegador-izq a:hover { background-color: var(--color-secondary); color: var(--color-text); }
+        
+        #navegador-izq a#active {
+            color: var(--color-accent);
+            background-color: var(--color-secondary);
+            border-left: 3px solid var(--color-accent);
+        }
+
+        #navegador-izq hr { border: 1px solid var(--color-border); margin: 5px 0; }
+
+        /* Contenido Derecho */
+        #informacion-der {
+            flex: 0.75;
+            display: flex;
+            flex-direction: column;
+            gap: 60px; /* Separación entre grandes bloques */
+        }
+
+        /* Secciones */
+        .seccion-contenido {
+            scroll-margin-top: 100px; /* Para que el anchor no quede tapado por el navbar */
+            background-color: var(--color-primary);
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+        }
+
+        .header-seccion {
+            margin-bottom: 30px;
+        }
+
+        .header-seccion h1 {
+            font-size: 32px;
+            color: var(--color-text);
+            margin-bottom: 10px;
+        }
+
+        .header-seccion hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+        }
+
+        /* Estilos de Texto */
+        p { color: var(--color-text-secondary); margin-bottom: 15px; font-size: 17px; }
+        strong { color: var(--color-text); }
+        
+        /* Cajas de conclusiones / destacados */
+        .highlight-box {
+            background-color: rgba(74, 158, 255, 0.1);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        /* Estilos para las Gráficas */
+        .chart-wrapper {
+            background-color: var(--color-background);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--color-border);
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        /* Estilos para los Prompts (Tarjetas) */
+        .prompt-card {
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background-color: var(--color-secondary);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .level-badge {
+            background-color: var(--color-accent);
+            color: var(--color-background);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .prompt-body { padding: 25px; }
+
+        .prompt-code {
+            background-color: #0c0f13;
+            color: #a5b3ce;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            border-left: 3px solid var(--color-text-secondary);
+            margin: 15px 0;
+        }
+
+        .prompt-eval {
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        
+        .prompt-eval span { color: var(--color-accent); font-weight: bold; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            #info-proyect { flex-direction: column; }
+            #navegador-izq { position: relative; top: 0; width: 100%; margin-bottom: 20px; }
+            .chart-wrapper { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar-index">
+        <div id="navbar-izq">
+            <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
+        </div>
+        <div id="navbar-der">
+            <ul id="navbar-menu">
+                <li><a href="../index.html" class="nav-link">INICIO</a></li>
+                <li><a href="../#sobre-mi" class="nav-link">SOBRE MÍ</a></li>
+                <li><a href="../#habilidades" class="nav-link">HABILIDADES</a></li>
+                <li><a href="../proyectos.html" class="nav-link active">PROYECTOS</a></li>
+                <li><a href="../#contacto" class="nav-link">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="sec-ruta">
+        <h3>Ruta</h3>
+        <p id="ruta">
+            <a href="#">Proyectos</a><span>/</span>
+            <a href="#">IA & Data Science</a><span>/</span>
+            <span>Comparativa LLMs Pequeños</span>
+        </p>
+    </div>
+
+    <div id="info-proyect">
+        
+        <div id="navegador-izq">
+            <h3 id="navegador-cabecera">Contenido</h3>
+            <hr>
+            <a href="#introduccion" id="active"><span>Introducción</span></a>
+            <a href="#graficas"><span>Datos y Gráficas</span></a>
+            <a href="#analisis"><span>Análisis Detallado</span></a>
+            <a href="#metodologia"><span>Metodología (Prompts)</span></a>
+        </div>
+
+        <div id="informacion-der">
+
+            <div id="introduccion" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Comparativa de Modelos LLM</h1>
+                    <hr>
+                </div>
+                <p>Este proyecto analiza el rendimiento de cuatro modelos de lenguaje pequeños (SLM) sometiéndolos a pruebas de dificultad incremental. El objetivo es determinar la relación entre la velocidad de inferencia, la capacidad lógica y la precisión en tareas estrictas.</p>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+                    <div style="flex: 1; background: var(--color-background); padding: 15px; border-radius: 8px; border: 1px solid var(--color-border);">
+                        <strong style="color: var(--chart-qwen4b)">Qwen3 4B</strong><br>
+                        <span style="font-size: 13px; color: var(--color-text-secondary)">Equilibrado y ligero</span>
+                    </div>
+                    <div style="flex: 1; background: var(--color-background); padding: 15px; border-radius: 8px; border: 1px solid var(--color-border);">
+                        <strong style="color: var(--chart-granite)">Granite 4H Tiny</strong><br>
+                        <span style="font-size: 13px; color: var(--color-text-secondary)">Ultra rápido, baja lógica</span>
+                    </div>
+                    <div style="flex: 1; background: var(--color-background); padding: 15px; border-radius: 8px; border: 1px solid var(--color-border);">
+                        <strong style="color: var(--chart-gemma)">Gemma 3n</strong><br>
+                        <span style="font-size: 13px; color: var(--color-text-secondary)">Conciso pero alucina</span>
+                    </div>
+                    <div style="flex: 1; background: var(--color-background); padding: 15px; border-radius: 8px; border: 1px solid var(--color-border);">
+                        <strong style="color: var(--chart-qwen8b)">Qwen3 8B</strong><br>
+                        <span style="font-size: 13px; color: var(--color-text-secondary)">Lento pero inteligente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="graficas" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Visualización de Datos</h1>
+                    <hr>
+                </div>
+                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas. Pasa el ratón por encima de las barras para ver el valor exacto.</p>
+
+                <div class="chart-title">Velocidad de Generación (Tokens por Segundo)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartSpeed"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más alto es mejor. Granite domina en velocidad bruta.</p>
+
+                <div class="chart-title">Precisión de Respuestas (% de Acierto)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartAccuracy"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Porcentaje de pruebas superadas por nivel. Qwen 8B mantiene la consistencia.</p>
+
+                <div class="chart-title">Latencia: Tiempo hasta el primer token (Segundos)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartLatency"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px;">*Más bajo es mejor. Indica cuánto tarda la IA en empezar a "pensar".</p>
+            </div>
+
+            <div id="analisis" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Análisis de Resultados</h1>
+                    <hr>
+                </div>
+                
+                <p>Lo que más me preocupaba al tener los resultados y empezar a analizar los datos, era si los niveles de dificultad realmente subían o si, simplemente, se mantenían planos. Algunas preguntas que a mí me parecían sencillas estaban clasificadas con un nivel alto de dificultad y, como todavía no había mirado los datos, no sabía si para una máquina serían realmente difíciles o no. Esta duda desapareció en cuanto revisé el primer modelo: <strong>Qwen 4B</strong>.</p>
+
+                <p>Tal y como muestra la tabla, a medida que la dificultad subía, la IA se volvía más lenta, tardaba más en empezar a responder, generaba más texto (tokens) en general y se equivocaba más.</p>
+
+                <p>Como análisis general antes de ir uno por uno, ninguno de los 4 modelos fue capaz de escribir el poema del océano sin usar la letra ‘A’. Todos fallaron y la incluyeron. Algunos la usaron durante todo el poema y otros solo se les escapó una vez. También aclaro que los modelos están ordenados por tamaño, del que menos ocupa al que más.</p>
+
+                <p>Visto este dato curioso (que a partir de ahora probaré con todas las IAs para ver si dan la talla), paso al análisis individual:</p>
+
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-qwen4b); font-size: 18px;">Qwen 4B</strong><br>
+                        Es el modelo donde más se notan los cambios según sube la dificultad, además de ser el más ligero de los cuatro. Como decía antes, con mayor dificultad el modelo iba más lento, tardaba más en soltar el primer token y su porcentaje de aciertos bajaba.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-granite); font-size: 18px;">Granite 4H Tiny</strong><br>
+                        Aunque este modelo es más pesado que el Qwen 4B, se equivoca más. Fue incapaz de contar bien las letras ‘R’ de "FERROCARRILERO", algo que el Qwen 4B <strong>sí</strong> logró. Se nota que este modelo es más rápido que el anterior, y quizás por ir tan rápido es por lo que cuenta mal las letras. Al subir la dificultad, su velocidad y la cantidad de tokens se mantuvieron más o menos constantes. Es, sin duda, el modelo más rápido del análisis sin importar la dificultad, aunque eso le pasa factura en la calidad de las respuestas.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-gemma); font-size: 18px;">Gemma 3n c4b</strong><br>
+                        Aquí la velocidad baja drásticamente, siendo menos de la mitad de rápido que los anteriores. Sin embargo, usa muchos menos tokens, llegando a responder a veces con menos de la mitad de texto que los otros. Aun así, no pudo contar bien las ‘R’ ni hacer el poema. Eso sí, fue el primero en acertar el acertijo, aunque dijo que era "Monopoly" porque "es popular", sin argumentar nada. Da la sensación de que buscó la solución en su entrenamiento en lugar de usar la lógica.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-qwen8b); font-size: 18px;">Qwen 8B</strong><br>
+                        El modelo más pesado de la comparativa y también el más lento. Su único fallo fue el poema del océano. Lo interesante es que resolvió el acertijo usando la lógica, ya que en lugar de soltar "Monopoly" o decir que es un acertijo conocido, respondió "un juego de mesa" y argumentó el porqué.
+                    </li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h3 style="color: var(--color-accent); margin-top: 0;">Conclusión</h3>
+                    <p style="margin-bottom: 0;">Tras analizar los cuatro modelos, queda claro que existe una relación directa entre el "peso" del modelo y su capacidad de razonamiento. Mientras que los modelos más ligeros y rápidos (como Granite) priorizan la velocidad sacrificando precisión en tareas de conteo o lógica, el modelo más pesado (Qwen 8B) demostró ser el más fiable y "pensante", aunque el precio a pagar sea una respuesta mucho más lenta. Al final, depende de lo que busquemos: ¿queremos una respuesta inmediata o una respuesta razonada y correcta?</p>
+                </div>
+            </div>
+
+            <div id="metodologia" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Metodología y Prompts</h1>
+                    <hr>
+                </div>
+                <p>Para asegurar la imparcialidad, todos los modelos recibieron exactamente los mismos prompts en sesiones limpias (sin memoria previa).</p>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 1.1: Extracción de Datos</strong>
+                        <span class="level-badge">Nivel 1: Fácil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Comprobar si el modelo sigue instrucciones básicas y formato JSON.</p>
+                        <div class="prompt-code">
+                            "Lee el siguiente texto y extrae la lista de frutas mencionadas y sus colores en formato JSON: 'Juan fue al mercado y compró una manzana roja, dos plátanos amarillos y una sandía que por fuera era verde.' Solo dame el JSON, nada más."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Evaluar:</span> Si el modelo respeta el formato JSON y si alucina frutas.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 2.1: El Problema de la Tokenización</strong>
+                        <span class="level-badge">Nivel 2: Medio</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Ver cómo maneja el modelo la lógica de caracteres vs tokens.</p>
+                        <div class="prompt-code">
+                            "Cuenta cuántas veces aparece la letra 'r' (erre) en la palabra: FERROCARRILERO. Razona paso a paso antes de dar el número final."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> 5. (Muchos modelos fallan diciendo 3 o 4 por agrupar 'rr').
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 3.2: Razonamiento Lógico-Matemático</strong>
+                        <span class="level-badge">Nivel 3: Difícil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Frenar la intuición rápida del modelo y forzar el razonamiento.</p>
+                        <div class="prompt-code">
+                            "Un bate y una pelota cuestan 1,10 dólares en total. El bate cuesta 1,00 dólar más que la pelota. ¿Cuánto cuesta la pelota? Responde con una ecuación usando LaTeX."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> 0.05 dólares (5 centavos). La respuesta intuitiva e incorrecta es 0.10.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 4.1: Pensamiento Lateral</strong>
+                        <span class="level-badge">Nivel 4: Muy Difícil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Detectar si la IA entiende contextos ocultos.</p>
+                        <div class="prompt-code">
+                            "Un hombre empuja su coche hasta un hotel y al llegar se da cuenta de que está en bancarrota. ¿Por qué?"
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> Está jugando al Monopoly. Si inventa una historia real sobre gasolina, falla.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. CONFIGURACIÓN DE NAVEGACIÓN (SCROLL SPY) ---
+            const sections = document.querySelectorAll('.seccion-contenido');
+            const navLinks = document.querySelectorAll('#navegador-izq a');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px', // Ajustado para mejor detección
+                threshold: 0
+            };
+
+            const observerCallback = (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.removeAttribute('id');
+                        });
+                        const activeId = entry.target.id;
+                        const activeLink = document.querySelector(`#navegador-izq a[href="#${activeId}"]`);
+                        if (activeLink) activeLink.setAttribute('id', 'active');
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            sections.forEach(section => observer.observe(section));
+
+            // --- 2. DATOS DE LAS GRÁFICAS (Extraídos del PDF) ---
+            const labels = ['Fácil (N1)', 'Medio (N2)', 'Difícil (N3)', 'Muy Difícil (N4)'];
+
+            // Colores
+            const cQwen4b = '#4a9eff';
+            const cGranite = '#ff6b6b';
+            const cGemma = '#a29bfe';
+            const cQwen8b = '#00b894';
+
+            // Configuración común de Chart.js
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.borderColor = '#2d3e50';
+            Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#e8eaed', padding: 20, font: { size: 12 } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 20, 25, 0.95)',
+                        titleColor: '#fff',
+                        bodyColor: '#e8eaed',
+                        borderColor: '#4a9eff',
+                        borderWidth: 1,
+                        padding: 10
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#2d3e50' } },
+                    x: { grid: { display: false } }
+                }
+            };
+
+            // --- GRÁFICA 1: VELOCIDAD (Tokens/sec) ---
+            new Chart(document.getElementById('chartSpeed'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Qwen 4B', data: [40.43, 38.72, 37.91, 34.11], backgroundColor: cQwen4b },
+                        { label: 'Granite Tiny', data: [42.60, 42.79, 41.74, 42.82], backgroundColor: cGranite },
+                        { label: 'Gemma 3n', data: [19.05, 18.78, 18.89, 19.19], backgroundColor: cGemma },
+                        { label: 'Qwen 8B', data: [12.36, 12.12, 12.12, 11.97], backgroundColor: cQwen8b }
+                    ]
+                },
+                options: commonOptions
+            });
+
+            // --- GRÁFICA 2: PRECISIÓN (% Correctas) ---
+            new Chart(document.getElementById('chartAccuracy'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Qwen 4B', data: [100, 100, 50, 50], borderColor: cQwen4b, tension: 0.3 },
+                        { label: 'Granite Tiny', data: [100, 50, 50, 50], borderColor: cGranite, tension: 0.3 },
+                        { label: 'Gemma 3n', data: [100, 50, 50, 100], borderColor: cGemma, tension: 0.3 }, 
+                        // Nota: Gemma tiene 100% en N4 en el PDF, aunque el texto dice que falla cosas, respeto el PDF.
+                        { label: 'Qwen 8B', data: [100, 100, 50, 100], borderColor: cQwen8b, tension: 0.3 }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { max: 110, beginAtZero: true, grid: { color: '#2d3e50' }, ticks: { callback: v => v + '%' } }
+                    }
+                }
+            });
+
+            // --- GRÁFICA 3: LATENCIA (TFT - Segundos) ---
+            new Chart(document.getElementById('chartLatency'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Qwen 4B', data: [0.95, 2.27, 3.71, 6.82], backgroundColor: cQwen4b },
+                        { label: 'Granite Tiny', data: [0.39, 0.42, 1.09, 1.74], backgroundColor: cGranite },
+                        { label: 'Gemma 3n', data: [1.17, 0.44, 0.47, 0.45], backgroundColor: cGemma },
+                        { label: 'Qwen 8B', data: [2.30, 3.36, 5.43, 6.95], backgroundColor: cQwen8b }
+                    ]
+                },
+                options: commonOptions
+            });
+
+        });
+    </script>
+</body>
+</html>
