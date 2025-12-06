@@ -354,13 +354,13 @@
                     <h1>Visualización de Datos</h1>
                     <hr>
                 </div>
-                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas. Pasa el ratón por encima de las barras para ver el valor exacto.</p>
+                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas, los valores son las medias. Pasa el ratón por encima de las barras para ver el valor exacto.</p>
 
                 <div class="chart-title">Velocidad de Generación (Tokens por Segundo)</div>
                 <div class="chart-wrapper">
                     <canvas id="chartSpeed"></canvas>
                 </div>
-                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más alto es mejor. Granite domina en velocidad bruta.</p>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más alto es más rápido. Granite domina en velocidad bruta.</p>
 
                 <div class="chart-title">Precisión de Respuestas (% de Acierto)</div>
                 <div class="chart-wrapper">
@@ -372,7 +372,7 @@
                 <div class="chart-wrapper">
                     <canvas id="chartLatency"></canvas>
                 </div>
-                <p style="font-size: 14px; margin-top: -20px;">*Más bajo es mejor. Indica cuánto tarda la IA en empezar a "pensar".</p>
+                <p style="font-size: 14px; margin-top: -20px;">*Más bajo es más rápido. Indica cuánto tarda la IA en empezar a "pensar".</p>
             </div>
 
             <div id="analisis" class="seccion-contenido">
@@ -381,13 +381,13 @@
                     <hr>
                 </div>
                 
-                <p>Lo que más me preocupaba al tener los resultados y empezar a analizar los datos, era si los niveles de dificultad realmente subían o si, simplemente, se mantenían planos. Algunas preguntas que a mí me parecían sencillas estaban clasificadas con un nivel alto de dificultad y, como todavía no había mirado los datos, no sabía si para una máquina serían realmente difíciles o no. Esta duda desapareció en cuanto revisé el primer modelo: <strong>Qwen 4B</strong>.</p>
+                <p>Lo que más me preocupaba al tener los resultados y empezar a analizar los datos, era si los niveles de dificultad realmente subían o si, simplemente, se mantenían igual. Algunas preguntas que a mí me parecían sencillas estaban clasificadas con un nivel alto de dificultad y, como todavía no había mirado los datos, no sabía si para una máquina serían realmente difíciles o no. Esta duda desapareció en cuanto revisé el primer modelo: <strong>Qwen 4B</strong>.</p>
 
-                <p>Tal y como muestra la tabla, a medida que la dificultad subía, la IA se volvía más lenta, tardaba más en empezar a responder, generaba más texto (tokens) en general y se equivocaba más.</p>
+                <p>Tal y como muestran las gráficas, a medida que la dificultad subía, la IA se volvía más lenta, tardaba más en empezar a responder, generaba más texto (tokens) en general y se equivocaba más.</p>
 
-                <p>Como análisis general antes de ir uno por uno, ninguno de los 4 modelos fue capaz de escribir el poema del océano sin usar la letra ‘A’. Todos fallaron y la incluyeron. Algunos la usaron durante todo el poema y otros solo se les escapó una vez. También aclaro que los modelos están ordenados por tamaño, del que menos ocupa al que más.</p>
+                <p>Como análisis general antes de ir uno por uno, ninguno de los 4 modelos fue capaz de escribir el poema del océano sin usar la letra ‘A’ (una de las pruebas que detallo abajo). Todos fallaron y la incluyeron. Algunos la usaron durante todo el poema y otros solo se les escapó una vez. También aclaro que los modelos están ordenados por tamaño, del que menos ocupa al que más.</p>
 
-                <p>Visto este dato curioso (que a partir de ahora probaré con todas las IAs para ver si dan la talla), paso al análisis individual:</p>
+                <p>Visto este dato curioso (que a partir de ahora probaré con todas las IAs para ver si consiguen hacer el poema), paso al análisis individual:</p>
 
                 <ul style="list-style: none; padding: 0;">
                     <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
@@ -400,7 +400,7 @@
                     </li>
                     <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
                         <strong style="color: var(--chart-gemma); font-size: 18px;">Gemma 3n c4b</strong><br>
-                        Aquí la velocidad baja drásticamente, siendo menos de la mitad de rápido que los anteriores. Sin embargo, usa muchos menos tokens, llegando a responder a veces con menos de la mitad de texto que los otros. Aun así, no pudo contar bien las ‘R’ ni hacer el poema. Eso sí, fue el primero en acertar el acertijo, aunque dijo que era "Monopoly" porque "es popular", sin argumentar nada. Da la sensación de que buscó la solución en su entrenamiento en lugar de usar la lógica.
+                        Aquí la velocidad baja drásticamente, siendo menos de la mitad de rápido que los anteriores. Sin embargo, usa muchos menos tokens, llegando a responder a veces con menos de la mitad de texto que los otros. Aun así, no pudo contar bien las ‘R’ ni hacer el poema. Eso sí, fue el primero en acertar el acertijo, aunque dijo que era "Monopoly" porque "el acertijo es popular", sin argumentar nada. Da la sensación de que buscó la solución en su entrenamiento en lugar de usar la lógica.
                     </li>
                     <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
                         <strong style="color: var(--chart-qwen8b); font-size: 18px;">Qwen 8B</strong><br>
@@ -410,7 +410,7 @@
 
                 <div class="highlight-box">
                     <h3 style="color: var(--color-accent); margin-top: 0;">Conclusión</h3>
-                    <p style="margin-bottom: 0;">Tras analizar los cuatro modelos, queda claro que existe una relación directa entre el "peso" del modelo y su capacidad de razonamiento. Mientras que los modelos más ligeros y rápidos (como Granite) priorizan la velocidad sacrificando precisión en tareas de conteo o lógica, el modelo más pesado (Qwen 8B) demostró ser el más fiable y "pensante", aunque el precio a pagar sea una respuesta mucho más lenta. Al final, depende de lo que busquemos: ¿queremos una respuesta inmediata o una respuesta razonada y correcta?</p>
+                    <p style="margin-bottom: 0;">Tras analizar los cuatro modelos, queda claro que existe una relación directa entre el "peso" del modelo y su capacidad de razonamiento. Mientras que los modelos más ligeros y rápidos (como Granite) priorizan la velocidad sacrificando precisión en tareas de conteo o lógica, el modelo más pesado (Qwen 8B) demostró ser el más fiable y "pensante", aunque el precio a pagar sea una respuesta mucho más lenta. Al final, depende de lo que busquemos y de si merece la pena la precisión a cambio de la velocidad. Es el dilema que están enfrentando a día de hoy los modelos de 1 bit, tal y como hemos hablado ya varias veces en clase y algo que me parece muy interesante debatir.</p>
                 </div>
             </div>
 
@@ -432,7 +432,23 @@
                             "Lee el siguiente texto y extrae la lista de frutas mencionadas y sus colores en formato JSON: 'Juan fue al mercado y compró una manzana roja, dos plátanos amarillos y una sandía que por fuera era verde.' Solo dame el JSON, nada más."
                         </div>
                         <div class="prompt-eval">
-                            <span>Evaluar:</span> Si el modelo respeta el formato JSON y si alucina frutas.
+                            <span>Evaluar:</span> Si el modelo respeta el formato JSON y si dice los colores correctos.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 1.2: Cambio de Tono</strong>
+                        <span class="level-badge">Nivel 1: Fácil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Creatividad y consistencia en el estilo.</p>
+                        <div class="prompt-code">
+                            "Reescribe la siguiente frase para que suene como un caballero medieval muy educado: 'Oye, pásame la sal, que la sopa está sosa'."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Evaluar:</span> No debe sonar a pirata ni a Shakespeare exagerado, sino mantener la coherencia del personaje.
                         </div>
                     </div>
                 </div>
@@ -449,6 +465,38 @@
                         </div>
                         <div class="prompt-eval">
                             <span>Respuesta Correcta:</span> 5. (Muchos modelos fallan diciendo 3 o 4 por agrupar 'rr').
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 2.2: Lógica de "Sentido Común"</strong>
+                        <span class="level-badge">Nivel 2: Medio</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Mide el "pensamiento lento" y la lógica del mundo real.</p>
+                        <div class="prompt-code">
+                            "Tengo 5 camisas secándose al sol. Tardan 4 horas en secarse. Si pongo 10 camisas, ¿cuánto tardarán en secarse?"
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> 4 horas. (El sol seca todas a la vez). Si dice 8, ha fallado en la lógica.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 3.1: Restricción Creativa (Lipograma)</strong>
+                        <span class="level-badge">Nivel 3: Difícil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Capacidad de auto-corrección y restricciones negativas.</p>
+                        <div class="prompt-code">
+                            "Escribe un párrafo de 3 frases sobre el océano. Regla estricta: No puedes usar la letra 'A' en ninguna palabra. Si usas la letra 'A', fallas."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> Cualquier texto coherente sin usar ni una sola vez la letra 'A'.
                         </div>
                     </div>
                 </div>
@@ -481,6 +529,22 @@
                         </div>
                         <div class="prompt-eval">
                             <span>Respuesta Correcta:</span> Está jugando al Monopoly. Si inventa una historia real sobre gasolina, falla.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <strong>Prueba 4.2: La Alucinación de Hechos</strong>
+                        <span class="level-badge">Nivel 4: Muy Difícil</span>
+                    </div>
+                    <div class="prompt-body">
+                        <p>Objetivo: Ver si la IA admite no saber algo o se lo inventa convincentemente (Fact-Checking).</p>
+                        <div class="prompt-code">
+                            "Dame una breve biografía del famoso filósofo del siglo XIX 'Julian Frixler', conocido por su teoría del 'Positivismo acuático'."
+                        </div>
+                        <div class="prompt-eval">
+                            <span>Respuesta Correcta:</span> "No existe tal filósofo" o similar. Si escribe una biografía detallada, está alucinando.
                         </div>
                     </div>
                 </div>
