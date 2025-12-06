@@ -419,7 +419,7 @@
                     <h1>Metodología y Prompts</h1>
                     <hr>
                 </div>
-                <p>Para asegurar la imparcialidad, todos los modelos recibieron exactamente los mismos prompts en sesiones limpias (sin memoria previa).</p>
+                <p>Para asegurar la imparcialidad, todos los modelos recibieron exactamente los mismos prompts en sesiones limpias (sin memoria previa). Todas las pruebas tienen un objetivo sobre que analizar. Todas las pruebas fueron generadas por Gemini, pero le pedimos que tuvieran esos objetivos en concreto.</p>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
@@ -448,7 +448,7 @@
                             "Reescribe la siguiente frase para que suene como un caballero medieval muy educado: 'Oye, pásame la sal, que la sopa está sosa'."
                         </div>
                         <div class="prompt-eval">
-                            <span>Evaluar:</span> No debe sonar a pirata ni a Shakespeare exagerado, sino mantener la coherencia del personaje.
+                            <span>Evaluar:</span> Debe saber interpretar el personaje y no equivocarse, como por ejemplo, interpretar a un pirata.
                         </div>
                     </div>
                 </div>
@@ -464,7 +464,7 @@
                             "Cuenta cuántas veces aparece la letra 'r' (erre) en la palabra: FERROCARRILERO. Razona paso a paso antes de dar el número final."
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> 5. (Muchos modelos fallan diciendo 3 o 4 por agrupar 'rr').
+                            <span>Respuesta Correcta:</span> 5.
                         </div>
                     </div>
                 </div>
@@ -480,7 +480,7 @@
                             "Tengo 5 camisas secándose al sol. Tardan 4 horas en secarse. Si pongo 10 camisas, ¿cuánto tardarán en secarse?"
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> 4 horas. (El sol seca todas a la vez). Si dice 8, ha fallado en la lógica.
+                            <span>Respuesta Correcta:</span> 4 horas. (El sol seca todas a la vez). Si dice otro número, ha fallado en la lógica.
                         </div>
                     </div>
                 </div>
@@ -491,12 +491,12 @@
                         <span class="level-badge">Nivel 3: Difícil</span>
                     </div>
                     <div class="prompt-body">
-                        <p>Objetivo: Capacidad de auto-corrección y restricciones negativas.</p>
+                        <p>Objetivo: Capacidad de auto-corrección.</p>
                         <div class="prompt-code">
                             "Escribe un párrafo de 3 frases sobre el océano. Regla estricta: No puedes usar la letra 'A' en ninguna palabra. Si usas la letra 'A', fallas."
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> Cualquier texto coherente sin usar ni una sola vez la letra 'A'.
+                            <span>Respuesta Correcta:</span> Cualquier texto coherente sobre el océano sin usar ni una sola vez la letra 'A'.
                         </div>
                     </div>
                 </div>
@@ -512,7 +512,7 @@
                             "Un bate y una pelota cuestan 1,10 dólares en total. El bate cuesta 1,00 dólar más que la pelota. ¿Cuánto cuesta la pelota? Responde con una ecuación usando LaTeX."
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> 0.05 dólares (5 centavos). La respuesta intuitiva e incorrecta es 0.10.
+                            <span>Respuesta Correcta:</span> 0.05 dólares. La respuesta intuitiva e incorrecta es 0.10 (yo mismo me equivoqué pensando que era así). Si devuelve la ecuación en lugar de la respuesta y el resultado de la ecuación da 0.05 dólares también es correcto.
                         </div>
                     </div>
                 </div>
@@ -528,7 +528,7 @@
                             "Un hombre empuja su coche hasta un hotel y al llegar se da cuenta de que está en bancarrota. ¿Por qué?"
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> Está jugando al Monopoly. Si inventa una historia real sobre gasolina, falla.
+                            <span>Respuesta Correcta:</span> Está jugando al Monopoly o un juego de mesa. Si inventa una historia coherente y la respuesta argumentada tiene sentido, también es correcto.
                         </div>
                     </div>
                 </div>
@@ -539,7 +539,7 @@
                         <span class="level-badge">Nivel 4: Muy Difícil</span>
                     </div>
                     <div class="prompt-body">
-                        <p>Objetivo: Ver si la IA admite no saber algo o se lo inventa convincentemente (Fact-Checking).</p>
+                        <p>Objetivo: Ver si la IA admite no saber algo o se lo inventa convincentemente.</p>
                         <div class="prompt-code">
                             "Dame una breve biografía del famoso filósofo del siglo XIX 'Julian Frixler', conocido por su teoría del 'Positivismo acuático'."
                         </div>
