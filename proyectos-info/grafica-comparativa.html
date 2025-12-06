@@ -216,6 +216,11 @@
             height: 400px;
             position: relative;
         }
+        
+        /* Cursor pointer para indicar interactividad */
+        canvas {
+            cursor: pointer;
+        }
 
         .chart-title {
             text-align: center;
@@ -303,7 +308,8 @@
     <div id="sec-ruta">
         <h3>Ruta</h3>
         <p id="ruta">
-            <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-ia.html">Administración de sistemas</a><span>/</span>
+            <a href="../proyectos.html">Proyectos</a><span>/</span>
+            <a href="../categoria-ia.html">Administración de sistemas</a><span>/</span>
             <span>Comparativa LLMs Pequeños</span>
         </p>
     </div>
@@ -353,7 +359,8 @@
                     <h1>Visualización de Datos</h1>
                     <hr>
                 </div>
-                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas, los valores son las medias. Pasa el ratón por encima de las barras para ver el valor exacto.</p>
+                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas, los valores son las medias.</p>
+                <p style="color: var(--color-accent); font-weight: bold; font-size: 15px; background: rgba(74, 158, 255, 0.1); padding: 10px; border-radius: 5px; text-align: center;">💡 Haz click en cualquier barra para resaltar ese modelo en TODAS las gráficas.</p>
 
                 <div class="chart-title">Velocidad de Generación (Tokens por Segundo)</div>
                 <div class="chart-wrapper">
@@ -371,7 +378,13 @@
                 <div class="chart-wrapper">
                     <canvas id="chartLatency"></canvas>
                 </div>
-                <p style="font-size: 14px; margin-top: -20px;">*Más bajo es más rápido. Indica cuánto tarda la IA en empezar a "pensar".</p>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más bajo es más rápido. Indica cuánto tarda la IA en empezar a "pensar".</p>
+
+                <div class="chart-title">Consumo: Media de Tokens Totales Generados</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartTokens"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px;">*Indica la "verbosidad" del modelo. Qwen 4B tiende a enrollarse mucho en niveles difíciles.</p>
             </div>
 
             <div id="analisis" class="seccion-contenido">
@@ -511,7 +524,7 @@
                             "Un bate y una pelota cuestan 1,10 dólares en total. El bate cuesta 1,00 dólar más que la pelota. ¿Cuánto cuesta la pelota? Responde con una ecuación usando LaTeX."
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> 0.05 dólares. La respuesta intuitiva e incorrecta es 0.10 (yo mismo me equivoqué pensando que era así). Si devuelve la ecuación en lugar de la respuesta y el resultado de la ecuación da 0.05 dólares también es correcto.
+                            <span>Respuesta Correcta:</span> 0.05 dólares. La respuesta intuitiva e incorrecta es 0.10.
                         </div>
                     </div>
                 </div>
@@ -527,7 +540,7 @@
                             "Un hombre empuja su coche hasta un hotel y al llegar se da cuenta de que está en bancarrota. ¿Por qué?"
                         </div>
                         <div class="prompt-eval">
-                            <span>Respuesta Correcta:</span> Está jugando al Monopoly o un juego de mesa. Si inventa una historia coherente y la respuesta argumentada tiene sentido, también es correcto.
+                            <span>Respuesta Correcta:</span> Está jugando al Monopoly o un juego de mesa.
                         </div>
                     </div>
                 </div>
@@ -549,7 +562,6 @@
                 </div>
 
             </div>
-
         </div>
     </div>
 
@@ -562,16 +574,14 @@
 
             const observerOptions = {
                 root: null,
-                rootMargin: '-20% 0px -70% 0px', // Ajustado para mejor detección
+                rootMargin: '-20% 0px -70% 0px',
                 threshold: 0
             };
 
             const observerCallback = (entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.removeAttribute('id');
-                        });
+                        navLinks.forEach(link => { link.removeAttribute('id'); });
                         const activeId = entry.target.id;
                         const activeLink = document.querySelector(`#navegador-izq a[href="#${activeId}"]`);
                         if (activeLink) activeLink.setAttribute('id', 'active');
@@ -582,27 +592,109 @@
             const observer = new IntersectionObserver(observerCallback, observerOptions);
             sections.forEach(section => observer.observe(section));
 
-            // --- 2. DATOS DE LAS GRÁFICAS (Extraídos del PDF) ---
+            // --- 2. CONFIGURACIÓN DE GRÁFICAS ---
             const labels = ['Fácil (N1)', 'Medio (N2)', 'Difícil (N3)', 'Muy Difícil (N4)'];
 
-            // Colores
-            const cQwen4b = '#4a9eff';
-            const cGranite = '#ff6b6b';
-            const cGemma = '#a29bfe';
-            const cQwen8b = '#00b894';
+            // Colores con transparencia para el estado normal y color sólido para el borde
+            const colors = [
+                { bg: '#4a9eff', border: '#4a9eff' }, // Qwen 4B
+                { bg: '#ff6b6b', border: '#ff6b6b' }, // Granite
+                { bg: '#a29bfe', border: '#a29bfe' }, // Gemma
+                { bg: '#00b894', border: '#00b894' }  // Qwen 8B
+            ];
 
-            // Configuración común de Chart.js
+            // Datos comunes
+            const commonDatasets = [
+                { label: 'Qwen 4B', backgroundColor: colors[0].bg, borderColor: colors[0].border, borderWidth: 1 },
+                { label: 'Granite Tiny', backgroundColor: colors[1].bg, borderColor: colors[1].border, borderWidth: 1 },
+                { label: 'Gemma 3n', backgroundColor: colors[2].bg, borderColor: colors[2].border, borderWidth: 1 },
+                { label: 'Qwen 8B', backgroundColor: colors[3].bg, borderColor: colors[3].border, borderWidth: 1 }
+            ];
+
             Chart.defaults.color = '#9ca3af';
             Chart.defaults.borderColor = '#2d3e50';
             Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
 
+            // --- LÓGICA DE INTERACTIVIDAD (CLICK) ---
+            let activeDatasetIndex = null;
+            let charts = []; // Array para guardar las instancias de las gráficas
+
+            const handleChartClick = (evt, elements, chart) => {
+                if (elements.length > 0) {
+                    const selectedIndex = elements[0].datasetIndex;
+
+                    // Si hacemos click en el mismo que ya está activo, reseteamos (toggle)
+                    if (activeDatasetIndex === selectedIndex) {
+                        activeDatasetIndex = null;
+                    } else {
+                        activeDatasetIndex = selectedIndex;
+                    }
+                } else {
+                    // Si hacemos click en el fondo vacío, reseteamos
+                    activeDatasetIndex = null;
+                }
+
+                // Actualizar todas las gráficas
+                charts.forEach(c => {
+                    c.data.datasets.forEach((dataset, i) => {
+                        if (activeDatasetIndex === null) {
+                            // Restaurar colores originales
+                            dataset.backgroundColor = colors[i].bg;
+                            dataset.borderColor = colors[i].border;
+                            // Restaurar opacidad de línea si es gráfica de líneas
+                            if(c.config.type === 'line') {
+                                dataset.borderColor = colors[i].border; 
+                                dataset.borderWidth = 2;
+                            }
+                        } else if (i === activeDatasetIndex) {
+                            // Resaltar seleccionado (color sólido brillante)
+                            dataset.backgroundColor = colors[i].bg;
+                            dataset.borderColor = '#fff'; // Borde blanco para destacar
+                            dataset.borderWidth = 2;
+                        } else {
+                            // Atenuar no seleccionados (Gris transparente)
+                            dataset.backgroundColor = 'rgba(100, 100, 100, 0.1)';
+                            dataset.borderColor = 'rgba(100, 100, 100, 0.1)';
+                            dataset.borderWidth = 1;
+                        }
+                    });
+                    c.update();
+                });
+            };
+
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
+                onClick: (evt, elements, chart) => handleChartClick(evt, elements, chart),
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { color: '#e8eaed', padding: 20, font: { size: 12 } }
+                        labels: { color: '#e8eaed', padding: 20, font: { size: 12 } },
+                        onClick: (e, legendItem, legend) => {
+                            // Sobrescribimos el comportamiento de la leyenda para que use nuestra lógica de resaltado
+                            // simulando un click en el dataset index correspondiente
+                            const index = legendItem.datasetIndex;
+                            if (activeDatasetIndex === index) activeDatasetIndex = null;
+                            else activeDatasetIndex = index;
+                            
+                            // Actualizamos todas manualmente
+                            // (Reutilizamos la lógica de arriba simulando el evento)
+                            charts.forEach(c => {
+                                c.data.datasets.forEach((dataset, i) => {
+                                    if (activeDatasetIndex === null) {
+                                        dataset.backgroundColor = colors[i].bg;
+                                        dataset.borderColor = colors[i].border;
+                                    } else if (i === activeDatasetIndex) {
+                                        dataset.backgroundColor = colors[i].bg;
+                                        dataset.borderColor = '#fff';
+                                    } else {
+                                        dataset.backgroundColor = 'rgba(100, 100, 100, 0.1)';
+                                        dataset.borderColor = 'rgba(100, 100, 100, 0.1)';
+                                    }
+                                });
+                                c.update();
+                            });
+                        }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(15, 20, 25, 0.95)',
@@ -619,32 +711,32 @@
                 }
             };
 
-            // --- GRÁFICA 1: VELOCIDAD (Tokens/sec) ---
-            new Chart(document.getElementById('chartSpeed'), {
+            // --- GRÁFICA 1: VELOCIDAD ---
+            const chartSpeed = new Chart(document.getElementById('chartSpeed'), {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Qwen 4B', data: [40.43, 38.72, 37.91, 34.11], backgroundColor: cQwen4b },
-                        { label: 'Granite Tiny', data: [42.60, 42.79, 41.74, 42.82], backgroundColor: cGranite },
-                        { label: 'Gemma 3n', data: [19.05, 18.78, 18.89, 19.19], backgroundColor: cGemma },
-                        { label: 'Qwen 8B', data: [12.36, 12.12, 12.12, 11.97], backgroundColor: cQwen8b }
+                        { ...commonDatasets[0], data: [40.43, 38.72, 37.91, 34.11] },
+                        { ...commonDatasets[1], data: [42.60, 42.79, 41.74, 42.82] },
+                        { ...commonDatasets[2], data: [19.05, 18.78, 18.89, 19.19] },
+                        { ...commonDatasets[3], data: [12.36, 12.12, 12.12, 11.97] }
                     ]
                 },
                 options: commonOptions
             });
+            charts.push(chartSpeed);
 
-            // --- GRÁFICA 2: PRECISIÓN (% Correctas) ---
-            new Chart(document.getElementById('chartAccuracy'), {
+            // --- GRÁFICA 2: PRECISIÓN ---
+            const chartAccuracy = new Chart(document.getElementById('chartAccuracy'), {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Qwen 4B', data: [100, 100, 50, 50], borderColor: cQwen4b, tension: 0.3 },
-                        { label: 'Granite Tiny', data: [100, 50, 50, 50], borderColor: cGranite, tension: 0.3 },
-                        { label: 'Gemma 3n', data: [100, 50, 50, 100], borderColor: cGemma, tension: 0.3 }, 
-                        // Nota: Gemma tiene 100% en N4 en el PDF, aunque el texto dice que falla cosas, respeto el PDF.
-                        { label: 'Qwen 8B', data: [100, 100, 50, 100], borderColor: cQwen8b, tension: 0.3 }
+                        { ...commonDatasets[0], data: [100, 100, 50, 50], tension: 0.3, fill: false },
+                        { ...commonDatasets[1], data: [100, 50, 50, 50], tension: 0.3, fill: false },
+                        { ...commonDatasets[2], data: [100, 50, 50, 100], tension: 0.3, fill: false },
+                        { ...commonDatasets[3], data: [100, 100, 50, 100], tension: 0.3, fill: false }
                     ]
                 },
                 options: {
@@ -654,21 +746,39 @@
                     }
                 }
             });
+            charts.push(chartAccuracy);
 
-            // --- GRÁFICA 3: LATENCIA (TFT - Segundos) ---
-            new Chart(document.getElementById('chartLatency'), {
+            // --- GRÁFICA 3: LATENCIA ---
+            const chartLatency = new Chart(document.getElementById('chartLatency'), {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Qwen 4B', data: [0.95, 2.27, 3.71, 6.82], backgroundColor: cQwen4b },
-                        { label: 'Granite Tiny', data: [0.39, 0.42, 1.09, 1.74], backgroundColor: cGranite },
-                        { label: 'Gemma 3n', data: [1.17, 0.44, 0.47, 0.45], backgroundColor: cGemma },
-                        { label: 'Qwen 8B', data: [2.30, 3.36, 5.43, 6.95], backgroundColor: cQwen8b }
+                        { ...commonDatasets[0], data: [0.95, 2.27, 3.71, 6.82] },
+                        { ...commonDatasets[1], data: [0.39, 0.42, 1.09, 1.74] },
+                        { ...commonDatasets[2], data: [1.17, 0.44, 0.47, 0.45] },
+                        { ...commonDatasets[3], data: [2.30, 3.36, 5.43, 6.95] }
                     ]
                 },
                 options: commonOptions
             });
+            charts.push(chartLatency);
+
+            // --- GRÁFICA 4: TOKENS TOTALES (NUEVA) ---
+            const chartTokens = new Chart(document.getElementById('chartTokens'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { ...commonDatasets[0], data: [67, 319, 108, 938] },  // Qwen 4B
+                        { ...commonDatasets[1], data: [51, 208, 211, 285] },  // Granite
+                        { ...commonDatasets[2], data: [62, 111, 51, 81] },    // Gemma
+                        { ...commonDatasets[3], data: [66, 245, 104, 106] }   // Qwen 8B
+                    ]
+                },
+                options: commonOptions
+            });
+            charts.push(chartTokens);
 
         });
     </script>
