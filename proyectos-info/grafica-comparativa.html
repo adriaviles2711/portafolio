@@ -354,78 +354,6 @@
                 </div>
             </div>
 
-            <div id="graficas" class="seccion-contenido">
-                <div class="header-seccion">
-                    <h1>Visualización de Datos</h1>
-                    <hr>
-                </div>
-                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas, los valores son las medias.</p>
-                <p style="color: var(--color-accent); font-weight: bold; font-size: 15px; background: rgba(74, 158, 255, 0.1); padding: 10px; border-radius: 5px; text-align: center;">💡 Haz click en cualquier barra para resaltar ese modelo en TODAS las gráficas.</p>
-
-                <div class="chart-title">Velocidad de Generación (Tokens por Segundo)</div>
-                <div class="chart-wrapper">
-                    <canvas id="chartSpeed"></canvas>
-                </div>
-                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más alto es más rápido. Granite domina en velocidad bruta.</p>
-
-                <div class="chart-title">Precisión de Respuestas (% de Acierto)</div>
-                <div class="chart-wrapper">
-                    <canvas id="chartAccuracy"></canvas>
-                </div>
-                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Porcentaje de pruebas superadas por nivel. Qwen 8B mantiene la consistencia.</p>
-
-                <div class="chart-title">Latencia: Tiempo hasta el primer token (Segundos)</div>
-                <div class="chart-wrapper">
-                    <canvas id="chartLatency"></canvas>
-                </div>
-                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más bajo es más rápido. Indica cuánto tarda la IA en empezar a "pensar".</p>
-
-                <div class="chart-title">Consumo: Media de Tokens Totales Generados</div>
-                <div class="chart-wrapper">
-                    <canvas id="chartTokens"></canvas>
-                </div>
-                <p style="font-size: 14px; margin-top: -20px;">Indica la "verbosidad" del modelo. Qwen 4B tiene un punto más alto en la parte de "Muy dificíl" porque se quedo en bucle con el acertijo y lo paramos a los 3 repeticiones.</p>
-            </div>
-
-            <div id="analisis" class="seccion-contenido">
-                <div class="header-seccion">
-                    <h1>Análisis de Resultados</h1>
-                    <hr>
-                </div>
-                
-                <p>Lo que más me preocupaba al tener los resultados y empezar a analizar los datos, era si los niveles de dificultad realmente subían o si, simplemente, se mantenían igual. Algunas preguntas que a mí me parecían sencillas estaban clasificadas con un nivel alto de dificultad y, como todavía no había mirado los datos, no sabía si para una máquina serían realmente difíciles o no. Esta duda desapareció en cuanto revisé el primer modelo: <strong>Qwen 4B</strong>.</p>
-
-                <p>Tal y como muestran las gráficas, a medida que la dificultad subía, la IA se volvía más lenta, tardaba más en empezar a responder, generaba más texto (tokens) en general y se equivocaba más.</p>
-
-                <p>Como análisis general antes de ir uno por uno, ninguno de los 4 modelos fue capaz de escribir el poema del océano sin usar la letra ‘A’ (una de las pruebas que detallo abajo). Todos fallaron y la incluyeron. Algunos la usaron durante todo el poema y otros solo se les escapó una vez. También aclaro que los modelos están ordenados por tamaño, del que menos ocupa al que más.</p>
-
-                <p>Visto este dato curioso (que a partir de ahora probaré con todas las IAs para ver si consiguen hacer el poema), paso al análisis individual:</p>
-
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
-                        <strong style="color: var(--chart-qwen4b); font-size: 18px;">Qwen 4B</strong><br>
-                        Es el modelo donde más se notan los cambios según sube la dificultad, además de ser el más ligero de los cuatro. Como decía antes, con mayor dificultad el modelo iba más lento, tardaba más en soltar el primer token y su porcentaje de aciertos bajaba.
-                    </li>
-                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
-                        <strong style="color: var(--chart-granite); font-size: 18px;">Granite 4H Tiny</strong><br>
-                        Aunque este modelo es más pesado que el Qwen 4B, se equivoca más. Fue incapaz de contar bien las letras ‘R’ de "FERROCARRILERO", algo que el Qwen 4B <strong>sí</strong> logró. Se nota que este modelo es más rápido que el anterior, y quizás por ir tan rápido es por lo que cuenta mal las letras. Al subir la dificultad, su velocidad y la cantidad de tokens se mantuvieron más o menos constantes. Es, sin duda, el modelo más rápido del análisis sin importar la dificultad, aunque eso le pasa factura en la calidad de las respuestas.
-                    </li>
-                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
-                        <strong style="color: var(--chart-gemma); font-size: 18px;">Gemma 3n c4b</strong><br>
-                        Aquí la velocidad baja drásticamente, siendo menos de la mitad de rápido que los anteriores. Sin embargo, usa muchos menos tokens, llegando a responder a veces con menos de la mitad de texto que los otros. Aun así, no pudo contar bien las ‘R’ ni hacer el poema. Eso sí, fue el primero en acertar el acertijo, aunque dijo que era "Monopoly" porque "el acertijo es popular", sin argumentar nada. Da la sensación de que buscó la solución en su entrenamiento en lugar de usar la lógica.
-                    </li>
-                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
-                        <strong style="color: var(--chart-qwen8b); font-size: 18px;">Qwen 8B</strong><br>
-                        El modelo más pesado de la comparativa y también el más lento. Su único fallo fue el poema del océano. Lo interesante es que resolvió el acertijo usando la lógica, ya que en lugar de soltar "Monopoly" o decir que es un acertijo conocido, respondió "un juego de mesa" y argumentó el porqué.
-                    </li>
-                </ul>
-
-                <div class="highlight-box">
-                    <h3 style="color: var(--color-accent); margin-top: 0;">Conclusión</h3>
-                    <p style="margin-bottom: 0;">Tras analizar los cuatro modelos, queda claro que existe una relación directa entre el "peso" del modelo y su capacidad de razonamiento. Mientras que los modelos más ligeros y rápidos (como Granite) priorizan la velocidad sacrificando precisión en tareas de conteo o lógica, el modelo más pesado (Qwen 8B) demostró ser el más fiable y "pensante", aunque el precio a pagar sea una respuesta mucho más lenta. Al final, depende de lo que busquemos y de si merece la pena la precisión a cambio de la velocidad. Es el dilema que están enfrentando a día de hoy los modelos de 1 bit, tal y como hemos hablado ya varias veces en clase y algo que me parece muy interesante debatir.</p>
-                </div>
-            </div>
-
             <div id="metodologia" class="seccion-contenido">
                 <div class="header-seccion">
                     <h1>Metodología y Prompts</h1>
@@ -561,6 +489,78 @@
                     </div>
                 </div>
 
+            </div>
+            
+            <div id="graficas" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Visualización de Datos</h1>
+                    <hr>
+                </div>
+                <p>A continuación se presentan los resultados cuantitativos extraídos de las pruebas, los valores son las medias.</p>
+                <p style="color: var(--color-accent); font-weight: bold; font-size: 15px; background: rgba(74, 158, 255, 0.1); padding: 10px; border-radius: 5px; text-align: center;">💡 Haz click en cualquier barra para resaltar ese modelo en TODAS las gráficas.</p>
+
+                <div class="chart-title">Velocidad de Generación (Tokens por Segundo)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartSpeed"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más alto es más rápido. Granite domina en velocidad bruta.</p>
+
+                <div class="chart-title">Precisión de Respuestas (% de Acierto)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartAccuracy"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Porcentaje de pruebas superadas por nivel. Qwen 8B mantiene la consistencia.</p>
+
+                <div class="chart-title">Latencia: Tiempo hasta el primer token (Segundos)</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartLatency"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px; margin-bottom: 40px;">*Más bajo es más rápido. Indica cuánto tarda la IA en empezar a "pensar".</p>
+
+                <div class="chart-title">Consumo: Media de Tokens Totales Generados</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartTokens"></canvas>
+                </div>
+                <p style="font-size: 14px; margin-top: -20px;">Indica la "verbosidad" del modelo. Qwen 4B tiene un punto más alto en la parte de "Muy dificíl" porque se quedo en bucle con el acertijo y lo paramos a los 3 repeticiones.</p>
+            </div>
+
+            <div id="analisis" class="seccion-contenido">
+                <div class="header-seccion">
+                    <h1>Análisis de Resultados</h1>
+                    <hr>
+                </div>
+                
+                <p>Lo que más me preocupaba al tener los resultados y empezar a analizar los datos, era si los niveles de dificultad realmente subían o si, simplemente, se mantenían igual. Algunas preguntas que a mí me parecían sencillas estaban clasificadas con un nivel alto de dificultad y, como todavía no había mirado los datos, no sabía si para una máquina serían realmente difíciles o no. Esta duda desapareció en cuanto revisé el primer modelo: <strong>Qwen 4B</strong>.</p>
+
+                <p>Tal y como muestran las gráficas, a medida que la dificultad subía, la IA se volvía más lenta, tardaba más en empezar a responder, generaba más texto (tokens) en general y se equivocaba más.</p>
+
+                <p>Como análisis general antes de ir uno por uno, ninguno de los 4 modelos fue capaz de escribir el poema del océano sin usar la letra ‘A’ (una de las pruebas que detallo abajo). Todos fallaron y la incluyeron. Algunos la usaron durante todo el poema y otros solo se les escapó una vez. También aclaro que los modelos están ordenados por tamaño, del que menos ocupa al que más.</p>
+
+                <p>Visto este dato curioso (que a partir de ahora probaré con todas las IAs para ver si consiguen hacer el poema), paso al análisis individual:</p>
+
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-qwen4b); font-size: 18px;">Qwen 4B</strong><br>
+                        Es el modelo donde más se notan los cambios según sube la dificultad, además de ser el más ligero de los cuatro. Como decía antes, con mayor dificultad el modelo iba más lento, tardaba más en soltar el primer token y su porcentaje de aciertos bajaba.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-granite); font-size: 18px;">Granite 4H Tiny</strong><br>
+                        Aunque este modelo es más pesado que el Qwen 4B, se equivoca más. Fue incapaz de contar bien las letras ‘R’ de "FERROCARRILERO", algo que el Qwen 4B <strong>sí</strong> logró. Se nota que este modelo es más rápido que el anterior, y quizás por ir tan rápido es por lo que cuenta mal las letras. Al subir la dificultad, su velocidad y la cantidad de tokens se mantuvieron más o menos constantes. Es, sin duda, el modelo más rápido del análisis sin importar la dificultad, aunque eso le pasa factura en la calidad de las respuestas.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-gemma); font-size: 18px;">Gemma 3n c4b</strong><br>
+                        Aquí la velocidad baja drásticamente, siendo menos de la mitad de rápido que los anteriores. Sin embargo, usa muchos menos tokens, llegando a responder a veces con menos de la mitad de texto que los otros. Aun así, no pudo contar bien las ‘R’ ni hacer el poema. Eso sí, fue el primero en acertar el acertijo, aunque dijo que era "Monopoly" porque "el acertijo es popular", sin argumentar nada. Da la sensación de que buscó la solución en su entrenamiento en lugar de usar la lógica.
+                    </li>
+                    <li style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--chart-qwen8b); font-size: 18px;">Qwen 8B</strong><br>
+                        El modelo más pesado de la comparativa y también el más lento. Su único fallo fue el poema del océano. Lo interesante es que resolvió el acertijo usando la lógica, ya que en lugar de soltar "Monopoly" o decir que es un acertijo conocido, respondió "un juego de mesa" y argumentó el porqué.
+                    </li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h3 style="color: var(--color-accent); margin-top: 0;">Conclusión</h3>
+                    <p style="margin-bottom: 0;">Tras analizar los cuatro modelos, queda claro que existe una relación directa entre el "peso" del modelo y su capacidad de razonamiento. Mientras que los modelos más ligeros y rápidos (como Granite) priorizan la velocidad sacrificando precisión en tareas de conteo o lógica, el modelo más pesado (Qwen 8B) demostró ser el más fiable y "pensante", aunque el precio a pagar sea una respuesta mucho más lenta. Al final, depende de lo que busquemos y de si merece la pena la precisión a cambio de la velocidad. Es el dilema que están enfrentando a día de hoy los modelos de 1 bit, tal y como hemos hablado ya varias veces en clase y algo que me parece muy interesante debatir.</p>
+                </div>
             </div>
         </div>
     </div>
