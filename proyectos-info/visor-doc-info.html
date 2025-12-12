@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Visor de Documentos</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/categorias-styles.css">
+    <link rel="stylesheet" href="../styles/proyecto-info-styles.css">
+    <style>
+        /* Estilos básicos para los bloques de código en la documentación */
+        pre {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        .documentacion-tecnica h3 { margin-top: 30px; margin-bottom: 10px; color: var(--color-principal); }
+        .documentacion-tecnica h2 { margin-top: 40px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .documentacion-tecnica ul { margin-bottom: 20px; padding-left: 20px; }
+        .documentacion-tecnica li { margin-bottom: 10px; }
+    </style>
+    <script src="../js/proyecto-info-js.js" defer></script>
+</head>
+<body>
+    <nav id="navbar-index">
+        <div id="navbar-izq">
+            <a href="../index.html" id="navbar-logo">ADRIÁN AVILÉS</a>
+        </div>
+        <div id="navbar-der">
+            <ul id="navbar-menu">
+                <li><a href="../index.html" class="nav-link">INICIO</a></li>
+                <li><a href="../#sobre-mi" class="nav-link">SOBRE MÍ</a></li>
+                <li><a href="../#habilidades" class="nav-link">HABILIDADES</a></li>
+                <li><a href="../proyectos.html" class="nav-link active">PROYECTOS</a></li>
+                <li><a href="../#contacto" class="nav-link">CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="sec-ruta">
+        <h3>Ruta</h3>
+        <p id="ruta"><a href="../proyectos.html">Proyectos</a><span>/</span><a href="../categoria-ia.html">Desarrollo Web</a><span>/</span><span>Visor de Documentos</span></p>
+    </div>
+
+    <div id="info-proyect">
+        <div id="navegador-izq">
+            <h3 id="navegador-cabecera">En esta página</h3>
+            <hr>
+            <a href="#informacion" id="active"><span>Información</span></a>
+            <a href="#resumen"><span>Resumen</span></a>
+            <a href="#caracteristicas"><span>Características</span></a>
+            <a href="#prompts"><span>Prompts</span></a>
+            <a href="#documentacion"><span>Doc. Técnica</span></a>
+        </div>
+        <div id="informacion-der">
+            <div id="informacion">
+                <h1>Visor de Documentos & Editor</h1>
+                <p>Aplicación web progresiva diseñada para visualizar, editar y analizar múltiples formatos de archivo (PDF, Markdown, JSON, Imágenes) en un entorno unificado. Construida enteramente con tecnologías estándar y potenciada por IAs para la generación de código eficiente.</p>
+                <div id="info-stats">
+                    <div id="info-fecha">
+                        <p>FECHA</p>
+                        <h3>Diciembre 2025</h3>
+                    </div>
+                    <div id="info-rol">
+                        <p>ROL</p>
+                        <h3>Frontend Developer</h3>
+                    </div>
+                    <div id="info-cliente">
+                        <p>CLIENTE</p>
+                        <h3>Proyecto Personal</h3>
+                    </div>
+                </div>
+
+                <div id="info-botones">
+                    <a href="../proyectos/visor-doc/index.html" target="_blank"><button class="reverse-button">
+                        <p>Ver demostración →</p>
+                    </button></a>
+                    <a href="https://github.com/adriaviles2711/portafolio/tree/main/proyectos/visor-doc" target="_blank"><button class="button">
+                        <p>Ir a GitHub</p>
+                    </button></a>
+                </div>
+            </div>
+
+            <div id="resumen" class="secciones">
+                <div class="info-headers">
+                    <h1>Resumen</h1>
+                    <hr>
+                </div>
+                <p>
+                    Este proyecto nace de la necesidad de tener una herramienta ligera y versátil para visualizar documentos sin depender de software pesado o instalación de dependencias. Se trata de una SPA (Single Page Application) que integra librerías potentes como PDF.js y Prism.js mediante CDN, manteniendo una arquitectura "Vanilla JS" pura.<br><br>
+                    La aplicación no solo permite la lectura de PDFs con herramientas profesionales (zoom, navegación, rotación), sino que evoluciona hacia un editor de código con resaltado de sintaxis y un gestor de imágenes con capacidades de análisis de color y filtros, todo ejecutándose en el lado del cliente (Client-Side) para garantizar la privacidad de los datos.
+                </p>
+            </div>
+
+            <div id="caracteristicas" class="secciones">
+                <div class="info-headers">
+                    <h1>Características principales</h1>
+                    <hr>
+                </div>
+                <ul>
+                    <li><span>Arquitectura "No-Build":</span> Funciona directamente en el navegador sin necesidad de Node.js, Webpack o compiladores, utilizando importaciones directas vía CDN.</li>
+                    <li><span>Soporte Multiformato Avanzado:</span> Renderizado de PDFs de alta fidelidad, visualización de Markdown con conversión a HTML, y soporte para JSON y código con resaltado de sintaxis (Syntax Highlighting).</li>
+                    <li><span>Edición y Análisis de Imágenes:</span> Incluye herramientas para aplicar filtros visuales y un "Color Picker" avanzado que extrae el valor RGB/HEX real de los píxeles, compensando el escalado del zoom.</li>
+                    <li><span>Herramientas de Accesibilidad:</span> Integración de la API Web Speech para lectura de texto en voz alta (Text-to-Speech), modo oscuro/claro y diseño responsivo adaptado a cualquier dispositivo.</li>
+                    <li><span>Funcionalidades de Escritorio:</span> Soporte completo para Drag & Drop, búsqueda de texto integrada (Ctrl+F) con resaltado de coincidencias y edición de contenido en tiempo real.</li>
+                </ul>
+            </div>
+
+            <div id="prompts" class="secciones">
+                <div class="info-headers">
+                    <h1>Prompts Utilizados</h1>
+                    <hr>
+                </div>
+                <p>
+                    Aquí se documentan los prompts enviados a la IA para desarrollar la aplicación de forma iterativa, desde el núcleo básico hasta las funcionalidades avanzadas.
+                </p>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 1: Core de la Aplicación (PDF.js + Vanilla JS)</h3>
+                        <blockquote>Actúa como un desarrollador web experto en tecnologías estándar.
+
+Quiero que crees una aplicación de Visor de Documentos PDF funcional utilizando ÚNICAMENTE HTML5, CSS3 y JavaScript puro (Vanilla JS).
+
+Requisitos Estrictos:
+Sin dependencias de construcción: No uses Node.js, npm, Webpack, React ni nada que requiera instalación.
+Librería Externa: Utiliza la librería PDF.js (de Mozilla) importada directamente a través de un CDN...
+
+Funcionalidades:
+Botón para 'Subir Archivo', Navegación, Indicador de página, Zoom, Estilo profesional.
+Formato de entrega: Todo en un único bloque de código HTML.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt1.png" alt="Captura de la primera versión del visor PDF">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 2: UI Material Design y Nuevos Formatos</h3>
+                        <blockquote>Implementa las siguientes mejoras:
+
+En el diseño de la interfaz superior, usa iconos de Material Design, sombras suaves, transiciones fluidas y una paleta de colores profesional.
+Además añade soportes para más formatos:
+PDF, Markdown, JSON, Texto Plano.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt2.png" alt="Captura del rediseño e inclusión de formatos">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 3: Drag & Drop, Rotación y Temas</h3>
+                        <blockquote>Muy bien, está perfecto. Agrega las siguientes funcionalidades:
+Drag & Drop (Arrastrar y Soltar).
+Haz que se puedan rotar los documentos...
+Modo presentación o pantalla completa.
+Haz que se pueda cambiar entre tema claro u oscuro.
+Incluye una barra que muestre el nombre del archivo y el tamaño.
+Resaltado de sintaxis real (como en VS Code) para Markdown y JSON.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt3.png" alt="Captura de Drag & Drop y temas">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 4: Imágenes y Text-to-Speech</h3>
+                        <blockquote>Está perfecto, intentemos ir un paso más adelante.
+Ahora vas a añadir soporte para imagenes (jpg, png, webp, gif). Incluye centrado automático.
+Además, añade una barra de navegación lateral...
+Añade una lectura en voz alta también, utiliza la API del navegador para leer documentos de texto en voz alta.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt4.png" alt="Captura de soporte de imágenes y sidebar">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 5: Edición, Búsqueda y Filtros</h3>
+                        <blockquote>Perfecto! Voy a intentar explotar aún más la aplicación...
+Agrega que se pueda editar el texto y código, además de guardar los cambios.
+También un buscador de texto integrado (Ctrl+F), que resalte coincidencias.
+Además, haz que se puedan editar las imagenes, pero que sea sencillo, solo poner filtros.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt5.png" alt="Captura de edición de texto">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt5-2.png" alt="Captura del buscador">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt5-3.png" alt="Captura de filtros de imagen">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-item">
+                    <div class="prompt-text">
+                        <h3>Prompt 6: Color Picker</h3>
+                        <blockquote>Añade un color picker para imagenes, donde pueda hacer click en cualquier parte de ella y me dirá el color hex y rgb exacto de ese pixel.</blockquote>
+                    </div>
+                    <div class="prompt-capturas">
+                        <div class="captura-container">
+                            <img src="../proy-img/visor-doc/prompt6.png" alt="Captura del Color Picker">
+                            <div class="captura-overlay">
+                                <p>Ver detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="documentacion" class="secciones documentacion-tecnica">
+                <div class="info-headers">
+                    <h1>Documentación Técnica</h1>
+                    <hr>
+                </div>
+                
+                <h2>1. Tecnologías y Librerías Seleccionadas</h2>
+                <p>Para el desarrollo de esta herramienta se ha optado por un enfoque "Vanilla JS" (JavaScript puro) potenciado por librerías específicas mediante CDN.</p>
+                
+                <h3>Selección de Librerías y Justificación:</h3>
+                <ul>
+                    <li><strong>PDF.js (Mozilla):</strong> Uso: Renderizado de archivos PDF en un elemento <code>&lt;canvas&gt;</code>. Por qué: Es el estándar de oro para visualización de PDF en web.</li>
+                    <li><strong>Marked.js:</strong> Uso: Conversión de sintaxis Markdown (.md) a HTML. Por qué: Es extremadamente ligero y rápido.</li>
+                    <li><strong>Prism.js:</strong> Uso: Resaltado de sintaxis para archivos JSON y Código. Por qué: Ofrece una legibilidad superior.</li>
+                    <li><strong>Google Fonts & Material Symbols:</strong> Para tipografías (Inter, JetBrains Mono) e iconografía escalable.</li>
+                </ul>
+
+                <h2>2. Arquitectura y Funciones Principales</h2>
+                <p>La aplicación sigue un patrón de diseño basado en eventos y estado centralizado.</p>
+
+                <h3>2.1. Gestión de Estado y Enrutamiento</h3>
+                <p>El sistema no recarga la página. Utiliza un objeto <code>state</code> global. Cuando se carga un archivo, la función <code>getFileType</code> determina cómo procesarlo:</p>
+                <pre><code>// Determina el tipo de archivo y delega la ejecución
+function getFileType(file) {
+    const name = file.name.toLowerCase();
+    if (name.endsWith('.pdf')) return 'pdf';
+    if (/\.(jpg|jpeg|png|webp|gif|svg)$/.test(name)) return 'image';
+    if (/\.(json|js|css|html)$/.test(name)) return 'code';
+    return 'text';
+}</code></pre>
+
+                <h3>2.2. Módulo de Imágenes: Color Picker</h3>
+                <p>El desafío del Color Picker es que las imágenes suelen estar escaladas. Para obtener el color exacto, traducimos la coordenada visual a la real y usamos un canvas oculto:</p>
+                <pre><code>DOM.img.onclick = (e) => {
+    const img = DOM.img;
+    // ... Obtener coordenadas y calcular escala ...
+    const scaleX = img.naturalWidth / rect.width;
+    const trueX = Math.floor(x * scaleX);
+
+    // Usar un Canvas oculto de 1x1 para extraer la data del pixel
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, trueX, trueY, 1, 1, 0, 0, 1, 1);
+    
+    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+};</code></pre>
+
+                <h3>2.3. Procesamiento de Texto y Búsqueda</h3>
+                <p>La búsqueda manipula el DOM directamente. Se utiliza RegEx para encontrar coincidencias y envolverlas en etiquetas <code>&lt;mark&gt;</code>, escapando previamente el HTML para evitar inyecciones XSS.</p>
+                <pre><code>function executeSearch() {
+    const query = DOM.searchInput.value;
+    const raw = state.textData || DOM.text.textContent;
+    
+    // Regex global e insensible a mayúsculas/minúsculas
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    
+    const escaped = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const highlighted = escaped.replace(regex, '<mark>$1</mark>');
+    
+    DOM.text.innerHTML = `<pre>${highlighted}</pre>`;
+}</code></pre>
+
+                <h2>3. Diseño de Interfaz (UI/UX)</h2>
+                <ul>
+                    <li><strong>Variables CSS:</strong> Definidas para colores y fondos (`--bg-app`), facilitando el modo oscuro.</li>
+                    <li><strong>Drag & Drop:</strong> Capa superpuesta (`#drag-overlay`) que detecta eventos en toda la ventana.</li>
+                    <li><strong>Responsive:</strong> Uso de Flexbox para adaptar la visualización y barra lateral.</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal-overlay">
+        <img class="modal-content" id="modal-image-content">
+    </div>
+
+</body>
+</html>

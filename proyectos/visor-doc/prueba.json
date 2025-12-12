@@ -1,0 +1,53 @@
+{
+  "meta_info": {
+    "app_nombre": "Visor Universal Pro",
+    "version": 2.5,
+    "autor": "Usuario Experto",
+    "es_produccion": true,
+    "licencia_legacy": null
+  },
+  "configuracion_visual": {
+    "tema_inicial": "dark_mode",
+    "zoom_default": 1.5,
+    "paleta_colores": {
+      "fondo": "#0f172a",
+      "texto_principal": "#e2e8f0",
+      "acento": "#3b82f6",
+      "transparencia": 0.95
+    }
+  },
+  "formatos_soportados": [
+    "application/pdf",
+    "application/json",
+    "text/markdown",
+    "text/plain"
+  ],
+  "prueba_tipos_datos": {
+    "entero_grande": 987654321,
+    "flotante_pi": 3.14159265359,
+    "notacion_cientifica": 5.2e4,
+    "booleano_falso": false,
+    "booleano_verdadero": true
+  },
+  "prueba_caracteres": {
+    "espanol": "El veloz murciélago hindú comía feliz cardillo y kiwi. ¡Ñam!",
+    "emojis": "🚀 💻 📄 ✨",
+    "simbolos": "Copyright © 2023 | 100% <Secure>"
+  },
+  "array_objetos_complejo": [
+    {
+      "id": 1,
+      "titulo": "Documento A",
+      "tags": ["importante", "trabajo"]
+    },
+    {
+      "id": 2,
+      "titulo": "Documento B",
+      "tags": ["personal", "borrador"],
+      "detalles_extra": {
+        "revisado": false,
+        "fecha": "2023-10-27T10:00:00Z"
+      }
+    }
+  ]
+}
