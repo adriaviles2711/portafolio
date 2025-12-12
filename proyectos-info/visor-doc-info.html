@@ -128,12 +128,24 @@
 Quiero que crees una aplicación de Visor de Documentos PDF funcional utilizando ÚNICAMENTE HTML5, CSS3 y JavaScript puro (Vanilla JS).
 
 Requisitos Estrictos:
+
 Sin dependencias de construcción: No uses Node.js, npm, Webpack, React ni nada que requiera instalación.
-Librería Externa: Utiliza la librería PDF.js (de Mozilla) importada directamente a través de un CDN...
+
+Librería Externa: Utiliza la librería PDF.js (de Mozilla) importada directamente a través de un CDN (como cdnjs o unpkg). Asegúrate de configurar correctamente el GlobalWorkerOptions.workerSrc para que apunte al worker del CDN correspondiente.
 
 Funcionalidades:
-Botón para 'Subir Archivo', Navegación, Indicador de página, Zoom, Estilo profesional.
-Formato de entrega: Todo en un único bloque de código HTML.</blockquote>
+
+Botón para 'Subir Archivo': Esto es crítico para poder cargar documentos locales sin problemas de CORS.
+
+Navegación: Botones de Página Anterior y Página Siguiente.
+
+Indicador de página: Que muestre 'Página X de Y'.
+
+Zoom: Botones de (+) y (-) que redibujen el canvas con la nueva escala.
+
+Estilo: Usa CSS moderno (Flexbox/Grid) para que la interfaz se vea limpia, con una barra de herramientas superior fija y el documento centrado abajo con sombra (estilo visor profesional).
+
+Por favor, dame todo el código en un único bloque de código HTML para que pueda guardarlo como index.html y ejecutarlo inmediatamente..</blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
@@ -168,12 +180,13 @@ PDF, Markdown, JSON, Texto Plano.</blockquote>
                     <div class="prompt-text">
                         <h3>Prompt 3: Drag & Drop, Rotación y Temas</h3>
                         <blockquote>Muy bien, está perfecto. Agrega las siguientes funcionalidades:
+
 Drag & Drop (Arrastrar y Soltar).
-Haz que se puedan rotar los documentos...
+Haz que se puedan rotar los documentos, por si se sube un PDF horizontal.
 Modo presentación o pantalla completa.
 Haz que se pueda cambiar entre tema claro u oscuro.
 Incluye una barra que muestre el nombre del archivo y el tamaño.
-Resaltado de sintaxis real (como en VS Code) para Markdown y JSON.</blockquote>
+Haz que los códigos en Markdown y los archivos JSON tengan resaltado de sintaxis real (como en VS Code).</blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
@@ -189,9 +202,9 @@ Resaltado de sintaxis real (como en VS Code) para Markdown y JSON.</blockquote>
                     <div class="prompt-text">
                         <h3>Prompt 4: Imágenes y Text-to-Speech</h3>
                         <blockquote>Está perfecto, intentemos ir un paso más adelante.
-Ahora vas a añadir soporte para imagenes (jpg, png, webp, gif). Incluye centrado automático.
-Además, añade una barra de navegación lateral...
-Añade una lectura en voz alta también, utiliza la API del navegador para leer documentos de texto en voz alta.</blockquote>
+Ahora vas a añadir soporte para imagenes, quiero que abras jpg, png, webp y gif, si se me olvida algun formato de imagen añadelo, pero quiero que también puedas abrir gif. Incluye centrado automático, para que no salgan las imagenes mal.
+Además, añade una barra de navegación lateral, por ejemplo, en los pdfs aparecerá el indice y en los textos muestra estadísticas en tiempo real como caracteres.
+Añade una lectura en voz alta también, utiliza la API del navegador para leer documentos de texto en voz alta. Si no eres capaz de hacer esto último no lo agregues.</blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
@@ -206,10 +219,10 @@ Añade una lectura en voz alta también, utiliza la API del navegador para leer 
                 <div class="prompt-item">
                     <div class="prompt-text">
                         <h3>Prompt 5: Edición, Búsqueda y Filtros</h3>
-                        <blockquote>Perfecto! Voy a intentar explotar aún más la aplicación...
+                        <blockquote>Perfecto! Voy a intentar explotar aún más la aplicación a ver si es posible, ya que me ha sorprendido el resultado de la lectura en voz alta.
 Agrega que se pueda editar el texto y código, además de guardar los cambios.
-También un buscador de texto integrado (Ctrl+F), que resalte coincidencias.
-Además, haz que se puedan editar las imagenes, pero que sea sencillo, solo poner filtros.</blockquote>
+También un buscador de texto integrado (Ctrl+F), que resalte coincidencias dentro de los archivos de código como VS Code.
+Además, haz que se puedan editar las imagenes, pero que sea sencillo, solo poner filtros, no hagas mucho para evitar alejarnos mucho de la idea principal y convertirlo en un editor de imagenes.</blockquote>
                     </div>
                     <div class="prompt-capturas">
                         <div class="captura-container">
