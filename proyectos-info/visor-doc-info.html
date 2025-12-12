@@ -283,7 +283,8 @@ Además, haz que se puedan editar las imagenes, pero que sea sencillo, solo pone
                 <p>La aplicación sigue un patrón de diseño basado en eventos y estado centralizado.</p>
 
                 <h3>2.1. Gestión de Estado y Enrutamiento</h3>
-                <p>El sistema no recarga la página. Utiliza un objeto <code>state</code> global. Cuando se carga un archivo, la función <code>getFileType</code> determina cómo procesarlo:</p>
+                <p>El sistema no recarga la página. Utiliza un objeto state global para mantener la referencia al archivo actual, el nivel de zoom y el modo de edición.
+Lógica de Enrutamiento: Cuando se carga un archivo (vía Drag & Drop o Input), la función getFileType determina cómo procesarlo basándose en la extensión, delegando la tarea al manejador específico (handlePDF, handleImage, handleText).:</p>
                 <pre><code>// Determina el tipo de archivo y delega la ejecución
 function getFileType(file) {
     const name = file.name.toLowerCase();
@@ -294,34 +295,55 @@ function getFileType(file) {
 }</code></pre>
 
                 <h3>2.2. Módulo de Imágenes: Color Picker</h3>
-                <p>El desafío del Color Picker es que las imágenes suelen estar escaladas. Para obtener el color exacto, traducimos la coordenada visual a la real y usamos un canvas oculto:</p>
+                <p>Esta es una de las funcionalidades más complejas. Permite no solo manipular visualmente la imagen mediante filtros CSS, sino analizar los píxeles reales de la imagen original.
+El Desafío del Color Picker: Las imágenes en pantalla suelen estar escaladas (Zoom CSS) o redimensionadas para caber en la ventana. Para obtener el color exacto, no basta con saber dónde hizo clic el usuario en la pantalla; hay que traducir esa coordenada a la resolución original de la imagen (naturalWidth / naturalHeight).</p>
                 <pre><code>DOM.img.onclick = (e) => {
-    const img = DOM.img;
-    // ... Obtener coordenadas y calcular escala ...
-    const scaleX = img.naturalWidth / rect.width;
-    const trueX = Math.floor(x * scaleX);
 
-    // Usar un Canvas oculto de 1x1 para extraer la data del pixel
+    const img = DOM.img;
+                    
+    // 1. Obtener coordenadas del clic relativas al elemento visual
+    const rect = img.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // 2. Calcular el factor de escala (Relación entre tamaño visual y real)
+    const scaleX = img.naturalWidth / rect.width;
+    const scaleY = img.naturalHeight / rect.height;
+
+    // 3. Traducir a coordenadas reales del pixel en la imagen original
+    const trueX = Math.floor(x * scaleX);
+    const trueY = Math.floor(y * scaleY);
+
+    // 4. Usar un Canvas oculto de 1x1 para extraer la data del pixel
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, trueX, trueY, 1, 1, 0, 0, 1, 1);
-    
+                    
+    // 5. Obtener datos RGB
     const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+
+    
+    // ... (Código para convertir a HEX y actualizar UI)
 };</code></pre>
 
                 <h3>2.3. Procesamiento de Texto y Búsqueda</h3>
-                <p>La búsqueda manipula el DOM directamente. Se utiliza RegEx para encontrar coincidencias y envolverlas en etiquetas <code>&lt;mark&gt;</code>, escapando previamente el HTML para evitar inyecciones XSS.</p>
+                <p>Para archivos de texto, código y JSON, se implementa una función de edición ligera usando el atributo contentEditable.
+Búsqueda y Resaltado (Highlighting): La búsqueda no utiliza las herramientas nativas del navegador (que son limitadas en control), sino que manipula el DOM. Se utiliza expresiones regulares (RegEx) para encontrar coincidencias y envolverlas en etiquetas <mark>.
+Nota: Para evitar la inyección de código (XSS) y romper el HTML al buscar, primero se "escapa" el texto HTML antes de inyectar las marcas de resaltado.</p>
                 <pre><code>function executeSearch() {
+
     const query = DOM.searchInput.value;
+    // Se trabaja sobre el texto crudo (state.textData) para limpiar búsquedas anteriores
     const raw = state.textData || DOM.text.textContent;
-    
+
     // Regex global e insensible a mayúsculas/minúsculas
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    
+
+    // Escapar HTML para seguridad y luego insertar etiquetas <mark>
     const escaped = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const highlighted = escaped.replace(regex, '<mark>$1</mark>');
-    
-    DOM.text.innerHTML = `<pre>${highlighted}</pre>`;
+
+    DOM.text.innerHTML = `<pre ...>${highlighted}</pre>`;
 }</code></pre>
 
                 <h2>3. Diseño de Interfaz (UI/UX)</h2>
